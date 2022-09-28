@@ -1,0 +1,420 @@
+@import url(https://fonts.googleapis.com/css?family=Oswald:300);
+@import url(https://fonts.googleapis.com/css?family=Abel);
+@import "https://s3-us-west-2.amazonaws.com/s.cdpn.io/584938/dashboard.scss";
+body {
+    overflow: hidden;
+    height: 100vh;
+    position: relative;
+}
+
+/*admin css start*/
+.res_nav_item {
+    color: #fff;
+    font-size: 18px;
+    margin-left: 20px;
+  display: none;
+}
+.admin-dashbord {
+  background-color: #1b2431;
+  color: #202020;
+  font-family: "Montserrat", "Helvetica", "Open Sans", "Arial";
+  font-size: 13px;
+  height: 100vh;
+  width: 100%;
+  overflow-y: scroll;
+}
+.admin-dashbord .navbar-brand {
+    background: none;
+    box-shadow: none;
+
+}
+.admin-dashbord .sidebar {
+    top: 90px;
+    border-right: 1px solid #2c394a;
+}
+a:hover {
+  text-decoration: none;
+}
+
+p,
+figure {
+  margin: 0;
+  padding: 0;
+}
+.ml-sm-auto {
+  margin-left: auto;
+}
+
+.admin-dashbord .navbar {
+  background-color: #1b2431;
+  border-bottom: 1px solid #2c394a;
+  padding-left: 10px;
+}
+
+.sidebar {
+  background-color: #1b2431;
+  box-shadow: none;
+}
+.sidebar .nav-link {
+  border-left: 5px solid transparent;
+  color: #738297;
+  padding: 0.5rem 0.75rem;
+}
+.sidebar .nav-link:hover {
+  color: white;
+}
+.sidebar .nav-link.active {
+  border-left: 5px solid #738297;
+  color: white;
+}
+.sidebar .zmdi {
+  display: inline-block;
+  font-size: 1.35rem;
+  margin-right: 5px;
+  min-width: 25px;
+}
+
+.projects {
+  background-color: #273142;
+  border: 1px solid #313d4f;
+  overflow-x: auto;
+  width: 100%;
+}
+.projects-inner {
+  border-radius: 4px;
+}
+
+.projects-header {
+  color: white;
+  padding: 22px;
+}
+.projects-header .count,
+.projects-header .title {
+  display: inline-block;
+}
+.projects-header .count {
+  color: #738297;
+}
+.projects-header .zmdi {
+  cursor: pointer;
+  float: right;
+  font-size: 16px;
+  margin: 5px 0;
+}
+.projects-header .title {
+  font-size: 21px;
+}
+.projects-header .title + .count {
+  margin-left: 5px;
+}
+
+.projects-table {
+  background: #273142;
+  width: 100%;
+}
+.projects-table td,
+.projects-table th {
+  color: white;
+  padding: 10px 22px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.projects-table td p {
+  font-size: 12px;
+}
+.projects-table td p:last-of-type {
+  color: #738297;
+  font-size: 11px;
+}
+.projects-table th {
+  background-color: #313d4f;
+}
+.projects-table tr:hover {
+  background-color: #303d52;
+}
+.projects-table tr:not(:last-of-type) {
+  border-bottom: 1px solid #313d4f;
+}
+.projects-table .member figure,
+.projects-table .member .member-info {
+  display: inline-block;
+  vertical-align: top;
+}
+.projects-table .member figure + .member-info {
+  margin-left: 7px;
+  vertical-align: middle;
+}
+.projects-table .member img {
+  border-radius: 50%;
+  height: 32px;
+  width: 32px;
+}
+.projects-table .status > form {
+  float: right;
+}
+.projects-table .status-text {
+  display: inline-block;
+  font-size: 12px;
+  margin: 11px 0;
+  padding-left: 20px;
+  position: relative;
+}
+.projects-table .status-text:before {
+  border: 3px solid;
+  border-radius: 50%;
+  content: "";
+  height: 14px;
+  left: 0;
+  position: absolute;
+  top: 1px;
+  width: 14px;
+}
+.projects-table .status-text.status-blue:before {
+  border-color: #1c93ed;
+}
+.projects-table .status-text.status-green:before {
+  border-color: #66b92e;
+}
+.projects-table .status-text.status-orange:before {
+  border-color: #da932c;
+}
+.projects-table .status-text.status-red:before {
+  border-color: #d65b4a;
+}
+
+.selectric {
+  background-color: transparent;
+  border-color: #313d4f;
+  border-radius: 4px;
+}
+.selectric .label {
+  color: #738297;
+  line-height: 34px;
+  margin-right: 10px;
+  text-align: left;
+}
+.selectric-wrapper {
+  float: right;
+  width: 150px;
+}
+
+.danger-item {
+  border-left: 4px solid #a84d43;
+}
+
+.zmdi {
+  line-height: 1;
+  vertical-align: middle;
+}
+
+/* admin css end*/
+
+/*Admin login start */
+.admin-login{
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #666666;
+  background: #eaeff4;
+}
+.admin-login .wrapper {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1140px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.admin-login .container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  display: flex;
+  background: #ffffff;
+  box-shadow: 0 0 5px #999999;
+}
+
+.admin-login .credit {
+  position: relative;
+  margin: 25px auto 0 auto;
+  width: 100%;
+  text-align: center;
+  color: #666666;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.admin-login .credit a {
+  color: #222222;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.admin-login .col-left,
+.admin-login .col-right {
+  padding: 30px;
+  display: flex;
+}
+
+.admin-login .col-left {
+  width: 60%;
+  -webkit-clip-path: polygon(0 0, 0% 100%, 100% 0);
+  clip-path: polygon(0 0, 0% 100%, 100% 0);
+  background: #44c7f5;
+}
+
+.admin-login .col-right {
+  padding: 60px 30px;
+  width: 50%;
+  margin-left: -10%;
+}
+
+@media(max-width: 575.98px) {
+  .res_nav_item {
+  	display: block;
+	}
+  .admin-login .container {
+    flex-direction: column;
+    box-shadow: none;
+  }
+
+  .admin-login .col-left,
+  .admin-login .col-right {
+    width: 100%;
+    margin: 0;
+    -webkit-clip-path: none;
+    clip-path: none;
+  }
+
+  .admin-login .col-right {
+    padding: 30px;
+  }
+}
+
+.admin-login .login-text {
+  position: relative;
+  width: 100%;
+  color: #ffffff;
+}
+
+.admin-login .login-text h2 {
+  margin: 0 0 15px 0;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.admin-login .login-text p {
+  margin: 0 0 20px 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22px;
+}
+
+.admin-login .login-text .btn {
+  display: inline-block;
+  padding: 7px 20px;
+  font-size: 16px;
+  letter-spacing: 1px;
+  text-decoration: none;
+  border-radius: 30px;
+  color: #ffffff;
+  outline: none;
+  border: 1px solid #ffffff;
+  box-shadow: inset 0 0 0 0 #ffffff;
+  transition: .3s;
+  -webkit-transition: .3s;
+}
+
+.admin-login .login-text .btn:hover {
+  color: #44c7f5;
+  box-shadow: inset 150px 0 0 0 #ffffff;
+}
+
+.admin-login .login-form,
+.admin-login .forgot-form {
+  position: relative;
+  width: 100%;
+}
+
+.admin-login h2 {
+  margin: 0 0 15px 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.admin-login p {
+  margin: 0 0 10px 0;
+  text-align: left;
+  color: #666666;
+  font-size: 15px;
+}
+
+.admin-login p:last-child {
+  margin: 0;
+  padding-top: 3px;
+}
+
+.admin-login p a {
+  color: #44c7f5;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.admin-login label {
+  display: block;
+  width: 100%;
+  margin-bottom: 2px;
+  letter-spacing: .5px;
+}
+
+.admin-login p:last-child label {
+  width: 60%;
+  float: left;
+}
+
+.admin-login label span {
+  color: #ff574e;
+  padding-left: 2px;
+}
+
+.admin-login input {
+  display: block;
+  width: 100%;
+  height: 35px;
+  padding: 0 10px;
+  outline: none;
+  border: 1px solid #cccccc;
+  border-radius: 30px;
+}
+.admin-login input:focus {
+  border-color: #ff574e;
+}
+
+.admin-login button,
+.admin-login input[type=submit] {
+  display: inline-block;
+  width: 100%;
+  margin-top: 5px;
+  color: #44c7f5;
+  font-size: 16px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid #44c7f5;
+  border-radius: 30px;
+  box-shadow: inset 0 0 0 0 #44c7f5;
+  transition: .3s;
+  -webkit-transition: .3s;
+}
+
+.admin-login button:hover,
+.admin-login input[type=submit]:hover {
+  color: #ffffff;
+  box-shadow: inset 250px 0 0 0 #44c7f5;
+}
+/*Admin login End*/
