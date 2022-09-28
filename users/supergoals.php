@@ -138,11 +138,7 @@ $user_id = Session::get('user_id');
 $table_name='supergoals';
 $result=$common->db->select("SELECT * FROM supergoals WHERE user_id='".$user_id."' AND type='".$type."' AND DATE(start_date)>='".$start_date."' AND DATE(end_date)<='".$end_date."'");
 $goals=[];
-if(isset($_GET['test'])){
-  $result=$common->db->select("SELECT * FROM supergoals WHERE id='226'");
-  $row = $result -> fetch_assoc();
-  print_r($row);
-}
+
 
 
 if($result){
