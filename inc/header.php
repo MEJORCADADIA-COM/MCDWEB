@@ -33,5 +33,37 @@ $profile_info = $common
         src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v14.0&appId=1108588056758284&autoLogAppEvents=1"
         nonce="JQBAhE2Y"></script>
     <link rel="stylesheet" href="./assets/style.css">
+    <script>
+      var SITE_URL='<?=SITE_URL; ?>';
+      </script>
+    <style>
+       
+        @media only screen and (min-width: 768px) {
+            .desktop-only{display:block;}
+            .mobile-only{display:none;}
+            .res_logo .mobile{
+                display:none;
+            }
+            .res_logo .desktop{
+                display:block;
+            }
+        }
+        @media only screen and (max-width: 767px) {
+            .desktop-only{display:none;}
+            body.logged-in .desktop-only{display:block;}
+            body.logged-in .responsive_view_text,  body.logged-in .mobile-only{display:none;}
+            body.guest .mobile-only{display:block;}
+            body.guest .responsive_nav .blog-btn{display:none !important; } 
+            .mobile-blog-btn{position:absolute; right:10px; top:10px;}
+            .res_logo .mobile{
+                display:block;
+                margin:0 auto;
+            }
+            .res_logo .desktop{
+                display:none;
+            }
+        }
+        
+    </style>
 </head>
-<body>
+<body class="<?=(Session::get('login'))? 'logged-in':'guest'; ?>">

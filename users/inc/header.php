@@ -57,7 +57,6 @@ $profile_info = $common
                 color: #738297;
                 background-color: transparent;
             } 
-
             .heading1 {
                 font-size: 12px; 
                 font-family: cursive; 
@@ -243,6 +242,7 @@ $profile_info = $common
         }
         .hidemobileshow  .nav-link {color:#FFF; padding: 0.5rem 0.75rem 0.2rem 0.75rem}
         .description-area .print-description{display:none;}
+        .datepicker.datepicker-dropdown{z-index:9999 !important;}
         @media print {
              section .header-navbar-mobile, .footer-navbar, .tox-statusbar, .tox-statusbar__path-item, .tox-statusbar__text-container, .tox-statusbar__wordcount, .tox-statusbar__branding, .tox-statusbar__text-container, .screenonly{display:none;}
              .heading1,.migualtitle{color:#FFF;} 
@@ -267,7 +267,7 @@ $profile_info = $common
 <body>
 <section class="admin-dashbord" >
         <nav class="navbar header-navbar navbar-dark sticky-top flex-md-nowrap pb-2 navselect">
-            <a class="navbar-brand col-sm-3 col-md-2 mr-0 py-0" href="https://mejorcadadia.com/admin/">
+            <a class="navbar-brand col-sm-3 col-md-2 mr-0 py-0" href="https://mejorcadadia.com/">
                 <img src="https://mejorcadadia.com/users/assets/logo.png" alt="image" width="100px">
             </a>
             <h1 class="heading1">Making Ever Day Extraordinary</h1>
@@ -288,13 +288,14 @@ $profile_info = $common
         </nav>
         <div class="hidemobileshow header-navbar-mobile screenonly" style="background-color: #1076be;">
             <li class="nav-item" style="list-style: none;">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">
-                    Cartas Eternidad
+                <a class="nav-link" href="dailygoals.php" role="button"  style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">
+                Victory-7
                 </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #0158a3; padding: 0rem 0.75rem; width: 100%;border: 0px;border-radius: 0px;top: -2px;">
-                    <li class="nav-item"><a class="nav-link<?= $path == 'index.php' ? ' active' : ''; ?>" href="https://mejorcadadia.com/users/index.php" id="navbarDropdown" style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">Tablero</a></li>    
-                    <li><a style="border-left: 5px solid transparent; color: #738297; padding: 0.2rem 0.75rem; font-size: 14px;font-size: 16px;color: #ffffff;" class="dropdown-item" href="https://mejorcadadia.com/users/notebook.php">Escribe Carta</a></li>
-                </ul>
+            </li>
+            <li class="nav-item" style="list-style: none;">
+                <a class="nav-link" href="dailycommitments.php" role="button"  style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">
+                Guerrero Diario
+                </a>
             </li>
             <li class="nav-item" style="list-style: none; screenonly">
                                 <a class="nav-link dropdown-toggle " href="#" id="navbarDropdownsupergoals" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">
@@ -308,6 +309,16 @@ $profile_info = $common
                                     <li class="nav-item"><a class="nav-link <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?=SITE_URL;?>/users/supergoals.php?type=lifetime">De por Vida</a></li>
                                 </ul>
                             </li>
+            <li class="nav-item" style="list-style: none;">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">
+                    Cartas Eternidad
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #0158a3; padding: 0rem 0.75rem; width: 100%;border: 0px;border-radius: 0px;top: -2px;">
+                    <li class="nav-item"><a class="nav-link<?= $path == 'index.php' ? ' active' : ''; ?>" href="https://mejorcadadia.com/users/index.php" id="navbarDropdown" style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">Tablero</a></li>    
+                    <li><a style="border-left: 5px solid transparent; color: #738297; padding: 0.2rem 0.75rem; font-size: 14px;font-size: 16px;color: #ffffff;" class="dropdown-item" href="https://mejorcadadia.com/users/notebook.php">Escribe Carta</a></li>
+                </ul>
+            </li>
+           
         </div>
         <div class="container-fluid">
             <div class="row">
@@ -315,16 +326,16 @@ $profile_info = $common
                     <h1 style="color: #ffffff; font-size: 17px; text-align: center; background-color: #fdaf40; padding: 7px; margin: 0px;">Menu</h1>
                     <div class="sidebar-sticky" style="padding-top: 0px;width: 100%;background-color: #1076be;">
                         <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">
-                                    Cartas Eternidad
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #0158a3; padding: 0rem 0.75rem; width: 100%;border: 0px;">
-                                    <li class="nav-item"><a class="nav-link<?= $path == 'index.php' ? ' active' : ''; ?>" href="https://mejorcadadia.com/users/index.php" id="navbarDropdown" style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">Tablero</a></li>    
-                                    <li><a style="border-left: 5px solid transparent; color: #738297; padding: 0.2rem 0.75rem; font-size: 14px;font-size: 16px;color: #ffffff;" class="dropdown-item" href="https://mejorcadadia.com/users/notebook.php">Escribe Carta</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
+                        <li class="nav-item" style="list-style: none;">
+                            <a class="nav-link" href="dailygoals.php" role="button"  style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">
+                            Victory-7
+                            </a>
+                        </li>
+                        <li class="nav-item" style="list-style: none;">
+                <a class="nav-link" href="dailycommitments.php" role="button"  style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">
+                Guerrero Diario
+                </a>
+            </li>       <li class="nav-item">
                                 <a class="nav-link dropdown-toggle " href="#" id="navbarDropdownsupergoals" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">
                                 SuperObjetivos
                                 </a>
@@ -336,6 +347,16 @@ $profile_info = $common
                                     <li class="nav-item"><a class="nav-link <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?=SITE_URL;?>/users/supergoals.php?type=lifetime">De por Vida</a></li>
                                 </ul>
                             </li>
+                        <li class="nav-item">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">
+                                    Cartas Eternidad
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #0158a3; padding: 0rem 0.75rem; width: 100%;border: 0px;">
+                                    <li class="nav-item"><a class="nav-link<?= $path == 'index.php' ? ' active' : ''; ?>" href="https://mejorcadadia.com/users/index.php" id="navbarDropdown" style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">Tablero</a></li>    
+                                    <li><a style="border-left: 5px solid transparent; color: #738297; padding: 0.2rem 0.75rem; font-size: 14px;font-size: 16px;color: #ffffff;" class="dropdown-item" href="https://mejorcadadia.com/users/notebook.php">Escribe Carta</a></li>
+                                </ul>
+                            </li>
+                            
                         </ul>
                     </div>
                 </nav>

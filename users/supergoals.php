@@ -1,3 +1,7 @@
+<?php
+    /*Just for your server-side code*/
+    //header('Content-Type: text/html; charset=ISO-8859-1');
+?>
 <?php require_once "inc/header.php"; ?>
 <?php 
 $type='weekly';
@@ -16,6 +20,12 @@ function getStartAndEndDate($week, $year) {
 }
 
 
+function localDate($cdate){
+  setlocale(LC_ALL,"es_ES");
+  $string = date('d/m/Y',strtotime($cdate));
+  $dateObj = DateTime::createFromFormat("d/m/Y", $string);
+  return utf8_encode(strftime("%A, %d %B, %Y",$dateObj->getTimestamp()));
+}
 $today=date('Y-m-d');
 
 
@@ -74,22 +84,22 @@ if($type=='weekly'){
      $end_date=$week_array['week_end'];
 
     $goals_heading='Objetivos y Prioridades esta Semana';
-    $evaluation_heading='Evaluation / Progress this week; things to improve';
+    $evaluation_heading='Evaluación/Progreso. Cosas para Mejorar';
 }elseif($type=='monthly'){
   $start_date=$selectedYear.'-'.$selectedMonth.'-01';
   $end_date=date('Y-m-t',strtotime($start_date));
   $goals_heading='Objetivos y Prioridades esta Mes';
-  $evaluation_heading='Evaluation / Progress this month; things to improve';
+  $evaluation_heading='Evaluación/Progreso. Cosas para Mejorar';
 }elseif($type=='yearly'){
    $start_date = $selectedYear. '-01-01';
    $end_date=$selectedYear. '-12-31';
-   $goals_heading='Objetivos y Prioridades esta Año';
-   $evaluation_heading='Evaluation / Progress this year; things to improve';
+   $goals_heading='Objetivos y Sueños este Año';
+   $evaluation_heading='Evaluación/Progreso. Cosas para Mejorar';
 }elseif($type=='lifetime'){
   $start_date = '1900-01-01';
   $end_date='2200-12-31';
   $goals_heading='De por Vida Objetivos y Prioridades';
-  $evaluation_heading='Evaluation / Progress; things to improve';
+  $evaluation_heading='Evaluación/Progreso. Cosas para Mejorar';
 }elseif($type=='quarterly'){
   $nextQuarterYear=$selectedYear;
   if($selectedQuarter==1){
@@ -123,8 +133,8 @@ if($type=='weekly'){
   }
   
 
-  $goals_heading='Objetivos y Prioridades esta Trimestral';
-  $evaluation_heading='Evaluación / Progreso este trimestre; cosas para mejorar';
+  $goals_heading='Objetivos y Prioridades este Trimestre';
+  $evaluation_heading='Evaluación/Progreso. Cosas para Mejorar';
 }
 
 
@@ -138,7 +148,11 @@ $user_id = Session::get('user_id');
 $table_name='supergoals';
 $result=$common->db->select("SELECT * FROM supergoals WHERE user_id='".$user_id."' AND type='".$type."' AND DATE(start_date)>='".$start_date."' AND DATE(end_date)<='".$end_date."'");
 $goals=[];
-
+if(isset($_GET['test'])){
+  $result=$common->db->select("SELECT * FROM supergoals WHERE id='226'");
+  $row = $result -> fetch_assoc();
+  print_r($row);
+}
 
 
 if($result){
@@ -280,6 +294,18 @@ if($result){
      
       #goals-area.edit .edit-actions{display:inline-block;}
       .has-errors input{border-color:#F00;}
+      .datestr{text-transform: capitalize;}
+     
+      @media screen and (max-width: 767px) {
+        h2.maintitle{font-size:1rem;}
+        .projects-header h2{font-size:1.1rem;}
+        .goals-area ol li{padding-right:2rem; min-height:56px;}
+        #goals-area{padding: 20px 0px;}
+        .chart-btn{right:0; top:calc(10% + 30px);}
+        .goals-area ol li input{top:10%;}
+       
+        .projects-header{padding:0 0 20px 0;}
+      }
     </style>
 
     <?php 
@@ -320,8 +346,8 @@ if($result){
               <div class="col-sm-3 col-3" style="text-align:right;"><a class="next-arrow" href="<?=SITE_URL;?>/users/supergoals.php?type=weekly&<?=$nextWeekString;?>"><i class="fa fa-arrow-right"></i></a></div>
             </div>
             <p><label>Semana # :</label> <span><?=$selectedWeekNumber;?></span></p>
-            <p><label>De :</label> <span><?=date('l F d , Y',strtotime($start_date));?></span></p>
-            <p><label>Hasta :</label> <span><?=date('l F d , Y',strtotime($end_date));?></span></p>
+            <p><label>De :</label> <span class="datestr"><?=localDate($start_date); ?></span></p>
+            <p><label>Hasta :</label> <span class="datestr"><?=localDate($end_date); ?></span></p>
           <?php elseif($type=='monthly'): ?>
             <div class="row">
               <div class="col-sm-3 col-3" style="text-align:left;"><a class="prev-arrow" href="<?=SITE_URL;?>/users/supergoals.php?type=monthly&month=<?=date("m", strtotime("-1 month", strtotime($start_date)))?>&year=<?=date("Y", strtotime("-1 month", strtotime($start_date)))?>";><i  class="fa fa-arrow-left"></i></a></div>
@@ -329,8 +355,8 @@ if($result){
               <div class="col-sm-3 col-3" style="text-align:right;"><a class="next-arrow" href="<?=SITE_URL;?>/users/supergoals.php?type=monthly&&month=<?=date("m", strtotime("+1 month", strtotime($start_date)))?>&year=<?=date("Y", strtotime("+1 month", strtotime($start_date)))?>"><i class="fa fa-arrow-right"></i></a></div>
             </div>
             <p><label>Mes:</label> <span><?=$selectedMonth;?></span></p>
-            <p><label>De :</label> <span><?=date('l F d , Y',strtotime($start_date));?></span></p>
-            <p><label>Hasta :</label> <span><?=date('l F d , Y',strtotime($end_date));?></span></p>
+            <p><label>De :</label> <span class="datestr"><?=localDate($start_date);?></span></p>
+            <p><label>Hasta :</label> <span class="datestr"><?=localDate($end_date); ;?></span></p>
             <?php elseif($type=='yearly'): ?>
             <div class="row">
               <div class="col-sm-3 col-3" style="text-align:left;"><a class="prev-arrow" href="<?=SITE_URL;?>/users/supergoals.php?type=yearly&year=<?=$selectedYear-1;?>";><i  class="fa fa-arrow-left"></i></a></div>
@@ -338,8 +364,8 @@ if($result){
               <div class="col-sm-3 col-3" style="text-align:right;"><a class="next-arrow" href="<?=SITE_URL;?>/users/supergoals.php?type=yearly&year=<?=$selectedYear+1;?>"><i class="fa fa-arrow-right"></i></a></div>
             </div>
             <p><label>Año:</label> <span><?=$selectedYear;?></span></p>
-            <p><label>De :</label> <span><?=date('l F d , Y',strtotime($start_date));?></span></p>
-            <p><label>Hasta :</label> <span><?=date('l F d , Y',strtotime($end_date));?></span></p>
+            <p><label>De :</label> <span class="datestr"><?=localDate($start_date);?></span></p>
+            <p><label>Hasta :</label> <span class="datestr"><?=localDate($end_date);?></span></p>
             <?php elseif($type=='quarterly'): ?>
             <div class="row">
               <div class="col-sm-3 col-3" style="text-align:left;"><a class="prev-arrow" href="<?=SITE_URL;?>/users/supergoals.php?type=quarterly&quarter=<?=$prevQuarter;?>&year=<?=$prevQuarterYear;?>";><i  class="fa fa-arrow-left"></i></a></div>
@@ -347,8 +373,8 @@ if($result){
               <div class="col-sm-3 col-3" style="text-align:right;"><a class="next-arrow" href="<?=SITE_URL;?>/users/supergoals.php?type=quarterly&quarter=<?=$nextQuarter;?>&year=<?=$nextQuarterYear;?>"><i class="fa fa-arrow-right"></i></a></div>
             </div>
             <p><label>Trimestral:</label> <span><?=$selectedQuarter;?></span></p>
-            <p><label>De :</label> <span><?=date('l F d , Y',strtotime($start_date));?></span></p>
-            <p><label>Hasta :</label> <span><?=date('l F d , Y',strtotime($end_date));?></span></p>
+            <p><label>De :</label> <span class="datestr"><?=localDate($start_date);;?></span></p>
+            <p><label>Hasta :</label> <span class="datestr"><?=localDate($end_date);;?></span></p>
             
             <?php elseif($type=='lifetime'): ?>
               <div class="row">  
@@ -361,9 +387,9 @@ if($result){
           
           
           <div style="background-color: #fef200; padding: 10px">
-              <h2 class="maintitle" style="padding:0; margin:0;"><?=$goals_heading; ?>
+              <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; "><?=$goals_heading; ?>
              
-                <button type="button" class="btn btn-info screenonly pull-right" id="editBtn">Editar</button>
+                <button type="button" class="btn btn-info btn-sm screenonly pull-right" id="editBtn">Editar</button>
               
               </h2>
             </div>
@@ -391,7 +417,7 @@ if($result){
             <?php if($today<$end_date): ?>
             <div class="form-group screenonly" style="padding:20px; text-align:right;" id="create-goal-btn-wrapper">
             <button type="button" id="save-new-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewGoals('<?=$type;?>')"><i class="fa fa-save"></i> Save New Goals</button>
-              <button type="button" class="button btn btn-info" onClick="CreateGoal('<?=$type;?>')"><i class="fa fa-book"></i> Add Goal</button>
+              <button type="button" class="button btn btn-info" onClick="CreateGoal('<?=$type;?>')"><i class="fa fa-book"></i> Agrega Objetivo</button>
             </div>
             <?php endif; ?>
             <div class="form-group">
@@ -407,19 +433,16 @@ if($result){
                 <p id="success_msg_verification_text" style="font-size: 14px; font-weight: 600;"></p><button style="border: 0px; background: transparent; font-size: 18px; font-weight: 800;align-items: center;" id="close">x</button>  
               </div>
             </div>
-            <div class="form-group screenonly">
-                        
-                        <div class="button-wrapper" style="margin:30px 0;">
-       
+            <div class="form-group screenonly">                        
+                        <div class="button-wrapper" style="margin:30px 0;">       
                         <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Email</button>
                         
                         <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="Guardar pdf" />
                        <?php if($today<=$end_date):?>
-                        <input class="btn btn-info letter" type="button" id="saveBtn" name="saveBtn" value="Ahorrar" />
+                        <input class="btn btn-info letter" type="button" id="saveBtn" name="saveBtn" value="Guardar" />
                         <?php endif; ?>
-                           
-                           
-                        </div>
+                      
+                      </div>
             </div>
           </div>
           </form>
@@ -734,7 +757,7 @@ if($result){
           console.log($(this).text());  
               $("#goal-list li.more").toggleClass("hidden");
               if($(this).text()=='Mostrar más'){
-                $(this).text('Show Less');
+                $(this).text('Mostrar Menos');
               }else{
                 $(this).text('Mostrar más');
               }
@@ -804,7 +827,35 @@ if($result){
       
       
       
-
+      $(function() {
+        if(typeof goalType !== 'undefined'){
+                var calOptions={
+                format:'dd-mm-yyyy',
+                autoclose:true,
+                calendarWeeks:true,
+                todayHighlight:true,
+                weekStart:1
+                };
+                if(goalType=='yearly'){
+                    calOptions={
+                        format: "yyyy",
+                        viewMode: "years", 
+                        minViewMode: "years"
+                    }
+                }
+                $('.datepicker').datepicker(calOptions)
+                .on('changeDate', function(e) {
+                    console.log('changeDate',e.date, e.format('yyyy-mm-dd'));
+                    if(goalType=='yearly'){
+                        window.location.href=SITE_URL+"/users/supergoals.php?type="+goalType+"&year="+e.format('yyyy');
+                    }else{
+                        window.location.href=SITE_URL+"/users/supergoals.php?type="+goalType+"&date="+e.format('yyyy-mm-dd');
+                    }
+                
+                    
+                });
+            }
+      });
     
 
      

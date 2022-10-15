@@ -25,6 +25,21 @@ use PHPMailer\PHPMailer\Exception;
 
 require_once '../../vendor/autoload.php';
 
+$timezoneOffset= empty($_SESSION['timezoneOffset'])? '': $_SESSION['timezoneOffset']; 
+$time=time();
+if(!empty($timezoneOffset)){
+  $timezoneHours=($timezoneOffset-240)/60;
+  $timeHourString='';
+  if($timezoneHours<0){  
+    
+  $timeHourString='+'.abs($timezoneHours);
+  }else{
+    
+    $timeHourString='-'.abs($timezoneHours);
+  }  
+  $time=strtotime($timeHourString.' hours');
+}
+$today = date("Y-m-d", $time);
 if(isset($_POST['LetterApplicationCheck']) && ($_POST['LetterApplicationCheck'] == 'LetterApplicationCheck')) {
 	$LetterApplication = $format->validation($_POST['LetterApplication']);
     if (isset($LetterApplication)) {
@@ -166,7 +181,25 @@ if(isset($_POST['EmailDeleteCheck']) && ($_POST['EmailDeleteCheck'] == 'EmailDel
 if(isset($_POST['MobileSendCheck']) && ($_POST['MobileSendCheck'] == 'MobileSendCheck')) {
    
 }
-
+function pullPreviousLifeGoals($userId,$currentDate){
+    global $common;
+    $result=$common->db->select("SELECT * FROM daily_life_goals WHERE user_id='".$userId."'  AND created_at='".$currentDate."'");
+    if($result==false || $result->num_rows<1){
+        $result=$common->db->select("SELECT * FROM daily_life_goals WHERE user_id='".$userId."'  AND created_at<='".$currentDate."' ORDER BY created_at DESC LIMIT 0, 1");
+        if($result){
+            $row = $result -> fetch_assoc();
+            $result=$common->db->select("SELECT * FROM daily_life_goals WHERE user_id='".$userId."' AND created_at='".$row['created_at']."'");
+            if($result){
+              while ($row = $result -> fetch_assoc()) {  
+                $goalText=$row['goal'];   
+                $common->insert('daily_life_goals(user_id,goal,created_at)', '("'.$userId.'","'.$goalText.'","'.$currentDate.'")');         
+                
+              }
+            }
+        } 
+    }
+    
+}
 function pullPreviousGoals($user_id,$type,$start_date,$end_date){
     global $common;
     $result=$common->db->select("SELECT * FROM supergoals WHERE user_id='".$user_id."' AND type='".$type."' AND start_date>='".$start_date."' AND end_date<='".$end_date."'");
@@ -223,6 +256,168 @@ if(isset($_POST['UpdateSuperGoal']) && ($_POST['UpdateSuperGoal'] == 'UpdateSupe
     }
     
    
+}
+
+if(isset($_POST['UpdateDailyLifeGoalChecked']) && ($_POST['UpdateDailyLifeGoalChecked'] == 'UpdateDailyLifeGoalChecked')) {  
+    
+    $user_id = Session::get('user_id');
+    $achieved=isset($_POST['achieved'])? $_POST['achieved']: 0;
+    $currentDate=isset($_POST['currentDate'])? $_POST['currentDate']:$today;    
+    $goalId=isset($_POST['goalId'])? (int)$_POST['goalId']:0; 
+
+    if(!empty($goalId)){
+        $result=$common->db->select("SELECT * FROM dailylifegoals_marked WHERE goal_id='".$goalId."' AND user_id='".$user_id."' AND created_at='".$currentDate."'");
+        if($result && $result->num_rows>0){
+            $sql="UPDATE dailylifegoals_marked SET  checked='".$achieved."' WHERE goal_id='".$goalId."' AND user_id='".$user_id."' AND created_at='".$currentDate."'";
+            $common->db->update($sql);
+            echo 'Updated';
+        }else{
+            $common->insert('dailylifegoals_marked(user_id,goal_id,checked,created_at)', '("'.$user_id.'","'.$goalId.'","'.$achieved.'","'.$currentDate.'")');
+        }      
+        
+    }
+     echo 'Update';
+    
+   
+}
+
+if(isset($_POST['UpdateDailyGoal']) && ($_POST['UpdateDailyGoal'] == 'UpdateDailyLifeGoal')) {  
+    
+    $user_id = Session::get('user_id');
+    $achieved=isset($_POST['achieved'])? $_POST['achieved']: 0;
+    $edit=isset($_POST['edit'])? $_POST['edit']: 0;
+    $goalText=empty($_POST['goalText'])? '': $_POST['goalText'];
+    $currentDate=isset($_POST['currentDate'])? $_POST['currentDate']:date('Y-m-d');    
+    $goalId=isset($_POST['goalId'])? (int)$_POST['goalId']:0; 
+   
+    $goalText= $common->db->link->real_escape_string($goalText);
+
+    if($edit==1 && !empty($goalId) && !empty($goalText)){
+        $sql="UPDATE dailylifegoals SET  goal='".$goalText."' WHERE `id`=".$goalId;
+        $common->db->update($sql);
+        echo 'Updated';
+    }
+     echo 'Update';
+    
+   
+}
+
+
+
+if(isset($_POST['UpdateDailyGoal']) && ($_POST['UpdateDailyGoal'] == 'UpdateDailyTopGoal')) {
+  
+
+    $user_id = Session::get('user_id');
+    $achieved=isset($_POST['achieved'])? $_POST['achieved']: 0;
+    $goalText=empty($_POST['goalText'])? '': $_POST['goalText'];
+    $currentDate=isset($_POST['currentDate'])? $_POST['currentDate']:date('Y-m-d');    
+    $goalId=isset($_POST['goalId'])? (int)$_POST['goalId']:0;
+  
+   
+    $goalText= $common->db->link->real_escape_string($goalText);
+
+    if(!empty($goalId)){
+        $sql="UPDATE daily_top_goals SET  daily_top_goals.goal='".$goalText."', daily_top_goals.`achieved`='".$achieved."' WHERE daily_top_goals.`id`=".$goalId;
+        $common->db->update($sql);
+        echo 'Updated';
+    }else{
+        if(!empty($goalText)){   
+           
+            //pullPreviousGoals($user_id,$type,$startDate,$endDate);    
+            $result=$common->db->select("SELECT * FROM daily_top_goals WHERE goal='".$goalText."' AND user_id='".$user_id."' AND created_at='".$currentDate."'");
+           
+            if($result->num_rows){
+                $row = $result->fetch_assoc();
+                  $sql="UPDATE daily_top_goals SET daily_top_goals.`achieved`='".$achieved."' WHERE daily_top_goals.`id`=".$row['id'];
+                $common->db->update($sql);               
+            }else{
+                $common->insert('daily_top_goals(user_id,goal,created_at)', '("'.$user_id.'","'.$goalText.'","'.$currentDate.'")');
+            }
+        }
+        echo 'Update';
+    }
+    
+   
+}
+
+
+
+if(isset($_POST['UpdateDailyGoals']) && ($_POST['UpdateDailyGoals'] == 'UpdateDailyGoals')) {
+    
+
+   
+    $user_id = Session::get('user_id');
+    $lifeGoalsData=isset($_POST['lifeGoalsData'])? $_POST['lifeGoalsData']:[];
+    $topGoalsData=isset($_POST['topGoalsData'])? $_POST['topGoalsData']:[];
+    $dailyEvolution=empty($_POST['dailyEvolution'])? '': $_POST['dailyEvolution'];
+    $dailyImprovements=empty($_POST['dailyImprovements'])? '': $_POST['dailyImprovements'];
+    $currentDate=isset($_POST['currentDate'])? $_POST['currentDate']:date('Y-m-d');
+
+    
+    $dailyEvolution= $common->db->link->real_escape_string($dailyEvolution);
+    $dailyImprovements= $common->db->link->real_escape_string($dailyImprovements);
+    
+    $result=$common->db->select("SELECT * FROM dailygaols WHERE user_id='".$user_id."' AND created_at='".$currentDate."'");
+    
+    try{
+
+   
+    if($result){
+      $row = $result -> fetch_assoc();
+      $sql="UPDATE dailygaols SET improvements='".$dailyImprovements."', evolution='".$dailyEvolution."' WHERE id=".$row['id'];
+        $common->db->update($sql);
+    }else{        
+        $common->insert('dailygaols(user_id,improvements,evolution,created_at)', '("'.$user_id.'","'.$dailyImprovements.'","'.$dailyEvolution.'","'.$currentDate.'")');
+    }
+
+    if(!empty($lifeGoalsData)){
+        pullPreviousLifeGoals($user_id,$currentDate);
+        foreach ($lifeGoalsData as $key => $item) {
+            $id=(int)$item['id'];
+            $goalText= $common->db->link->real_escape_string($item['text']);
+            $achieved=(int)$item['checked'];            
+            $result=$common->db->select("SELECT * FROM daily_life_goals WHERE id='".$id."' AND user_id='".$user_id."' AND created_at='".$currentDate."'");
+             if($result->num_rows){
+                $row = $result->fetch_assoc();
+                $sql="UPDATE daily_life_goals SET achieved='".$achieved."' WHERE id=".$row['id'];
+                $common->db->update($sql);
+            
+            }else{
+                if(!empty($goalText)){
+                    $common->insert('daily_life_goals(user_id,goal,created_at)', '("'.$user_id.'","'.$goalText.'","'.$currentDate.'")');
+                }               
+            }
+        }
+    }
+    if(!empty($topGoalsData)){
+        //pullPreviousGoals($user_id,$type,$startDate,$endDate);
+        foreach ($topGoalsData as $key => $item) {
+            $id=(int)$item['id'];
+            $goalText= $common->db->link->real_escape_string($item['text']);
+            $achieved=(int)$item['checked'];            
+            $result=$common->db->select("SELECT * FROM daily_top_goals WHERE id='".$id."' AND user_id='".$user_id."' AND created_at='".$currentDate."'");
+             if($result->num_rows){
+                $row = $result->fetch_assoc();
+                $sql="UPDATE daily_top_goals SET achieved='".$achieved."' WHERE id=".$row['id'];
+                $common->db->update($sql);
+            
+            }else{
+                if(!empty($goalText)){
+                    $common->insert('daily_top_goals(user_id,goal,created_at)', '("'.$user_id.'","'.$goalText.'","'.$currentDate.'")');
+                }               
+            }
+        }
+    }
+    
+    }catch(Exception $exp){
+        echo $exp;    
+    }
+    
+   
+    
+    echo 'Update';
+   
+
 }
 
 if(isset($_POST['UpdateSuperGoals']) && ($_POST['UpdateSuperGoals'] == 'UpdateSuperGoals')) {
@@ -287,6 +482,156 @@ if(isset($_POST['DeleteGoals']) && ($_POST['DeleteGoals'] == 'DeleteGoals')) {
     }
     echo 'Deleted';
 }
+if(isset($_POST['DeleteDailyGoals']) && ($_POST['DeleteDailyGoals'] == 'DeleteDailyGoals')) {
+    $user_id = Session::get('user_id');
+    $goalIds=isset($_POST['goalIds'])? $_POST['goalIds']:[];
+    $type=$_POST['type'];
+    $currentDate=isset($_POST['currentDate'])? $_POST['currentDate']:date('Y-m-d h:i:s');     
+    if(!empty($goalIds)){
+        if($type=='top'){
+            $common->db->delete("DELETE FROM daily_top_goals WHERE daily_top_goals.id IN('".implode(",",$goalIds)."')");
+        }elseif($type=='life'){
+            $common->db->delete("DELETE FROM dailylifegoals WHERE id IN('".implode(",",$goalIds)."')");
+            $common->db->delete("DELETE FROM dailylifegoals_marked WHERE goal_id IN('".implode(",",$goalIds)."')");
+        }      
+    }
+    echo 'Deleted';
+}
+
+if(isset($_POST['action']) && ($_POST['action'] == 'UpdateDailyCommitmentAnswer')) {
+    $user_id = Session::get('user_id'); 
+    $selectedDate=isset($_POST['selectedDate'])? $_POST['selectedDate']:$today;
+    $table_name='daily_commitments_answers';
+    $goalId = $format->validation($_POST['goalId']);
+    $answer = (int)$format->validation($_POST['answer']);   
+
+    $resArr=['success'=>false,'goals'=>[],'message'=>""];
+    if($selectedDate<$today){
+        $resArr['message']='Not allowed in past.';
+    }else{
+        $result=$common->db->select("SELECT * FROM daily_commitments_answers WHERE goal_id='".$goalId."' AND user_id='".$user_id."' AND created_at='".$selectedDate."'");
+        
+        if($result && $result->num_rows>0){
+            echo $sql="UPDATE daily_commitments_answers SET answer='".$answer."' WHERE goal_id='".$goalId."' AND user_id='".$user_id."' AND created_at='".$selectedDate."'";
+            $common->db->update($sql);           
+            $resArr['success']=true;
+        }else{
+            $common->insert('daily_commitments_answers(user_id,goal_id,answer,created_at)', '("'.$user_id.'","'.$goalId.'","'.$answer.'","'.$selectedDate.'")');
+            $resArr['success']=true;
+        }
+
+    }    
+    echo json_encode($resArr);
+}
+if(isset($_POST['action']) && ($_POST['action'] == 'SaveNewDailyCommitments')) {
+    $user_id = Session::get('user_id');
+    $goals=isset($_POST['goals'])? $_POST['goals']:[];   
+    $seletedDate=isset($_POST['seletedDate'])? $_POST['seletedDate']:$today;
+    $table_name='daily_commitments_goals';
+    $addedGoals=[];
+    $resArr=['success'=>false,'goals'=>$addedGoals,'message'=>""];
+    if($seletedDate<$today){
+        $resArr['message']='Not allowed in past.';
+    }else{
+        foreach ($goals as $key => $goal) {        
+            if(!empty($goal)){
+                $goal= $common->db->link->real_escape_string($goal);
+                $common->insert($table_name.'(user_id,goal,created_at)', '("'.$user_id.'","'.$goal.'","'.$today.'")');
+                $id=$common->insert_id();
+                $addedGoals[$id]=$goal;
+            }        
+        }
+        $resArr['goals']=$addedGoals;
+        $resArr['message']='Added';
+        $resArr['success']=true;
+    }    
+    echo json_encode($resArr);
+}
+if(isset($_POST['action']) && ($_POST['action'] == 'UpdateDailyCommitment')) {
+    $user_id = Session::get('user_id');
+    
+    $achieved=isset($_POST['achieved'])? $_POST['achieved']: 0;
+    $goalText=empty($_POST['goalText'])? '': $_POST['goalText'];
+    $selectedDate=isset($_POST['selectedDate'])? $_POST['selectedDate']:date('Y-m-d');    
+    $goalId=isset($_POST['goalId'])? (int)$_POST['goalId']:0;
+    $edit=isset($_POST['edit'])? (int)$_POST['edit']:0;
+    $delete=isset($_POST['delete'])? (int)$_POST['delete']:0;
+    $goalIds=isset($_POST['goalIds'])? $_POST['goalIds']:[];
+    if(!empty($goalIds) && $delete==1){
+        foreach ($goalIds as $key => $gid) {
+           if(!empty($gid)){
+            $sql="UPDATE daily_commitments_goals SET deleted_at='".$today."' WHERE id='".$gid."' AND user_id='".$user_id."'";
+            $common->db->update($sql);           
+            $resArr['success']=true;
+           }
+        }
+    }else if(!empty($goalText) && !empty($goalId)){
+        $sql="UPDATE daily_commitments_goals SET goal='".$goalText."' WHERE id='".$goalId."' AND user_id='".$user_id."'";
+        $common->db->update($sql);           
+        $resArr['success']=true;
+
+    }
+    echo 'Updated';
+
+}
+if(isset($_POST['action']) && ($_POST['action'] == 'UpdateDailyCommitments')) {
+    $user_id = Session::get('user_id');
+    $dailyEvolution=empty($_POST['dailyEvolution'])? '': $_POST['dailyEvolution'];
+    $selectedDate=isset($_POST['selectedDate'])? $_POST['selectedDate']:date('Y-m-d');    
+  
+    $result=$common->db->select("SELECT * FROM daily_commitments_description WHERE user_id='".$user_id."' AND created_at='".$selectedDate."'");
+    if($result && $result->num_rows>0 ){
+        $sql="UPDATE daily_commitments_description SET description='".$dailyEvolution."' WHERE user_id='".$user_id."' AND created_at='".$selectedDate."'";
+        $common->db->update($sql);           
+        $resArr['success']=true;
+    }else{
+        $common->insert('daily_commitments_description(user_id,description,created_at)', '("'.$user_id.'","'.$dailyEvolution.'","'.$selectedDate.'")');
+        
+    }
+
+    
+    echo 'Updated';
+
+}
+
+
+if(isset($_POST['SaveNewDailyTopGoals']) && ($_POST['SaveNewDailyTopGoals'] == 'SaveNewDailyTopGoals')) {
+    $user_id = Session::get('user_id');
+    $goals=isset($_POST['goals'])? $_POST['goals']:[];   
+    $currentDate=isset($_POST['currentDate'])? $_POST['currentDate']:date('Y-m-d');
+    $table_name='daily_top_goals';
+    $addedGoals=[];
+    //pullPreviousGoals($user_id,$type,$startDate,$endDate);
+    foreach ($goals as $key => $goal) {
+        
+        if(!empty($goal)){
+            $goal= $common->db->link->real_escape_string($goal);
+            $common->insert($table_name.'(user_id,goal,created_at)', '("'.$user_id.'","'.$goal.'","'.$currentDate.'")');
+            $id=$common->insert_id();
+            $addedGoals[$id]=$goal;
+        }        
+    }
+        echo json_encode(['success'=>true,'goals'=>$addedGoals]);
+}
+if(isset($_POST['SaveNewDailyLifeGoals']) && ($_POST['SaveNewDailyLifeGoals'] == 'SaveNewDailyLifeGoals')) {
+    $user_id = Session::get('user_id');
+    $goals=isset($_POST['goals'])? $_POST['goals']:[];   
+    $currentDate=isset($_POST['currentDate'])? $_POST['currentDate']:date('Y-m-d');
+    $table_name='dailylifegoals';
+    $addedGoals=[];    
+    if($currentDate>=$today){
+        foreach ($goals as $key => $goal) {        
+            if(!empty($goal)){
+                $goal= $common->db->link->real_escape_string($goal);
+                $common->insert($table_name.'(user_id,goal,created_at)', '("'.$user_id.'","'.$goal.'","'.$today.'")');
+                $id=$common->insert_id();
+                $addedGoals[$id]=$goal;
+            }        
+        }
+    }    
+    echo json_encode(['success'=>true,'goals'=>$addedGoals]);
+}
+
 if(isset($_POST['saveNewGoals']) && ($_POST['saveNewGoals'] == 'saveNewGoals')) {
     $user_id = Session::get('user_id');
     $goals=isset($_POST['goals'])? $_POST['goals']:[];
@@ -309,6 +654,126 @@ if(isset($_POST['saveNewGoals']) && ($_POST['saveNewGoals'] == 'saveNewGoals')) 
     echo json_encode(['success'=>true,'goals'=>$addedGoals]);
 
 }
+
+if(isset($_POST['EmailSendDailyGoal']) && ($_POST['EmailSendDailyGoal'] == 'EmailSendDailyGoal')) {
+	$dailyImprovements = $format->validation($_POST['dailyImprovements']);
+    $dailyEvolution = $format->validation($_POST['dailyEvolution']); 
+    $toEmail = $format->validation($_POST['toEmail']);
+    $currentDate = date('Y-m-d',strtotime($format->validation($_POST['currentDate'])));
+    $user_id = Session::get('user_id');
+
+    
+    $dailyTopGoals=[];
+    $dailyLifeGoals=[];
+   
+
+    $result=$common->db->select("SELECT * FROM daily_top_goals WHERE user_id='".$user_id."' AND created_at='".$currentDate."'");
+    if($result){
+    while ($row = $result -> fetch_assoc()) {
+        $dailyTopGoals[]=$row;  
+    }
+    }
+
+    $result=$common->db->select("SELECT * FROM daily_life_goals WHERE user_id='".$user_id."' AND created_at='".$currentDate."'");
+    if($result){
+    while ($row = $result -> fetch_assoc()) {
+        $dailyLifeGoals[]=$row;  
+    }
+    }else{
+    $result=$common->db->select("SELECT * FROM daily_life_goals WHERE user_id='".$user_id."'  AND created_at<='".$currentDate."' ORDER BY created_at DESC LIMIT 0, 1");
+    if($result){
+        $row = $result -> fetch_assoc();
+        $result=$common->db->select("SELECT * FROM daily_life_goals WHERE user_id='".$user_id."' AND created_at='".$row['created_at']."'");
+        if($result){
+        while ($row = $result -> fetch_assoc()) {
+    
+            $dailyLifeGoals[]=$row;  
+        }
+        }
+    } 
+    }
+    
+    $topGoalsHtml='<ol>';
+    foreach ($dailyTopGoals as $goal) {
+      $topGoalsHtml.='<li>'.$goal['goal'].'</li>';    
+    }
+    $topGoalsHtml.='</ol>';
+
+    $lifeGoalsHtml='<ol>';
+    foreach ($dailyLifeGoals as $goal) {
+      $lifeGoalsHtml.='<li>'.$goal['goal'].'</li>';    
+    }
+    $lifeGoalsHtml.='</ol>';
+
+      $goalBodyHtml='<div style="width:600px; background-color:#FFF; margin:0 auto;">';
+      $goalBodyHtml.='<header style="background-color: #74be41;"><img src="https://mejorcadadia.com/users/assets/logo.png"></header>';
+      $goalBodyHtml.='<div style="padding:20px; background-color:#FFF; ">
+        <h2 style="text-transform: capitalize;">'.date('l F d , Y',strtotime($currentDate)).'</h2>  
+            
+        <div class="goals-area" style="margin-top:20px; margin-bottom:40px;"><h4>Objectives and priorities today: 7-Objetivos y Prioridades Hoy</h4> '.$topGoalsHtml.'</div>  
+        
+        <div class="description-area" style="margin-top:20px; margin-bottom:40px;"><h4>Resumen del Día. Las 7-Victorias o Triunfos Hoy</h4><div style="">'.html_entity_decode($dailyEvolution).'</div></div>      
+        <div class="goals-area" style="margin-top:20px; margin-bottom:40px;"><h4>Qué Podías haber hecho Mejor?</h4>'.$lifeGoalsHtml.'</div>  
+        <div class="description-area" style="margin-top:20px; margin-bottom:40px;"><h4>Tus 7-Objetivos y Prioridades Más Importantes para tu Vida:</h4><div style="">'.html_entity_decode($dailyImprovements).'</div></div>   
+      </div>';
+      $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both;"><span style="float:left;">Mejorcadadia.com</span>  <span style="float:right;">All rights reserved 2022</span></p> </footer></div>';
+
+    $AdminId = 0;
+    $Date=date('Y-m-d');
+    $result=$common->db->select("SELECT * FROM users WHERE id=".$user_id);
+    if($result){
+        $user = $result -> fetch_assoc();
+        //print_r($user);
+        if($user){
+            $Title="Victory-7";
+            $email = 'verify@mejorcadadia.com';
+            $email = $user['gmail'];
+            $from=$user['full_name'].'<'.$email.'>';
+            
+            $mail = new PHPMailer();
+            $mail->isSMTP();
+            
+            $mail->Host = "smtp.ionos.es";
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 587;
+            $mail->Username = "verify@mejorcadadia.com";
+            $mail->Password = "Ta$77!/8H7u/SX?";
+            $mail->Subject = $Title;
+            $mail->setFrom($email);
+            $mail->addReplyTo('verify@mejorcadadia.com');
+            $mail->addReplyTo($email);
+            $mail->isHTML(true);
+           // $mail->AddEmbeddedImage('../assets/logo.png', 'logoimg', '../assets/logo.png'); 
+            $mail->Body = '
+                    <html>
+                        <head>
+                            <title>'.$Title.'</title>
+                        </head>
+                        <body>
+                        <div style="background-color:#f3f2f0;">                        
+                            '.$goalBodyHtml.'
+                        </div>
+                        </body></html>';
+            $mail->AltBody = "This is the plain text version of the email content";
+            //$emailto='ehsan.ullah.tarar@gmail.com';
+            $mail->addAddress($toEmail);
+            if($mail->send()) {
+                    echo 'Insert';
+            } else {
+                    echo 'Failed to send mail!';
+            }
+            $mail->smtpClose();
+        }else{
+            echo 'Something is wrong!!';
+        }
+    }else{
+        echo 'Something is wrong!';
+    }   
+    
+    
+}
+
 if(isset($_POST['EmailSendSuperGoal']) && ($_POST['EmailSendSuperGoal'] == 'EmailSendSuperGoal')) {
 	$description = $format->validation($_POST['description']);
     $type = $format->validation($_POST['type']);
@@ -395,6 +860,106 @@ if(isset($_POST['EmailSendSuperGoal']) && ($_POST['EmailSendSuperGoal'] == 'Emai
     }   
     
     
+}
+
+if(isset($_POST['action']) && ($_POST['action'] == 'EmailSendDailyCommitment')) {
+	$description = $format->validation($_POST['dailyEvolution']);
+    $toEmail = $format->validation($_POST['toEmail']);
+    $selectedDate = $format->validation($_POST['selectedDate']);
+   
+    $user_id = Session::get('user_id');
+    if($selectedDate<$today){
+        $goalDate=$selectedDate;       
+      }else{
+        $goalDate=$today;
+      }
+    $goals=[];
+    $result=$common->db->select("SELECT * FROM daily_commitments_goals WHERE user_id='".$user_id."' AND created_at<='".$goalDate."' AND (deleted_at IS NULL OR deleted_at>'".$goalDate."')");
+    if($result){
+        while ($row = $result -> fetch_assoc()) {
+            $resultAns=$common->db->select("SELECT * FROM daily_commitments_answers WHERE user_id='".$user_id."' AND goal_id='".$row['id']."' AND created_at='".$selectedDate."'");
+            if($resultAns && $resultAns->num_rows>0){
+            $ansRow = $resultAns -> fetch_assoc();
+                $row['answer']=$ansRow['answer'];      
+            }else{
+                $row['answer']=0;
+            }
+            $goals[]=$row;  
+        }
+    }
+    
+    $goalsHtml='<ol>';
+    foreach ($goals as $goal) {
+      $goalsHtml.='<li>'.$goal['goal'].'</li>';   
+     }
+      $goalsHtml.='</ol>';
+      $goalBodyHtml='<div style="width:600px; background-color:#FFF; margin:0 auto;">';
+      $goalBodyHtml.='<header style="background-color: #74be41;"><img src="https://mejorcadadia.com/users/assets/logo.png"></header>';
+      $goalBodyHtml.='<div style="padding:20px; background-color:#FFF; ">
+        <h2 style="text-transform: capitalize;">Guerrero Diario </h2>
+        <p><label>'.date('l F d , Y',strtotime($selectedDate)).'</label></p>     
+        <div class="goals-area" style="margin-top:20px; margin-bottom:40px;">'.$goalsHtml.'</div>  
+        <div class="description-area" style="margin-top:20px; margin-bottom:40px;"><h4>Evaluación y Mejoramiento</h4><div style="">'.html_entity_decode($description).'</div></div>      
+      </div>';
+      $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both;"><span style="float:left;">Mejorcadadia.com</span>  <span style="float:right;">All rights reserved 2022</span></p> </footer></div>';
+
+    $AdminId = 0;
+    $Date=date('Y-m-d');
+    sendEmail($user_id,'Guerrero Diario',$toEmail,$goalBodyHtml);
+    
+    
+}
+
+function sendEmail($user_id,$Title,$toEmail,$body){
+    global $common;
+    $result=$common->db->select("SELECT * FROM users WHERE id=".$user_id);
+    if($result){
+        $user = $result -> fetch_assoc();
+        //print_r($user);
+        if($user){
+           
+            $email = 'verify@mejorcadadia.com';
+            $email = $user['gmail'];
+            $from=$user['full_name'].'<'.$email.'>';
+            $mail = new PHPMailer();
+            $mail->isSMTP();
+            $mail->Host = "smtp.ionos.es";
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 587;
+            $mail->Username = "verify@mejorcadadia.com";
+            $mail->Password = "Ta$77!/8H7u/SX?";
+            $mail->Subject = $Title;
+            $mail->setFrom($email);
+            $mail->addReplyTo('verify@mejorcadadia.com');
+            $mail->addReplyTo($email);
+            $mail->isHTML(true);
+           // $mail->AddEmbeddedImage('../assets/logo.png', 'logoimg', '../assets/logo.png'); 
+            $mail->Body = '
+                    <html>
+                        <head>
+                            <title>'.$Title.'</title>
+                        </head>
+                        <body>
+                        <div style="background-color:#f3f2f0;">                        
+                            '.$body.'
+                        </div>
+                        </body></html>';
+            $mail->AltBody = "This is the plain text version of the email content";
+            //$emailto='ehsan.ullah.tarar@gmail.com';
+            $mail->addAddress($toEmail);
+            if($mail->send()) {
+                    echo 'Insert';
+            } else {
+                    echo 'Failed to send mail!';
+            }
+            $mail->smtpClose();
+        }else{
+            echo 'Something is wrong!';
+        }
+    }else{
+        echo 'Something is wrong!';
+    }  
 }
 
 

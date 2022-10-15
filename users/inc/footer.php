@@ -134,41 +134,7 @@
     </script>
     <script src="<?=SITE_URL;?>/users/assets/bootstrap-datepicker.min.js"></script>
  
-    <script>        
-        $(function() {
-            if(typeof goalType !== 'undefined'){
-                var calOptions={
-                format:'dd-mm-yyyy',
-                autoclose:true,
-                calendarWeeks:true,
-                todayHighlight:true,
-                weekStart:1
-                };
-                if(goalType=='yearly'){
-                    calOptions={
-                        format: "yyyy",
-                        viewMode: "years", 
-                        minViewMode: "years"
-                    }
-                }
-                $('.datepicker').datepicker(calOptions)
-                .on('changeDate', function(e) {
-                    console.log('changeDate',e.date, e.format('yyyy-mm-dd'));
-                    if(goalType=='yearly'){
-                        window.location.href=SITE_URL+"/users/supergoals.php?type="+goalType+"&year="+e.format('yyyy');
-                    }else{
-                        window.location.href=SITE_URL+"/users/supergoals.php?type="+goalType+"&date="+e.format('yyyy-mm-dd');
-                    }
-                
-                    
-                });
-            }
-            
-          
-            
-        });
-      
-        </script>
+  
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
 </body>

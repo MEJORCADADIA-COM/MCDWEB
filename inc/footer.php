@@ -30,13 +30,15 @@
         });
         // google api login start
         function handleCredentialResponse(response) {
+            console.log('handleCredentialResponse',response);
             let type = 'google';
             let profile = response.credential;
             phpSignIn(profile, type);
         }
+       
         window.onload = function () {
             google.accounts.id.initialize({
-                client_id: "887364289703-4jju24o28dgn7mh41s3o97i5emucjupp.apps.googleusercontent.com",
+                client_id: "51609443177-jb3b6pl4onl6h54pnq11isn07bqhr563.apps.googleusercontent.com",
                 callback: handleCredentialResponse
             });
             google.accounts.id.renderButton(
@@ -137,7 +139,7 @@
             }
             if(errors == 0) {
             	$.ajax({
-                	url: "http://localhost/vault/raza/mejorcadadia.com/ajax/ajax.php",
+                	url: SITE_URL+"/ajax/ajax.php",
                         type: "POST",
                         data: {
                             email_registration: 'email_registration',
@@ -221,7 +223,7 @@
             }
 
             $.ajax({
-                url: "http://localhost/vault/raza/mejorcadadia.com/ajax/ajax.php",
+                url: SITE_URL+"/ajax/ajax.php",
                 type: "POST",
                 data: formData,
                 success: function (data) {
@@ -232,7 +234,7 @@
                     }
 
                     if (data == 'logged_in') {
-                        window.location.href = 'http://localhost/vault/raza/mejorcadadia.com/users/index.php';
+                        window.location.href = SITE_URL+'/users/dailygoals.php';
                     } else if (data == 'sent') {
                         $('#email_check_part').hide();
                         $('#email_verification_part').show();
@@ -279,7 +281,7 @@
                         },
                         success: function (data) {
                             if (data == 'logged_in') {
-                                window.location.href = 'https://mejorcadadia.com/users/index.php';
+                                window.location.href = 'https://mejorcadadia.com/users/dailygoals.php';
                             } else {
                                 $("#error_success_msg_verification").text(data);
                                 $("#error_success_msg_verification").removeAttr('class').addClass(

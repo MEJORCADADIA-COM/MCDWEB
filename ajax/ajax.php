@@ -80,7 +80,7 @@ if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'fa
     $type = $format->validation($_POST['type']);
     if (!empty($type)) {
         if ($type == 'google') {
-            $CLIENT_ID = "887364289703-4jju24o28dgn7mh41s3o97i5emucjupp.apps.googleusercontent.com";
+            $CLIENT_ID = "51609443177-jb3b6pl4onl6h54pnq11isn07bqhr563.apps.googleusercontent.com";
             $id_token = $_POST['credential'];
             $client = new Google_Client(['client_id' => $CLIENT_ID]);
             $payload = $client->verifyIdToken($id_token);
@@ -94,13 +94,9 @@ if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'fa
                 $google_checks = mysqli_fetch_assoc($google_check);
                 $type_check = $google_checks['type'];
                 if($google_checks['status'] == '1') {
-                    if ($type_check == 'google') {
-                      	Session::set('login', true);
-                        Session::set('user_id', $google_checks['id']);
-                        echo 'logged_in';
-                    } else {
-                        echo 'You have another account with this email!';
-                    }
+                    Session::set('login', true);
+                    Session::set('user_id', $google_checks['id']);
+                    echo 'logged_in';
                 } else {
                     echo 'Your account has been blocked!';
                 }
@@ -130,13 +126,9 @@ if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'fa
                 $facebook_checks = mysqli_fetch_assoc($facebook_check);
                 $type_check = $facebook_checks['type'];
                 if($facebook_checks['status'] == '1') {
-                    if ($type_check == 'facebook') {
-                      	Session::set('login', true);
+                   Session::set('login', true);
                     	Session::set('user_id', $facebook_checks['id']);
                         echo 'logged_in';
-                    } else {
-                        echo 'You have another account with this email!';
-                    }
                 } else {
                     echo 'Your account has been blocked!';
                 }
