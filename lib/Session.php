@@ -2,14 +2,10 @@
 
 class Session {
 	public static function init() {
-		if (version_compare(phpversion(), '5.4.0', '<')) {
-			if (session_id() == '') {
-				session_start();
-			}
-		} else {
-			if (session_status() == PHP_SESSION_NONE) {
-				session_start();
-			}
+		if (session_status() == PHP_SESSION_NONE) {
+			$lifetime=6000;
+			session_set_cookie_params($lifetime);
+			session_start();
 		}
 	}
 
@@ -25,9 +21,10 @@ class Session {
 		}
 	}
 	public static function checkSession() {
+		
 		self::init();
 		if (self::get('login') == false) {
-			session_destroy();
+			
 			header("Location: https://mejorcadadia.com/");
 		}
 	}
@@ -38,6 +35,7 @@ class Session {
 		}
 	}
 	public static function destroy() {
+		
 		session_destroy();
 		header("Location: https://mejorcadadia.com/");
 	}
@@ -45,6 +43,7 @@ class Session {
   	public static function adminSession() {
 		self::init();
 		if (self::get('admin_login') == false) {
+			
 			session_destroy();
 			header("Location: https://mejorcadadia.com/admin/login.php");
 		}
@@ -56,11 +55,13 @@ class Session {
 		}
 	}
 	public static function adminDestroy() {
+		
 		session_destroy();
 		header("Location: https://mejorcadadia.com/admin/login.php");
 	}
   
 	public static function unset($key) {
+		
 		unset($_SESSION[$key]);
 	}
 }

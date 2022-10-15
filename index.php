@@ -3,42 +3,47 @@
 //Session::checkLogin();
 ?>
 
-	<img src="assets/images/bg.svg" alt="bg-image" class="bg_image">
+	<img src="assets/images/5-mejorcadadia-welcome-negro-better.png" alt="bg-image" class="bg_image">
 	<section class="home-main">
       
     <!-- Button trigger modal -->
-    <div class="nav" style="display: flex;align-items: center;justify-content: flex-end;">
+    <div class="nav" style=" padding-left:20px; display: flex;align-items: center;justify-content: space-between;">
+        
+    <div class="nav-brand desktop-only"><img class="desktop" src="assets/images/mcdf-01.png" alt="logo"></div>
+            <div class="nav-brand mobile-only"><a class="mobile-blog-btn" href="https://blog.mejorcadadia.com/" style="background-color: #FF007A; display:inline-block;">Blog</a></div>
             <div class="responsive_nav">
                 <div class="responsive_view_text">
                     <div class="res_logo">
-                        <img src="assets/images/logo.png" alt="logo">
+                        <img class="mobile" src="assets/images/mcdf-01.png" alt="logo">
+                        <img class="desktop" src="assets/images/logo.png" alt="logo">
                     </div>
                 </div>
-                <a href="https://blog.mejorcadadia.com/" style="background-color: #FF007A;">Blog</a>
+                <a class="blog-btn desktop-only" href="https://blog.mejorcadadia.com/" style="background-color: #FF007A; display:inline-block;">Blog</a>
               	<?php
               	if (Session::get('login') == false) {
                 ?>
               	<button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#loginModel"
                     style="background-color: #1e01ff;">
-                    Log in
+                    Accede
                 </button>
                 <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#registration"
                     style="background-color: #e60023;">
-                    Sign up
+                    Regístrate
                 </button>
               	<?php
                 }
               	?>
-            </div>
-      		<?php
+                <?php
             if (Session::get('login') == true) {
             ?>
-      		<a href="https://mejorcadadia.com/users/index.php" class="profile" title="profile">
+      		<a href="https://mejorcadadia.com/users/dailygoals.php" class="profile" title="profile" style="display:inline-block;">
                 <img src="https://s3-us-west-2.amazonaws.com/harriscarney/images/150x150.png" alt="profile image">
             </a>
             <?php
             }
             ?>
+            </div>
+      		
         </div>
       
       
