@@ -40,7 +40,6 @@ $profile_info = $common
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mejorcadadia</title>
-    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css'>
     <script async defer crossorigin="anonymous"
@@ -53,27 +52,7 @@ $profile_info = $common
       var SITE_URL='<?=SITE_URL; ?>';
       </script>
     <style>
-        body {
-    font-family: 'Montserrat';
-}
-        @media screen and (max-width: 767px) {
-            .navbar-brand{order:2;}
-            .navbar-brand img{width:78px !important;}
-            .brand-info-bar{text-align:center;}
-            .brand-info-bar .heading1{margin-bottom:5px;}
-            .admin-dashbord .navbar{align-items: baseline;}
-            .goals-area {
-                padding: 20px 0px;
-            }
-            .migualtitle {
-                font-size: 10px;
-                color: #ffffff;
-                margin-right: 0rem!important;
-            }
-            .card-header{font-size:1.1rem;}
-            .goals-area ol li{font-size:1rem !important; min-height: 30px; }
-            .goals-area{padding-right:5px !important;}
-        }
+        
         @media screen and (max-width: 480px) {
             .dropdown-item:focus, .dropdown-item:hover {   
                 color: #738297;
@@ -83,6 +62,7 @@ $profile_info = $common
                 font-size: 12px; 
                 font-family: cursive; 
                 color: #ffffff;
+                margin-bottom: -40px;
             }
 
             .navselect {
@@ -90,12 +70,12 @@ $profile_info = $common
                 display: flex;
                 flex-wrap: nowrap;
                 justify-content: space-between;
-                align-items: baseline;
+                align-items: center;
                 align-content: center;
             }
 
             .migualtitle {
-                font-size: 10px;
+                font-size: 8px;
                 color: #ffffff;
                 margin-right: 0rem!important;
             }
@@ -119,7 +99,8 @@ $profile_info = $common
             .heading1 {
                 font-size: 12px; 
                 font-family: cursive; 
-                color: #FFF;
+                color: #ffffff;
+                margin-bottom: -40px;
             }
 
             .navselect {
@@ -156,7 +137,8 @@ $profile_info = $common
             .heading1 {
                 font-size: 34px; 
                 font-family: cursive; 
-                color: #FFF;
+                color: #ffffff;
+                margin-bottom: -40px;
             }
 
             .navselect {
@@ -193,7 +175,8 @@ $profile_info = $common
             .heading1 {
                 font-size: 34px; 
                 font-family: cursive; 
-                color: #FFF;
+                color: #ffffff;
+                margin-bottom: -40px;
             }
 
             .navselect {
@@ -230,7 +213,8 @@ $profile_info = $common
             .heading1 {
                 font-size: 34px; 
                 font-family: cursive; 
-                color: #FFF;
+                color: #ffffff;
+                margin-bottom: -40px;
             }
 
             .navselect {
@@ -279,70 +263,28 @@ $profile_info = $common
                 height:auto;
             }
         }
-        .custom-toggler, .custom-toggler:active{
-            border:none;
-        }
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 1)' stroke-width='4' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E") !important;
-            width: 1.8em;
-            height: 1.8em;
-        }
-        .offcanvas .navbar-nav .nav-link.active{
-            font-weight:bold; color:#FFF;
-        }
-        
-        .offcanvas li a{ color:#FFF; padding:5px 10px; font-size:1.2rem;}
-        .offcanvas li a:active, .offcanvas li a:hover{color:#FFF;}
-        .offcanvas .submenu li{list-style:none;}
-        .offcanvas a.profile-icon{display:inline-block; width:50px; }
-        .offcanvas a.profile-icon img{width:48px; height:48px; border-radius:50%;}
-        .offcanvas .offcanvas-header{background:#74be41; color:#FFF};
-        .desktop-left-sidebar.sidebar ul, .desktop-left-sidebar.sidebar li  {list-style:none !important; }
-        .desktop-left-sidebar.sidebar .nav-link{color:#FFF; font-size: 16px; }
-       .sidebar ul.submenu{list-style:none; padding-left:1rem;}
-        .row main{padding-left:0; padding-right:0};
-        
-        
+        #navbarMainMobile li a{ color:#FFF; padding:5px 10px; font-size:1rem;}
+        #navbarMainMobile .submenu li{list-style:none;}
     </style>
 </head>
 <body>
 <section class="admin-dashbord" >
         <nav class="navbar header-navbar navbar-dark sticky-top flex-md-nowrap pb-2 navselect">
-        
-                <a class="btn d-block d-md-none custom-toggler" data-bs-toggle="offcanvas" href="#offcanvasWithBothOptions" role="button" aria-controls="offcanvasWithBothOptions">
-                <span class="navbar-toggler-icon"></span>
-                </a>    
-        <a class="navbar-brand mr-0 py-0" href="https://mejorcadadia.com/">
+            <a class="navbar-brand col-sm-3 col-md-2 mr-0 py-0" href="https://mejorcadadia.com/">
                 <img src="https://mejorcadadia.com/users/assets/logo.png" alt="image" width="100px">
             </a>
-            <h1 class="heading1 d-none d-sm-block">Making Every Day Extraordinary</h1>
+            <h1 class="heading1">Making Ever Day Extraordinary</h1>
             <!-- Example single danger button -->
-            <div class="brand-info-bar">
-                <h1 class="heading1 d-block d-md-none">Making Every Day Extraordinary</h1>
+            <div>
                 <h1 class="migualtitle">By Miguel De La Fuente</h1>
+                <button class="navbar-toggler d-block d-sm-none pull-right" style=" border:none;" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMainMobile" aria-controls="navbarMainMobile" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
                 
-
+                
             </div>
         </nav>
-        <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel" style="background-color: #1076be;">
-            <div class="offcanvas-header">
-               
-                <h5 class="offcanvas-title">
-                <a href="#" class="profile-icon">
-                    <?php if(!empty($user_infos['image'])){
-                        $profileIcon=$user_infos['image'];
-                    }else{
-                        $profileIcon='https://s3-us-west-2.amazonaws.com/harriscarney/images/150x150.png';
-                    }
-                    $profileIcon='https://s3-us-west-2.amazonaws.com/harriscarney/images/150x150.png'; ?>
-                    <img  src="<?=$profileIcon;?>" alt="image">
-                </a>
-                    <?=$user_infos['full_name']?>
-                </h5>
-                
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
+        <div class="collapse navbar-collapse" id="navbarMainMobile" style="background-color: #1076be;">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="<?=SITE_URL;?>">Home</a>
@@ -352,11 +294,6 @@ $profile_info = $common
                         MCD-JOURNAL
                     </a>
                     <ul class="submenu">
-                         <li class="nav-item" >
-                            <a class="nav-link" href="cronovida.php" role="button" >
-                            Cronovida
-                            </a>
-                        </li>
                         <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button">Victory-7  </a> </li>
 
                         <li class="nav-item">
@@ -364,12 +301,17 @@ $profile_info = $common
                             Guerrero Diario
                             </a>
                         </li>
-                        
-                        <li class="nav-item">
-                                <a class="nav-link dropdown-toggle" href="#SuperObjetivos" id="navbarDropdownsupergoals" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="SuperObjetivos" >
+                        <li class="nav-item" >
+                            <a class="nav-link" href="cronovida.php" role="button" >
+                            Cronovida
+                            </a>
+                        </li>
+            
+            <li class="nav-item">
+                                <a class="nav-link dropdown-toggle " href="#" id="navbarDropdownsupergoals" role="button" data-bs-toggle="dropdown" aria-expanded="false" >
                                 SuperObjetivos
                                 </a>
-                                <ul id="SuperObjetivos" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdownsupergoals" style="margin-left:1rem;" >
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownsupergoals" style="background-color: #0158a3; padding: 0rem 0.75rem; width: 100%;border: 0px;">
                                     <li class="nav-item"><a class="nav-link <?= $goalType == 'weekly' ? ' active' : ''; ?>" href="<?=SITE_URL;?>/users/supergoals.php" >Semanal</a></li>    
                                     <li class="nav-item"><a class="nav-link <?= $goalType == 'monthly' ? ' active' : ''; ?>" href="<?=SITE_URL;?>/users/supergoals.php?type=monthly">Mensual</a></li>
                                     <li class="nav-item"><a class="nav-link <?= $goalType == 'quarterly' ? ' active' : ''; ?>" href="<?=SITE_URL;?>/users/supergoals.php?type=quarterly">Trimestral</a></li>
@@ -377,15 +319,13 @@ $profile_info = $common
                                     <li class="nav-item"><a class="nav-link <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?=SITE_URL;?>/users/supergoals.php?type=lifetime">De por Vida</a></li>
                                 </ul>
                             </li>
-            
-  
                         <li class="nav-item">
-                            <a class="nav-link dropdown-toggle" href="#dentletter" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false" >
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" >
                                 Cartas Eternidad
                             </a>
-                            <ul id="dentletter" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #0158a3; padding: 0rem 0.75rem; width: 100%;border: 0px;border-radius: 0px;top: -2px;">
                                 <li class="nav-item"><a class="nav-link<?= $path == 'index.php' ? ' active' : ''; ?>" href="https://mejorcadadia.com/users/index.php" id="navbarDropdown" >Tablero</a></li>    
-                                <li class="nav-item"><a  class="nav-link" href="https://mejorcadadia.com/users/notebook.php">Escribe Carta</a></li>
+                                <li><a  class="dropdown-item" href="https://mejorcadadia.com/users/notebook.php">Escribe Carta</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -394,84 +334,59 @@ $profile_info = $common
                 <a class="nav-link" href="https://blog.mejorcadadia.com">MCD BLOG</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="<?=SITE_URL;?>/users/profile.php">Perfil</a>
+                <a class="nav-link" href="<?=SITE_URL;?>/users/profile.php">Profile</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="<?=SITE_URL;?>/users/logout.php" onclick="return confirm('Are you sure to logout?');">Salir</a>
+                <a class="nav-link" href="<?=SITE_URL;?>/users/logout.php" onclick="return confirm('Are you sure to logout?');">Logout</a>
                 </li>
                 
                 
             </ul>
             </div>
-        </div>
-        
       
         <div class="container-fluid">
             <div class="row">
-                
-                <nav class="col-md-2 d-none d-md-block sidebar desktop-left-sidebar" style="top: 89px;position: inherit;">
+                <nav class="col-md-2 d-none d-md-block sidebar" style="top: 89px;width: 12%;position: inherit;">
                     <h1 style="color: #ffffff; font-size: 17px; text-align: center; background-color: #fdaf40; padding: 7px; margin: 0px;">Menu</h1>
                     <div class="sidebar-sticky" style="padding-top: 0px;width: 100%;background-color: #1076be;">
-                       
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?=SITE_URL;?>">Home</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link" href="#"  role="button">
-                                MCD-JOURNAL
+                        <ul class="nav flex-column">
+                        <li class="nav-item" style="list-style: none;">
+                            <a class="nav-link" href="dailygoals.php" role="button"  style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">
+                            Victory-7
                             </a>
-                            <ul class="submenu">
-                                <li class="nav-item" >
-                                    <a class="nav-link" href="cronovida.php" role="button" >
-                                    Cronovida
-                                    </a>
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button">Victory-7  </a> </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" href="dailycommitments.php" role="button" >
-                                    Guerrero Diario
-                                    </a>
-                                </li>
-                                
-                                <li class="nav-item">
-                                        <a class="nav-link dropdown-toggle" href="#SuperObjetivos" id="navbarDropdownsupergoals" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="SuperObjetivos" >
-                                        SuperObjetivos
-                                        </a>
-                                        <ul id="SuperObjetivos" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdownsupergoals" style="margin-left:1rem;" >
-                                            <li class="nav-item"><a class="nav-link <?= $goalType == 'weekly' ? ' active' : ''; ?>" href="<?=SITE_URL;?>/users/supergoals.php" >Semanal</a></li>    
-                                            <li class="nav-item"><a class="nav-link <?= $goalType == 'monthly' ? ' active' : ''; ?>" href="<?=SITE_URL;?>/users/supergoals.php?type=monthly">Mensual</a></li>
-                                            <li class="nav-item"><a class="nav-link <?= $goalType == 'quarterly' ? ' active' : ''; ?>" href="<?=SITE_URL;?>/users/supergoals.php?type=quarterly">Trimestral</a></li>
-                                            <li class="nav-item"><a class="nav-link <?= $goalType == 'yearly' ? ' active' : ''; ?>" href="<?=SITE_URL;?>/users/supergoals.php?type=yearly">Anual</a></li>
-                                            <li class="nav-item"><a class="nav-link <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?=SITE_URL;?>/users/supergoals.php?type=lifetime">De por Vida</a></li>
-                                        </ul>
-                                    </li>
-                    
-        
-                                <li class="nav-item">
-                                    <a class="nav-link dropdown-toggle" href="#dentletter" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false" >
-                                        Cartas Eternidad
-                                    </a>
-                                    <ul id="dentletter" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
-                                        <li class="nav-item"><a class="nav-link <?= $path == 'index.php' ? ' active' : ''; ?>" href="https://mejorcadadia.com/users/index.php" id="navbarDropdown" >Tablero</a></li>    
-                                        <li class="nav-item"><a  class="nav-link" href="https://mejorcadadia.com/users/notebook.php">Escribe Carta</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
                         </li>
+                        <li class="nav-item" style="list-style: none;">
+                <a class="nav-link" href="dailycommitments.php" role="button"  style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">
+                Guerrero Diario
+                </a>
+            </li>       
+            <li class="nav-item" style="list-style: none;">
+                <a class="nav-link" href="cronovida.php" role="button"  style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">
+                Cronovida
+                </a>
+            </li>
+            <li class="nav-item">
+                                <a class="nav-link dropdown-toggle " href="#" id="navbarDropdownsupergoals" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">
+                                SuperObjetivos
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownsupergoals" style="background-color: #0158a3; padding: 0rem 0.75rem; width: 100%;border: 0px;">
+                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'weekly' ? ' active' : ''; ?>" href="<?=SITE_URL;?>/users/supergoals.php" >Semanal</a></li>    
+                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'monthly' ? ' active' : ''; ?>" href="<?=SITE_URL;?>/users/supergoals.php?type=monthly">Mensual</a></li>
+                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'quarterly' ? ' active' : ''; ?>" href="<?=SITE_URL;?>/users/supergoals.php?type=quarterly">Trimestral</a></li>
+                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'yearly' ? ' active' : ''; ?>" href="<?=SITE_URL;?>/users/supergoals.php?type=yearly">Anual</a></li>
+                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?=SITE_URL;?>/users/supergoals.php?type=lifetime">De por Vida</a></li>
+                                </ul>
+                            </li>
                         <li class="nav-item">
-                        <a class="nav-link" href="https://blog.mejorcadadia.com">MCD BLOG</a>
-                        </li>
-                        <li class="nav-item">
-                        <a class="nav-link" href="<?=SITE_URL;?>/users/profile.php">Perfil</a>
-                        </li>
-                        <li class="nav-item">
-                        <a class="nav-link" href="<?=SITE_URL;?>/users/logout.php" onclick="return confirm('Are you sure to logout?');">Salir</a>
-                        </li>
-                        
-                        
-                    </ul>
-                    
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">
+                                    Cartas Eternidad
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #0158a3; padding: 0rem 0.75rem; width: 100%;border: 0px;">
+                                    <li class="nav-item"><a class="nav-link<?= $path == 'index.php' ? ' active' : ''; ?>" href="https://mejorcadadia.com/users/index.php" id="navbarDropdown" style="padding: 0.5rem 0.75rem 0.2rem 0.75rem;font-size: 16px;color: #ffffff;">Tablero</a></li>    
+                                    <li><a style="border-left: 5px solid transparent; color: #738297; padding: 0.2rem 0.75rem; font-size: 14px;font-size: 16px;color: #ffffff;" class="dropdown-item" href="https://mejorcadadia.com/users/notebook.php">Escribe Carta</a></li>
+                                </ul>
+                            </li>
+                            
+                        </ul>
                     </div>
                 </nav>

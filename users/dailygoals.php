@@ -202,7 +202,28 @@ if($result){
       .prev-arrow i,.next-arrow i{color:#FFF; font-size:1.8rem;}
       .projects-header p{font-size:1.1rem;}
       .goal-list textarea{ width:100%;}
-      
+      #section_box_wrapper{
+                display:none;
+              }
+              #section_box_wrapper .section_box{
+                margin-bottom:20px;
+              }
+              #section_box_wrapper .section_box .section_header{
+                background:#fef200;
+                padding:10px;
+                
+              }
+              #section_box_wrapper .section_box .section_header h2{
+                margin-bottom:0;
+                color:#202020;
+              }
+              #section_box_wrapper .section_box .section_header small{
+                font-size:1rem;
+              }
+
+              #section_box_wrapper .section_box .section_content{
+                padding:1rem;
+              }
       @media print {       
        .goals-area ol li.hidden{display:list-item;}
       }
@@ -218,21 +239,28 @@ if($result){
       @media screen and (max-width: 767px) {
         h2.maintitle{font-size:1rem;}
         .projects-header h2{font-size:1.1rem;}
-        .goals-area ol li{padding-right:2rem; min-height:56px;}
+        .goals-area ol li{padding-right:2rem; }
         #goals-area{padding: 20px 0px;}
         .chart-btn{right:0; top:calc(10% + 30px);}
         .goals-area ol li input{top:10%;}
-     
-        .projects-header{padding:0 0 20px 0;}
+        
+        .projects-header{padding:10px 20px;}
+        #section_box_wrapper .section_box .section_header{padding:5px;}
+        #section_box_wrapper .section_box .section_content{padding:5px;}
       }
+      .admin-dashbord{
+        background:#ed008c;
+      }
+      .projects{border:none;}
     </style>
+    
 
     <?php 
     
 
     
     ?>
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 my-3 maincontonent">
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 my-3">
       <div class="projects mb-4" style="background-color: #ed008c;">
         <div class="projects-inner">
         <header class="projects-header" style="">
@@ -277,7 +305,7 @@ $dateObj = DateTime::createFromFormat("d/m/Y", $string);
             </div>
             <div class="cardd mb-4" id="section-1" >
                
-                <div class="goals-area" id="top-goals-area" style="display:block; padding:30px 20px;">
+                <div class="goals-area" id="top-goals-area" style="display:block; ">
                   <ol id="daily-top-goal-list" class="goal-list">
                     <?php foreach($dailyTopGoals as $key=>$item):  ?>
                       <li class="<?=($key>9)? 'hidden more':'';?>" id="top-goal-list-item-<?=$item['id']; ?>">
@@ -302,7 +330,7 @@ $dateObj = DateTime::createFromFormat("d/m/Y", $string);
                 </div>
             </div>
             <div class="cardd mb-4" id="section-2" style="padding:0 5px;">
-                <h5 class="card-header" style="color:#FFF; font-size:1.5rem; margin:5px 0;">Resumen del día. Las 7-Victorias o Triunfos Hoy:</h5>
+                <h5 class="card-header" style="color:#FFF;  margin:5px 0;">Resumen del día. Las 7-Victorias o Triunfos Hoy:</h5>
                 <div class="card-body">
                 <div class="form-group">
                     <div class="description-area">                     
@@ -313,7 +341,7 @@ $dateObj = DateTime::createFromFormat("d/m/Y", $string);
                 </div>
             </div>
             <div class="cardd mb-4" id="section-3" style="padding:0 5px;">
-                <h5 class="card-header" style="color:#FFF; font-size:1.5rem; margin:5px 0;">Qué Podías haber hecho Mejor?: </h5>
+                <h5 class="card-header" style="color:#FFF; margin:5px 0;">Qué Podías haber hecho Mejor?: </h5>
                 
                 <div class="card-body">
                 <div class="form-group">
@@ -333,7 +361,7 @@ $dateObj = DateTime::createFromFormat("d/m/Y", $string);
             </div>
             <div class="cardd" id="section-4">
              
-                <div class="goals-area" id="life-goals-area" style="display:block; padding:30px 20px;">
+                <div class="goals-area" id="life-goals-area" style="display:block;">
                 <ol id="daily-life-goal-list" class="goal-list">
                     <?php foreach($dailyLifeGoals as $key=>$item):  ?>
                       <li class="<?=($key>9)? 'hidden more':'';?>" id="life-goal-list-item-<?=$item['id']; ?>">
@@ -359,7 +387,42 @@ $dateObj = DateTime::createFromFormat("d/m/Y", $string);
             </div>            
               
              
+            <?php
+            $result=$common->db->select("SELECT * FROM victory7boxes WHERE user_id='".$user_id."' AND created_at<='".$goalDate."'");
+            $boxes=[
+              "box1"=>['id'=>1,'title'=>'SuperAfirmacion','subtitle'=>'Afirmación para tu Mejor Versión','body'=>''],
+              "box2"=>['id'=>2,'title'=>'VisualFit','subtitle'=>'Imagenes Exitosas de ti','body'=>''],
+              "box3"=>['id'=>3,'title'=>'SuperImagen','subtitle'=>'1-Imagen de 1 Gran Exito','body'=>''],
+              "box4"=>['id'=>4,'title'=>'SuperMotivación','subtitle'=>'Lo qué Más te Motiva','body'=>''],
+              "box5"=>['id'=>5,'title'=>'SuperInspiration','subtitle'=>'Ideas Que te Inspiran','body'=>''],
+              "box6"=>['id'=>6,'title'=>'SuperCreencias','subtitle'=>'Creencias que Más te Empoderen','body'=>''],
+              "box7"=>['id'=>7,'title'=>'SuperPreguntas','subtitle'=>'¿Cómo Puedo Mejorar Ahora?','body'=>''],
+              "box8"=>['id'=>8,'title'=>'SuperEntusiasmo','subtitle'=>'Que Estoy Más Entusiasmado Ahora?','body'=>''],
+              "box9"=>['id'=>9,'title'=>'SuperAcuerdos','subtitle'=>'Acuerdos y Promesas','body'=>''],
+              "box10"=>['id'=>10,'title'=>'SUPERVISION Ahora','subtitle'=>'La Visión Más Espectacular','body'=>''],
               
+            ];
+            if($result){
+              while ($row = $result -> fetch_assoc()) {                
+                $boxes["box".$row['box']]['body']=$row['body'];  
+              }
+            }
+            //print_r($boxes);
+
+            ?>
+
+            <div id="section_box_wrapper" class="section_box_wrapper">
+                <?php foreach($boxes as $k=>$bitem): ?>
+                  <div class="section_box" id="section_box_<?=$bitem['id']?>">
+                        <div class="section_header"><h2><?=$bitem['title']?></h2> <small><?=$bitem['subtitle']?></small></div>
+                        <div class="section_content"><textarea name="box[<?=$bitem['id']?>]" data-box="<?=$bitem['id']?>" class="LetterApplication boxitem"><?=$bitem['body']?></textarea></div>
+                    </div>
+                <?php endforeach; ?>
+
+                    
+            </div>
+            <div class="load-btn-wrapper mt-5 mb-5 text-center"><button class="btn btn-lg btn-warning" id="btnLoadMoreTenSections">Mostrar más</button></div>
+
               <div style="display: none;" id="show">
               <div style="padding: 15px; border-radius: 7px; margin-bottom: 15px;display: flex; align-content: center; justify-content: space-between;align-items: center;" id="error_success_msg_verification" class="msg">
                 <p id="success_msg_verification_text" style="font-size: 14px; font-weight: 600;"></p><button style="border: 0px; background: transparent; font-size: 18px; font-weight: 800;align-items: center;" id="close">x</button>  
@@ -426,6 +489,32 @@ $dateObj = DateTime::createFromFormat("d/m/Y", $string);
       tinymce.init({
         selector: 'textarea.LetterApplication',
         height: 600,
+        setup: function(editor) {
+          editor.on('Change', function(e) {
+            if(e.target.targetElm.classList.contains('boxitem')){
+              if(e.target.targetElm.dataset.box){
+                let box=e.target.targetElm.dataset.box;
+                let body=this.getContent();
+                $.ajax({
+                  url: SITE_URL+"/users/ajax/ajax.php",
+                  type: "POST",
+                  data: {
+                    action: 'SaveVictory7Box',
+                    box:box,
+                    currentDate:currentDate,
+                    body:body
+                  },
+                  success: function (data) {                
+                    var jsonObj=JSON.parse(data);
+                    console.log('data',data,jsonObj);
+                      
+                  }
+              });
+              }
+              
+            }
+          });
+        },
         plugins: [
           'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
           'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
@@ -433,6 +522,7 @@ $dateObj = DateTime::createFromFormat("d/m/Y", $string);
           'autosave','codesample','directionality','emoticons','importcss',
           'nonbreaking','pagebreak','quickbars','save','template','visualchars'
         ],
+
         toolbar: 'paste | undo redo | blocks | ' +
         'bold italic backcolor | alignleft aligncenter ' +
         'alignright alignjustify | bullist numlist outdent indent | ' +
@@ -522,6 +612,7 @@ $dateObj = DateTime::createFromFormat("d/m/Y", $string);
           });
         }
       }
+      
       function hasFilledNewGoals(classname){
         var filled=true;
         newgoalsInput=[];
@@ -600,6 +691,24 @@ $dateObj = DateTime::createFromFormat("d/m/Y", $string);
         
         
       }
+      
+      $(document).on('click','#btnLoadMoreTenSections',function(e){
+        e.preventDefault();
+        if($(this).text()=='Mostrar más'){
+            $(this).text('Mostrar Menos');
+            $("#section_box_wrapper").show();
+        }else{
+            $(this).text('Mostrar más');
+            $("#section_box_wrapper").hide();
+        }
+       
+      });
+
+      $(document).on('change keyup paste','#section_box_wrapper textarea',function(e){
+        console.log($(this));
+      });
+
+
       $(document).on('click','.edit-goal-btn',function(e){
         e.preventDefault();
         var sectionType=$(this).data('type');
@@ -666,10 +775,8 @@ $dateObj = DateTime::createFromFormat("d/m/Y", $string);
                    
                 }
             }
-        });
-          
-        }
-      
+        });          
+        }      
        
       });
       $(document).on('click','.delete-goal-btn',function(e){

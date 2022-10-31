@@ -40,6 +40,31 @@ if(!empty($timezoneOffset)){
   $time=strtotime($timeHourString.' hours');
 }
 $today = date("Y-m-d", $time);
+if(!empty($_POST) && !empty($_POST['saveDinstyLetter'])){ 
+    $UserId=$user_id = Session::get('user_id');
+    $letterid=isset($_REQUEST['id'])? (int) $_REQUEST['id']:0;
+    $date=isset($_POST['date'])? date('Y-m-d',strtotime($_POST['date'])):'';
+    $email=isset($_POST['email'])? $_POST['email']:'';
+    $emailto=isset($_POST['emailto'])? $_POST['emailto']:'';
+    $Title=isset($_POST['Title'])? $_POST['Title']:'';
+    $LetterApplication=isset($_POST['LetterApplication'])? $_POST['LetterApplication']:'';
+    if(!empty($date) && !empty($email) && !empty($emailto) && !empty($Title)){
+      
+      if(empty($letterid)){
+        $AdminId=0;
+        $LetterApplication_insert = $common->insert("`letterapplication`(`email`,`emailto`,`date`,`title`,`letterapplicationtext`,`UserId`,`AdminId`)", "('$email','$emailto','$date','$Title','$LetterApplication','$UserId','$AdminId')");
+        $letterid=$common->insert_id();    
+              
+      }else{
+        $sql="UPDATE letterapplication SET letterapplicationtext='".$LetterApplication."',  email='".$email."', emailto='".$emailto."', date='".$date."', title='".$Title."'  WHERE id=".$letterid;
+        $common->db->update($sql);
+      }
+      header('Location: '.SITE_URL.'/users/notebook.php?id='.$letterid) ;
+        exit; 
+  
+    }
+  
+   }
 if(isset($_POST['LetterApplicationCheck']) && ($_POST['LetterApplicationCheck'] == 'LetterApplicationCheck')) {
 	$LetterApplication = $format->validation($_POST['LetterApplication']);
     if (isset($LetterApplication)) {
@@ -54,59 +79,58 @@ if(isset($_POST['EmailSendCheck']) && ($_POST['EmailSendCheck'] == 'EmailSendChe
 	$LetterApplication = $format->validation($_POST['LetterApplication']);
     $Title = $format->validation($_POST['Title']);
     $Date = $format->validation($_POST['Date']);
-    $UserId = Session::get('user_id');
+    $Date=date('Y-m-d',strtotime($Date));
+    $UserId=$user_id = Session::get('user_id');
     $AdminId = 0;
     $email = $format->validation($_POST['email']);
     $emailto = $format->validation($_POST['emailto']);
+    $letterId = isset($_POST['id'])? (int)$_POST['id']:0;
+    $resArr=['success'=>false,'message'=>'error','data'=>[]];
+    $resArr['new']=false; 
+    $resArr['letterId']=$letterId;
     if (isset($email)) {
         if (isset($LetterApplication)) {
-            $LetterApplication_insert = $common->insert("`letterapplication`(`email`,`emailto`,`date`,`title`,`letterapplicationtext`,`UserId`,`AdminId`)", "('$email','$emailto','$Date','$Title','$LetterApplication','$UserId','$AdminId')");
-            if ($LetterApplication_insert) {
-                $mail = new PHPMailer();
-                $mail->isSMTP();
-                $mail->Host = "smtp.ionos.es";
-                $mail->SMTPAuth = true;
-                $mail->SMTPSecure = 'tls';
-                $mail->Port = 587;
-                $mail->Username = "verify@mejorcadadia.com";
-                $mail->Password = "Ta$77!/8H7u/SX?";
-                $mail->Subject = $Title;
-                $mail->setFrom($email);
-                $mail->addReplyTo('verify@mejorcadadia.com');
-                $mail->isHTML(true);
-                $mail->AddEmbeddedImage('../assets/logo.png', 'logoimg', '../assets/logo.png'); 
-                $mail->Body = '
-                    <html>
-                        <head>
-                            <title>'.$Title.'</title>
-                        </head>
-                        <body>
-                            <h1 style="font-size: 20px; text-align: left; font-weight: 600; font-family: sans-serif;">'.$Date.'</h1>
-                            <p><center><img style="width: 10%;" src="cid:logoimg" /></center></p>
-                            <h1 style="font-size: 40px; text-align: center; font-weight: 600; font-family: sans-serif;">'.$Title.'</h1>
-                            <h1 style="font-size: 40px; text-align: left; font-weight: 600; font-family: sans-serif;">Message :</h1>
-                            '.html_entity_decode($LetterApplication).'
-                        </body>
-                    </html>
-                ';
-                $mail->AltBody = "This is the plain text version of the email content";
-                $mail->addAddress($emailto);
-                if($mail->send()) {
-                    echo 'Insert';
-                } else {
-                    echo 'Failed to send mail!';
-                }
-                $mail->smtpClose();
-            } else {
-                echo 'Something is wrong!';
+            $result=$common->db->select("SELECT * FROM users WHERE id=".$user_id);
+            if($result && $result->num_rows>0){
+                $user = $result -> fetch_assoc();
+                if(empty($letterId)){
+                    $AdminId=0;
+                    $LetterApplication_insert = $common->insert("`letterapplication`(`email`,`emailto`,`date`,`title`,`letterapplicationtext`,`UserId`,`AdminId`)", "('$email','$emailto','$Date','$Title','$LetterApplication','$UserId','$AdminId')");
+                    $letterId=$common->insert_id();    
+                    $resArr['new']=true;      
+                  }else{
+                    $sql="UPDATE letterapplication SET letterapplicationtext='".$LetterApplication."',  email='".$email."', emailto='".$emailto."', date='".$Date."', title='".$Title."'  WHERE id=".$letterid;
+                    $common->db->update($sql);
+                  }
+                  $goalBodyHtml='<div style="width:600px; background-color:#FFF; margin:0 auto;">';
+                  $goalBodyHtml.='<header style="background-color: #74be41;"><img src="https://mejorcadadia.com/users/assets/logo.png"></header>';
+                  $goalBodyHtml.='<div style="padding:20px; background-color:#FFF; ">
+                      <h2 style="text-transform: capitalize;"> Cartas Eternidad </h2>
+                      <p>Fecha: '.date('d-m-Y',strtotime($Date)).'</p> 
+                      <p>De: '.$user['full_name'].'</p>        
+                      <div class="description-area" style="margin-top:20px; margin-bottom:40px;"><div style="">'.html_entity_decode($LetterApplication).'</div></div>      
+                  </div>';
+                  $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both;"><span style="float:left;">Mejorcadadia.com</span>  <span style="float:right;">All rights reserved 2022</span></p> </footer></div>';
+  
+                  $AdminId = 0;
+                  $Date=date('Y-m-d');
+                  $sent=sendEmail($user_id,'Cartas Eternidad - '.$Title,$emailto,$goalBodyHtml);
+                  if($sent===true){
+                      $resArr['success']=true;
+                      $resArr['letterId']=$letterId;
+                  }
             }
+           
+          
+            
         } else {
-            echo 'Something is wrong!';
+            $resArr['message']='Something is wrong!';
         }
     }
     else {
-        echo 'Field Fill';
-    }
+        $resArr['message']='Field Fill';
+    }        
+    echo json_encode($resArr);
 }
 
 if(isset($_POST['EmailSendCheckOnlySend']) && ($_POST['EmailSendCheckOnlySend'] == 'EmailSendCheckOnlySend')) {
@@ -497,7 +521,29 @@ if(isset($_POST['DeleteDailyGoals']) && ($_POST['DeleteDailyGoals'] == 'DeleteDa
     }
     echo 'Deleted';
 }
-
+if(isset($_POST['action']) && ($_POST['action'] == 'SaveVictory7Box')) {
+    $user_id = Session::get('user_id'); 
+    $box = $format->validation($_POST['box']);
+    $body = $format->validation($_POST['body']);
+    $selectedDate=isset($_POST['currentDate'])? $_POST['currentDate']:date('Y-m-d');
+    $resArr=['success'=>false,'goals'=>[],'message'=>""];
+    if($selectedDate<$today){
+        $resArr['message']='Not allowed in past.';
+    }else if($selectedDate>=$today && !empty($box)){
+        $result=$common->db->select("SELECT * FROM victory7boxes WHERE user_id='".$user_id."' AND box='".$box."' AND created_at='".$today."'");
+        if($result && $result->num_rows>0 ){
+            $sql="UPDATE victory7boxes SET body='".$body."' WHERE user_id='".$user_id."' AND box='".$box."' AND created_at='".$today."'";
+            $common->db->update($sql);           
+            $resArr['success']=true;
+        }else{
+            $common->insert('victory7boxes(user_id,box,body,created_at)', '("'.$user_id.'","'.$box.'","'.$body.'","'.$today.'")');
+            $resArr['success']=true;
+        }
+    }
+    echo json_encode($resArr);    
+    
+   
+}
 if(isset($_POST['action']) && ($_POST['action'] == 'UpdateDailyCommitmentAnswer')) {
     $user_id = Session::get('user_id'); 
     $selectedDate=isset($_POST['selectedDate'])? $_POST['selectedDate']:$today;
@@ -918,11 +964,12 @@ function sendEmail($user_id,$Title,$toEmail,$body){
         //print_r($user);
         if($user){
            
-            $email = 'verify@mejorcadadia.com';
+            $fromEmail = 'verify@mejorcadadia.com';
             $email = $user['gmail'];
-            $from=$user['full_name'].'<'.$email.'>';
+            $from=$user['full_name'].'<'.$fromEmail.'>';
             $mail = new PHPMailer();
             $mail->isSMTP();
+           // $mail->SMTPDebug = 2;
             $mail->Host = "smtp.ionos.es";
             $mail->SMTPAuth = true;
             $mail->SMTPSecure = 'tls';
@@ -930,7 +977,7 @@ function sendEmail($user_id,$Title,$toEmail,$body){
             $mail->Username = "verify@mejorcadadia.com";
             $mail->Password = "Ta$77!/8H7u/SX?";
             $mail->Subject = $Title;
-            $mail->setFrom($email);
+            $mail->setFrom($fromEmail,$user['full_name']);
             $mail->addReplyTo('verify@mejorcadadia.com');
             $mail->addReplyTo($email);
             $mail->isHTML(true);
@@ -949,9 +996,11 @@ function sendEmail($user_id,$Title,$toEmail,$body){
             //$emailto='ehsan.ullah.tarar@gmail.com';
             $mail->addAddress($toEmail);
             if($mail->send()) {
-                    echo 'Insert';
+                    return true;
             } else {
-                    echo 'Failed to send mail!';
+                  
+                    echo 'Mailer Error: ' . $mail->ErrorInfo;
+                
             }
             $mail->smtpClose();
         }else{

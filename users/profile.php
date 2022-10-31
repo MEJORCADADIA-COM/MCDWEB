@@ -156,7 +156,7 @@
 
     </style>
 
-<main role="main" class="col-md-9 ml-sm-auto col-lg-10 my-3 maincontonent" style="margin-top: 0rem!important;margin-bottom: 0rem!important;">
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 my-3 " style="margin-top: 0rem!important;margin-bottom: 0rem!important;">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12" style="padding: 0px;">
                 <div style="padding: 15px">

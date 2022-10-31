@@ -214,7 +214,7 @@ if($result && $result->num_rows>0){
         .chart-btn{right:0; top:calc(10% + 30px);}
         .goals-area ol li input{top:10%;}
         
-        .projects-header{padding:0 0 20px 0;}
+        .projects-header{padding:10px 20px;}
       }
         
     </style>
@@ -224,7 +224,7 @@ if($result && $result->num_rows>0){
 
     
     ?>
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 my-3 maincontonent">
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 my-3">
       <div class="projects mb-4" style="background-color: #ed008c;">
         <div class="projects-inner">
         <header class="projects-header" style="">

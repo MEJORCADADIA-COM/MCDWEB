@@ -88,7 +88,7 @@ if($type=='weekly'){
 }elseif($type=='monthly'){
   $start_date=$selectedYear.'-'.$selectedMonth.'-01';
   $end_date=date('Y-m-t',strtotime($start_date));
-  $goals_heading='Objetivos y Prioridades esta Mes';
+  $goals_heading='Objetivos y Prioridades ESTE Mes';
   $evaluation_heading='Evaluación/Progreso. Cosas para Mejorar';
 }elseif($type=='yearly'){
    $start_date = $selectedYear. '-01-01';
@@ -98,7 +98,7 @@ if($type=='weekly'){
 }elseif($type=='lifetime'){
   $start_date = '1900-01-01';
   $end_date='2200-12-31';
-  $goals_heading='De por Vida Objetivos y Prioridades';
+  $goals_heading='Objetivos, Prioridades y Sueños para tu Vida';
   $evaluation_heading='Evaluación/Progreso. Cosas para Mejorar';
 }elseif($type=='quarterly'){
   $nextQuarterYear=$selectedYear;
@@ -304,8 +304,12 @@ if($result){
         .chart-btn{right:0; top:calc(10% + 30px);}
         .goals-area ol li input{top:10%;}
        
-        .projects-header{padding:0 0 20px 0;}
+        .projects-header{padding:10px 20px;}
       }
+      .admin-dashbord{
+        background:#ed008c;
+      }
+      .projects{border:none;}
     </style>
 
     <?php 
@@ -313,7 +317,7 @@ if($result){
 
     
     ?>
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 my-3 maincontonent">
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 my-3">
       <div class="projects mb-4" style="background-color: #ed008c;">
         <div class="projects-inner">
         <header class="projects-header" style="">

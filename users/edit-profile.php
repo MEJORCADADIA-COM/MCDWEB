@@ -80,6 +80,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
 </style>
 
 <link rel="stylesheet" href="./assets/styleOne.css">
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 my-3 ">
 <form id="change-profile-form" class="inputform" action="" method="POST" enctype="multipart/form-data">
     <div class="change-profile-group">
         <div class="preview_image">
@@ -107,6 +108,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
   </div>
     
 </form>
+    </main>
 <script>
         var loadFile = function (event) {
             var output = document.getElementById('profile-preview-image');

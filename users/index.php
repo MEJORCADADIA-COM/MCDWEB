@@ -11,10 +11,7 @@
             float: right;
             margin: 15px 10px 15px 10px;
         }
-        .maincontonent {
-          width: 100%;
-          min-height: 100vh;
-        }
+        
       }
       @media screen and (min-width: 600px) {
         .tox-notifications-container {
@@ -24,10 +21,7 @@
             float: right;
             margin: 15px 10px 15px 10px;
         }
-        .maincontonent {
-          width: 100%;
-          min-height: 100vh;
-        }
+       
       }
       @media screen and (min-width: 786px) {
         .tox-notifications-container {
@@ -37,10 +31,7 @@
             float: right;
             margin: 15px 10px 15px 10px;
         }
-        .maincontonent {
-          width: 87.9%;
-          height: auto;
-        }
+        
       }
       @media screen and (min-width: 992px) {
         .tox-notifications-container {
@@ -50,10 +41,7 @@
             float: right;
             margin: 15px 10px 15px 10px;
         }
-        .maincontonent {
-          width: 87.9%;
-          height: auto;
-        }
+       
       }
       @media screen and (min-width: 1200px) {
         .tox-notifications-container {
@@ -63,16 +51,16 @@
             float: right;
             margin: 15px 10px 15px 10px;
         }
-        .maincontonent {
-          width: 87.9%;
-          height: auto;
-        }
+       
       }
+      table.table{background:#273142; border-color:grey; padding:0; margin:0;}
+      table th{color:#FFF; background-color: #313d4f; border-color:grey; padding:1rem !important; }
+      table td{color:#738297; border-color:grey; padding:1rem 0.5rem !important;}
 
     </style>
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 my-3 maincontonent">
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 my-3 ">
       <div class="projects mb-4">
-        <div class="projects-inner">
+        <div class="projects-inner" style="min-height:100vh;">
           <!-- <header class="projects-header">
             <div class="title">Notebook View</div>
             <i class="zmdi zmdi-download"></i>
@@ -82,71 +70,44 @@
               <p id="success_msg_verification_text" style="font-size: 14px; font-weight: 600;"></p><button style="border: 0px; background: transparent; font-size: 18px; font-weight: 800;align-items: center;" id="close">x</button>  
             </div>
           </div>
-          <table class="projects-table">
-            <thead>
-              <tr>
-                <!-- <th>id</th>
-                <th>From</th>
-                <th>To</th> -->
-                <th>Date</th>
-                <th>Title</th>
-                <!--<th>Letter Application</th>-->
-                <th>UserName</th>
-                <th class="text-center">Actions</th>
-              </tr>
-            </thead>
-            <?php
-            $useridletter = Session::get('user_id');
-            $all_letterapplication = $common->select("`letterapplication`", "`UserId` = '$useridletter'");
-            if($all_letterapplication) {
-              while($all_letterapp = mysqli_fetch_assoc($all_letterapplication)) {
-                $useridcheck = Session::get('user_id');
-                $letterusercheck = $common->selectcolumn("COUNT(id) AS id","`users`","id = ".$useridcheck."");
-                $letteruser_appcheck = mysqli_fetch_assoc($letterusercheck);
-                if($letteruser_appcheck['id'] >= 1) {
-                  $letteruser = $common->select("`users`","id = ".$useridcheck."");
-                  $letteruser_app = mysqli_fetch_assoc($letteruser);
-                  $letteruser_appview = $letteruser_app['full_name'];
-                } 
-                else {
-                  $letteruser_appview= 'Unknown';
-                }
-            ?>
-            <tr onclick="window.location.href='<?=SITE_URL; ?>/users/notebook.php?id=<?= $all_letterapp['id']; ?>'">
-              <!-- <td>
-                <p><?php //echo $all_letterapp['id']; ?></p>
-              </td>
-              <td>
-                <p><?php //echo $all_letterapp['email']; ?></p>
-              </td>
-              <td>
-                <p><?php //echo $all_letterapp['emailto']; ?></p>
-              </td> -->
-              <td>
-                <p><?= $all_letterapp['date']; ?></p>
-              </td>
-              <td>
-                <p><?= $all_letterapp['title']; ?></p>
-              </td>
-              <!--<td>
-                <textarea class="LetterApplication" id="LetterApplication<?= $all_letterapp['id']; ?>" name="LetterApplication"><?= $all_letterapp['letterapplicationtext']; ?></textarea>
-              </td>-->
-              <td>
-                  <p><?= $letteruser_appview; ?></p>
-              </td>
-              <td class="text-center">
-               
-                <a id="Edit" href="<?=SITE_URL; ?>/users/notebook.php?id=<?= $all_letterapp['id']; ?>"  class="btn btn-info">Edit</a>
-                <a id="Delete" onclick="DeleteOnClick(<?= $all_letterapp['id']; ?>)" class="btn btn-danger ms-2">Delete</a>
-              </td>
-            </tr>
-            <?php
-              }
-            } else {
-
+          <?php
+          $useridletter = Session::get('user_id');
+          $letters=[];
+          $result = $common->db->select("SELECT * FROM letterapplication WHERE UserId='".$useridletter."' ORDER BY date DESC");
+          if($result) {
+            while($row = mysqli_fetch_assoc($result)) {
+              $letters[]=$row;
             }
+          }
             ?>
-          </table>
+          <table class="table">
+  <thead>
+    <tr>
+      <th scope="col" width="120">Date</th>
+      <th scope="col">Title</th>
+      <th scope="col" class="text-center">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php foreach ($letters as $key=>$item) : ?>
+      <tr onclick="window.location.href='<?=SITE_URL; ?>/users/notebook.php?id=<?= $item['id']; ?>'">
+      
+      <td><?=date('d-m-Y',strtotime($item['date'])); ?></td>
+      <td><p style="white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;"><?=strlen($item['title']) > 100 ? substr($item['title'],0,100)."..." : $item['title'];  ?></p></td>
+      <td class="text-center" style="width:100px;">
+      <a id="Edit" href="<?=SITE_URL; ?>/users/notebook.php?id=<?= $item['id']; ?>"  class="btn btn-info btn-sm btn-inline" ><i class="fa fa-pencil"></i></a>
+      <a id="Delete" onclick="DeleteOnClick(<?= $item['id']; ?>)" class="btn btn-danger btn-sm btn-inline" ><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+             
+      </td>
+    </tr>
+    <?php endforeach; ?>
+   
+    
+  </tbody>
+</table>
+         
         </div>
       </div>
     </main>

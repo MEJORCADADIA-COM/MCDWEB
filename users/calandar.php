@@ -123,10 +123,7 @@ for ($day = 1; $day <= $day_count; $day++, $str++) {
             float: right;
             margin: 15px 10px 15px 10px;
         }
-        .maincontonent {
-          width: 100%;
-          min-height: 100vh;
-        }
+       
       }
       @media screen and (min-width: 600px) {
         .tox-notifications-container {
@@ -136,10 +133,7 @@ for ($day = 1; $day <= $day_count; $day++, $str++) {
             float: right;
             margin: 15px 10px 15px 10px;
         }
-        .maincontonent {
-          width: 100%;
-          min-height: 100vh;
-        }
+        
       }
       @media screen and (min-width: 786px) {
         .tox-notifications-container {
@@ -149,10 +143,7 @@ for ($day = 1; $day <= $day_count; $day++, $str++) {
             float: right;
             margin: 15px 10px 15px 10px;
         }
-        .maincontonent {
-          width: 87.9%;
-          height: auto;
-        }
+       
       }
       @media screen and (min-width: 992px) {
         .tox-notifications-container {
@@ -162,10 +153,7 @@ for ($day = 1; $day <= $day_count; $day++, $str++) {
             float: right;
             margin: 15px 10px 15px 10px;
         }
-        .maincontonent {
-          width: 87.9%;
-          height: auto;
-        }
+        
       }
       @media screen and (min-width: 1200px) {
         .tox-notifications-container {
@@ -175,10 +163,7 @@ for ($day = 1; $day <= $day_count; $day++, $str++) {
             float: right;
             margin: 15px 10px 15px 10px;
         }
-        .maincontonent {
-          width: 87.9%;
-          height: auto;
-        }
+       
       }
       @media screen and (max-width: 767px) {
         h2.maintitle{font-size:1.3rem;}
@@ -289,9 +274,9 @@ table tr:last-child td:last-child {
 
     
     ?>
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 my-3 maincontonent">
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 my-3 ">
       <div class="projects mb-4" style="background-color: #ed008c;">
-        <div class="projects-inner">
+        <div class="projects-inner" style="padding:10px 20px;">
         <header class="projects-header" style="">
         
          <?php setlocale(LC_ALL,"es_ES");
