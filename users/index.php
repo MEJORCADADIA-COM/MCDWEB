@@ -92,10 +92,10 @@
     <?php foreach ($letters as $key=>$item) : ?>
       <tr onclick="window.location.href='<?=SITE_URL; ?>/users/notebook.php?id=<?= $item['id']; ?>'">
       
-      <td><?=date('d-m-Y',strtotime($item['date'])); ?></td>
+      <td style="color:#FFF;"><?=date('d-m-Y',strtotime($item['date'])); ?></td>
       <td><p style="white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;"><?=strlen($item['title']) > 100 ? substr($item['title'],0,100)."..." : $item['title'];  ?></p></td>
+  text-overflow: ellipsis; color:#FFF;"><?=strlen($item['title']) > 100 ? substr($item['title'],0,100)."..." : $item['title'];  ?></p></td>
       <td class="text-center" style="width:100px;">
       <a id="Edit" href="<?=SITE_URL; ?>/users/notebook.php?id=<?= $item['id']; ?>"  class="btn btn-info btn-sm btn-inline" ><i class="fa fa-pencil"></i></a>
       <a id="Delete" onclick="DeleteOnClick(<?= $item['id']; ?>)" class="btn btn-danger btn-sm btn-inline" ><i class="fa fa-trash-o" aria-hidden="true"></i></a>

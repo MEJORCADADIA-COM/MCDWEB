@@ -222,7 +222,7 @@ if($result){
               }
 
               #section_box_wrapper .section_box .section_content{
-                padding:1rem;
+                padding:5px;
               }
       @media print {       
        .goals-area ol li.hidden{display:list-item;}
@@ -481,7 +481,7 @@ $dateObj = DateTime::createFromFormat("d/m/Y", $string);
       Hello, world! This is a toast message.
     </div>
   </div>
-   </div>
+</div>
     <script>
     
       $('#show').css('display','none');

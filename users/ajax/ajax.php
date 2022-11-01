@@ -49,7 +49,7 @@ if(!empty($_POST) && !empty($_POST['saveDinstyLetter'])){
     $Title=isset($_POST['Title'])? $_POST['Title']:'';
     $LetterApplication=isset($_POST['LetterApplication'])? $_POST['LetterApplication']:'';
     if(!empty($date) && !empty($email) && !empty($emailto) && !empty($Title)){
-      
+       $LetterApplication= $common->db->link->real_escape_string($LetterApplication);
       if(empty($letterid)){
         $AdminId=0;
         $LetterApplication_insert = $common->insert("`letterapplication`(`email`,`emailto`,`date`,`title`,`letterapplicationtext`,`UserId`,`AdminId`)", "('$email','$emailto','$date','$Title','$LetterApplication','$UserId','$AdminId')");
@@ -90,6 +90,7 @@ if(isset($_POST['EmailSendCheck']) && ($_POST['EmailSendCheck'] == 'EmailSendChe
     $resArr['letterId']=$letterId;
     if (isset($email)) {
         if (isset($LetterApplication)) {
+            $NewLetterApplication= $common->db->link->real_escape_string($LetterApplication);
             $result=$common->db->select("SELECT * FROM users WHERE id=".$user_id);
             if($result && $result->num_rows>0){
                 $user = $result -> fetch_assoc();
@@ -99,18 +100,22 @@ if(isset($_POST['EmailSendCheck']) && ($_POST['EmailSendCheck'] == 'EmailSendChe
                     $letterId=$common->insert_id();    
                     $resArr['new']=true;      
                   }else{
-                    $sql="UPDATE letterapplication SET letterapplicationtext='".$LetterApplication."',  email='".$email."', emailto='".$emailto."', date='".$Date."', title='".$Title."'  WHERE id=".$letterid;
+                     $sql="UPDATE letterapplication SET letterapplicationtext='".$LetterApplication."',  email='".$email."', emailto='".$emailto."', date='".$Date."', title='".$Title."'  WHERE id=".$letterId;
                     $common->db->update($sql);
                   }
+                  $result = $common->select("`letterapplication`", "id='".$letterId."'");
+                  $letterapp = mysqli_fetch_assoc($result);
                   $goalBodyHtml='<div style="width:600px; background-color:#FFF; margin:0 auto;">';
                   $goalBodyHtml.='<header style="background-color: #74be41;"><img src="https://mejorcadadia.com/users/assets/logo.png"></header>';
                   $goalBodyHtml.='<div style="padding:20px; background-color:#FFF; ">
-                      <h2 style="text-transform: capitalize;"> Cartas Eternidad </h2>
+                      <h2 style="text-transform: capitalize;">'.$Title.'</h2>
                       <p>Fecha: '.date('d-m-Y',strtotime($Date)).'</p> 
                       <p>De: '.$user['full_name'].'</p>        
-                      <div class="description-area" style="margin-top:20px; margin-bottom:40px;"><div style="">'.html_entity_decode($LetterApplication).'</div></div>      
+                      <div class="description-area" style="margin-top:20px; margin-bottom:40px;"><div style="">';
+                      $goalBodyHtml.=html_entity_decode($letterapp['letterapplicationtext']);
+                      $goalBodyHtml.='</div></div>      
                   </div>';
-                  $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both;"><span style="float:left;">Mejorcadadia.com</span>  <span style="float:right;">All rights reserved 2022</span></p> </footer></div>';
+                  $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both; margin:0; padding:0;"><span style="float:left;">Mejorcadadia.com</span>  <span style="float:right;">All rights reserved 2022</span></p><div style="clear:both; padding:0; margin:0;"></div> </footer></div>';
   
                   $AdminId = 0;
                   $Date=date('Y-m-d');
@@ -144,7 +149,7 @@ if(isset($_POST['EmailSendCheckOnlySend']) && ($_POST['EmailSendCheckOnlySend'] 
     $emailto = $format->validation($_POST['emailto']);
     if (isset($email)) {
         if (isset($LetterApplication)) {
-           
+            $LetterApplication= $common->db->link->real_escape_string($LetterApplication);
             if(!empty($id)){
                 $sql="UPDATE letterapplication SET letterapplicationtext='".$LetterApplication."',  email='".$email."', emailto='".$emailto."', date='".$Date."', title='".$Title."'   WHERE id=".$id;
                 $common->db->update($sql);
@@ -762,7 +767,7 @@ if(isset($_POST['EmailSendDailyGoal']) && ($_POST['EmailSendDailyGoal'] == 'Emai
         <div class="goals-area" style="margin-top:20px; margin-bottom:40px;"><h4>Qué Podías haber hecho Mejor?</h4>'.$lifeGoalsHtml.'</div>  
         <div class="description-area" style="margin-top:20px; margin-bottom:40px;"><h4>Tus 7-Objetivos y Prioridades Más Importantes para tu Vida:</h4><div style="">'.html_entity_decode($dailyImprovements).'</div></div>   
       </div>';
-      $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both;"><span style="float:left;">Mejorcadadia.com</span>  <span style="float:right;">All rights reserved 2022</span></p> </footer></div>';
+      $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both; margin:0; padding:0;"><span style="float:left;">Mejorcadadia.com</span>  <span style="float:right;">All rights reserved 2022</span></p><div style="clear:both; padding:0; margin:0;"></div> </footer></div>';
 
     $AdminId = 0;
     $Date=date('Y-m-d');
@@ -853,7 +858,7 @@ if(isset($_POST['EmailSendSuperGoal']) && ($_POST['EmailSendSuperGoal'] == 'Emai
         <div class="goals-area" style="margin-top:20px; margin-bottom:40px;">'.$goalsHtml.'</div>  
         <div class="description-area" style="margin-top:20px; margin-bottom:40px;"><h4>Evaluation / Progress this year; things to improve</h4><div style="">'.html_entity_decode($description).'</div></div>      
       </div>';
-      $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both;"><span style="float:left;">Mejorcadadia.com</span>  <span style="float:right;">All rights reserved 2022</span></p> </footer></div>';
+      $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both; margin:0; padding:0;"><span style="float:left;">Mejorcadadia.com</span>  <span style="float:right;">All rights reserved 2022</span></p><div style="clear:both; padding:0; margin:0;"></div> </footer></div>';
 
     $AdminId = 0;
     $Date=date('Y-m-d');
@@ -947,7 +952,7 @@ if(isset($_POST['action']) && ($_POST['action'] == 'EmailSendDailyCommitment')) 
         <div class="goals-area" style="margin-top:20px; margin-bottom:40px;">'.$goalsHtml.'</div>  
         <div class="description-area" style="margin-top:20px; margin-bottom:40px;"><h4>Evaluación y Mejoramiento</h4><div style="">'.html_entity_decode($description).'</div></div>      
       </div>';
-      $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both;"><span style="float:left;">Mejorcadadia.com</span>  <span style="float:right;">All rights reserved 2022</span></p> </footer></div>';
+      $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both; margin:0; padding:0;"><span style="float:left;">Mejorcadadia.com</span>  <span style="float:right;">All rights reserved 2022</span></p><div style="clear:both; padding:0; margin:0;"></div> </footer></div>';
 
     $AdminId = 0;
     $Date=date('Y-m-d');

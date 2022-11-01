@@ -190,6 +190,14 @@ if(!empty($letterid)){
             </div>
         </div>
     </main>
+    
+<div class="toast-container position-absolute top-0 end-0 p-3">
+  <div class="toast" id="toast">    
+    <div class="toast-body">
+      Hello, world! This is a toast message.
+    </div>
+  </div>
+</div>
     <script>
       $('#show').css('display','none');
       tinymce.init({
@@ -225,7 +233,24 @@ if(!empty($letterid)){
         $('#show').css('display','none');
         $('#success_msg_verification_text').html('');
       })
-      
+      function showToast(type='success',message=''){
+       
+       $('#toast .toast-body').html(message);
+       if(type=='success'){
+         $('#toast').addClass('bg-primary text-white');
+         $('#toast').removeClass('bg-danger text-white');
+       }else{
+         $('#toast').removeClass('bg-primary text-white');
+         $('#toast').addClass('bg-danger text-white');
+       }
+       var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+       var toastList = toastElList.map(function(toastEl) {
+       // Creates an array of toasts (it only initializes them)
+       
+         return new bootstrap.Toast(toastEl) // No need for options; use the default options
+       });
+      toastList.forEach(toast => toast.show()); // This show them
+     }
       $('#emailsend').click(function () {
         if($('#date').val() != '') {
           $('#show').css('display','none');
@@ -290,6 +315,7 @@ if(!empty($letterid)){
                       const data = JSON.parse(json);
                       if(data.success) {
                         $('#letter_id').val(data.letterId);
+                        showToast('success','Email has been sent.'); 
                        if(data.new==true){
                         window.location.href='<?=SITE_URL;?>/users/notebook.php?id='+data.letterId;
                        }
