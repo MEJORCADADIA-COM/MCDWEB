@@ -115,7 +115,7 @@ if(isset($_POST['EmailSendCheck']) && ($_POST['EmailSendCheck'] == 'EmailSendChe
                       $goalBodyHtml.=html_entity_decode($letterapp['letterapplicationtext']);
                       $goalBodyHtml.='</div></div>      
                   </div>';
-                  $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both; margin:0; padding:0;"><span style="float:left;">Mejorcadadia.com</span>  <span style="float:right;">All rights reserved 2022</span></p><div style="clear:both; padding:0; margin:0;"></div> </footer></div>';
+                  $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both; margin:0; padding:0; text-align:center;">Mejorcadadia.com</p><p style="clear:both; margin:0; padding:0; text-align:center;">All rights reserved 2022</p><div style="clear:both; padding:0; margin:0;"></div> </footer></div>';
   
                   $AdminId = 0;
                   $Date=date('Y-m-d');
@@ -767,7 +767,7 @@ if(isset($_POST['EmailSendDailyGoal']) && ($_POST['EmailSendDailyGoal'] == 'Emai
         <div class="goals-area" style="margin-top:20px; margin-bottom:40px;"><h4>Qué Podías haber hecho Mejor?</h4>'.$lifeGoalsHtml.'</div>  
         <div class="description-area" style="margin-top:20px; margin-bottom:40px;"><h4>Tus 7-Objetivos y Prioridades Más Importantes para tu Vida:</h4><div style="">'.html_entity_decode($dailyImprovements).'</div></div>   
       </div>';
-      $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both; margin:0; padding:0;"><span style="float:left;">Mejorcadadia.com</span>  <span style="float:right;">All rights reserved 2022</span></p><div style="clear:both; padding:0; margin:0;"></div> </footer></div>';
+      $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both; margin:0; padding:0; text-align:center;">Mejorcadadia.com</p><p style="clear:both; margin:0; padding:0; text-align:center;">All rights reserved 2022</p><div style="clear:both; padding:0; margin:0;"></div> </footer></div>';
 
     $AdminId = 0;
     $Date=date('Y-m-d');
@@ -858,7 +858,7 @@ if(isset($_POST['EmailSendSuperGoal']) && ($_POST['EmailSendSuperGoal'] == 'Emai
         <div class="goals-area" style="margin-top:20px; margin-bottom:40px;">'.$goalsHtml.'</div>  
         <div class="description-area" style="margin-top:20px; margin-bottom:40px;"><h4>Evaluation / Progress this year; things to improve</h4><div style="">'.html_entity_decode($description).'</div></div>      
       </div>';
-      $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both; margin:0; padding:0;"><span style="float:left;">Mejorcadadia.com</span>  <span style="float:right;">All rights reserved 2022</span></p><div style="clear:both; padding:0; margin:0;"></div> </footer></div>';
+      $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both; margin:0; padding:0; text-align:center;">Mejorcadadia.com</p><p style="clear:both; margin:0; padding:0; text-align:center;">All rights reserved 2022</p><div style="clear:both; padding:0; margin:0;"></div> </footer></div>';
 
     $AdminId = 0;
     $Date=date('Y-m-d');
@@ -952,7 +952,7 @@ if(isset($_POST['action']) && ($_POST['action'] == 'EmailSendDailyCommitment')) 
         <div class="goals-area" style="margin-top:20px; margin-bottom:40px;">'.$goalsHtml.'</div>  
         <div class="description-area" style="margin-top:20px; margin-bottom:40px;"><h4>Evaluación y Mejoramiento</h4><div style="">'.html_entity_decode($description).'</div></div>      
       </div>';
-      $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both; margin:0; padding:0;"><span style="float:left;">Mejorcadadia.com</span>  <span style="float:right;">All rights reserved 2022</span></p><div style="clear:both; padding:0; margin:0;"></div> </footer></div>';
+      $goalBodyHtml.='<footer style="background-color: #fef200; padding:20px;"><p style="clear:both; margin:0; padding:0; text-align:center;">Mejorcadadia.com</p><p style="clear:both; margin:0; padding:0; text-align:center;">All rights reserved 2022</p><div style="clear:both; padding:0; margin:0;"></div> </footer></div>';
 
     $AdminId = 0;
     $Date=date('Y-m-d');
