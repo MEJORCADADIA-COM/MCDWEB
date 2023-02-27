@@ -1,65 +1,33 @@
 <?php 
 $path = realpath(dirname(__FILE__));
+include_once $path . '/../helper.php';
 include_once ($path . "/../config/config.php");
 
 class Database {
-	public $host = DB_HOST;
-	public $user = DB_USER;
-	public $password = DB_PASS;
-	public $db_name = DB_NAME;
-
-	public $recipient_email = RECIPIENT_EMAIL;
-
-	public $link;
-	public $error;
+    private readonly PDO $connection;
 
 	public function __construct() {
-		$this->dbConnect();
+        $config = [
+            'host' => DB_HOST,
+            'port' => 3306,
+            'dbname' => DB_NAME,
+        ];
+
+        $dsn = "mysql:" . http_build_query($config, '', ';');
+        $this->connection = new PDO($dsn, DB_USER, DB_PASS, [
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        ]);
 	}
 
-	public function dbConnect() {
-		$this->link = new mysqli($this->host, $this->user, $this->password, $this->db_name);
-		if (!$this->link) {
-			$this->error = "Connection fail " . $this->link->connect_error;
-			return false;
-		}
-	}
-	public function select($query) {
-		$result = $this->link->query($query) or die($this->link->error . __LINE__);
-		if ($result->num_rows > 0) {
-			return $result;
-		} else {
-			return false;
-		}
-	}
-	public function insert($query) {
-		$result = $this->link->query($query) or die($this->link->error . __LINE__);
-		if ($result) {
-			return $result;
-		} else {
-			return false;
-		}
-	}
-	public function insert_id() {
-		$result = $this->link->insert_id;
-		return $result;
-	}
-	public function update($query) {
-		$result = $this->link->query($query) or die($this->link->error . __LINE__);
-		if ($result) {
-			return $result;
-		} else {
-			return false;
-		}
-	}
-	public function delete($query) {
-		$result = $this->link->query($query) or die($this->link->error . __LINE__);
-		if ($result) {
-			return $result;
-		} else {
-			return false;
-		}
-	}
+    public function query($query, $params = []): bool|PDOStatement
+    {
+        $statement = $this->connection->prepare($query);
+        $statement->execute($params);
+        return $statement;
+    }
+
+    public function insertId()
+    {
+        return $this->connection->lastInsertId();
+    }
 }
-
-?>

@@ -73,9 +73,9 @@
           <?php
           $useridletter = Session::get('user_id');
           $letters=[];
-          $result = $common->db->select("SELECT * FROM letterapplication WHERE UserId='".$useridletter."' ORDER BY date DESC");
+          $result = $common->get(table: "letterapplication", cond: 'UserId = :user_id', params: ['user_id' => $useridletter], orderBy: 'id',order: 'DESC');
           if($result) {
-            while($row = mysqli_fetch_assoc($result)) {
+            foreach($result as $row) {
               $letters[]=$row;
             }
           }

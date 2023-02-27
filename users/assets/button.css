@@ -1,0 +1,65 @@
+@import url(https://fonts.googleapis.com/css?family=Oswald:300);
+@import url(https://fonts.googleapis.com/css?family=Abel);
+@import "https://s3-us-west-2.amazonaws.com/s.cdpn.io/584938/dashboard.scss";
+
+
+.floating-btn {
+   z-index: 1111;
+   position: fixed;
+}
+
+
+@media screen and (min-width: 1200px) {
+   .floating-btn {
+      bottom: 40px;
+      right: 15px;
+   }
+
+   .toptitle {
+      font-size: 2rem;
+   }
+}
+
+@media screen and (max-width: 992px) {
+   .floating-btn {
+      bottom: 40px;
+      right: 10px;
+   }
+
+   .toptitle {
+      font-size: 1rem;
+   }
+}
+
+@media screen and (max-width: 786px) {
+   .floating-btn {
+      bottom: 40px;
+      right: 5px;
+   }
+
+   .toptitle {
+      font-size: 1rem;
+   }
+}
+
+@media screen and (max-width: 600px) {
+   .floating-btn {
+      bottom: 40px;
+      right: 5px;
+   }
+
+   .toptitle {
+      font-size: 1rem;
+   }
+}
+
+@media screen and (max-width: 480px) {
+   .floating-btn {
+      bottom: 35px;
+      right: 5px;
+   }
+
+   .toptitle {
+      font-size: 1rem;
+   }
+}

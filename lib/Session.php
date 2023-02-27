@@ -1,69 +1,111 @@
-<?php 
+<?php
 
-class Session {
-	public static function init() {
+use JetBrains\PhpStorm\Pure;
+
+class Session
+{
+	public static function init()
+	{
 		if (session_status() == PHP_SESSION_NONE) {
-			$lifetime=6000;
+			$lifetime = 3600*24*30;
 			session_set_cookie_params($lifetime);
 			session_start();
 		}
 	}
 
-	public static function set($key, $value) {
+	public static function set($key, $value)
+	{
 		$_SESSION[$key] = $value;
 	}
-	
-	public static function get($key) {
+
+	public static function get($key)
+	{
 		if (isset($_SESSION[$key])) {
 			return $_SESSION[$key];
 		} else {
 			return false;
 		}
 	}
-	public static function checkSession() {
-		
+
+	public static function checkSession()
+	{
 		self::init();
 		if (self::get('login') == false) {
-			
-			header("Location: https://mejorcadadia.com/");
+            session_destroy();
+
+            return false;
 		}
+
+        return true;
 	}
-	public static function checkLogin() {
+
+	public static function checkLogin()
+	{
 		self::init();
 		if (self::get('login') == true) {
-			header("Location: https://mejorcadadia.com/users/index.php");
+			header("Location: " . SITE_URL . "/users/index.php");
 		}
 	}
-	public static function destroy() {
-		
+
+	public static function destroy()
+	{
 		session_destroy();
-		header("Location: https://mejorcadadia.com/");
+		header("Location: " . SITE_URL);
 	}
-  
-  	public static function adminSession() {
+
+	public static function adminSession()
+	{
 		self::init();
 		if (self::get('admin_login') == false) {
-			
 			session_destroy();
-			header("Location: https://mejorcadadia.com/admin/login.php");
+
+			return false;
 		}
+
+        return true;
 	}
-	public static function adminLogin() {
+
+	public static function adminLogin()
+	{
 		self::init();
 		if (self::get('admin_login') == true) {
-			header("Location: https://mejorcadadia.com/admin/index.php");
+			header("Location: " . SITE_URL . "/admin/index.php");
 		}
 	}
-	public static function adminDestroy() {
-		
+
+	public static function adminDestroy()
+	{
+
 		session_destroy();
-		header("Location: https://mejorcadadia.com/admin/login.php");
+		header("Location: " . SITE_URL . "/admin/login.php");
 	}
-  
-	public static function unset($key) {
-		
+
+	public static function unset($key)
+	{
 		unset($_SESSION[$key]);
 	}
-}
 
-?>
+	#[Pure] public static function hasSuccess(): bool
+    {
+		return (bool)Session::get('success');
+	}
+
+	public static function getSuccess()
+	{
+		$message = Session::get('success') ?: null;
+		Session::unset('success');
+		return $message;
+	}
+
+	#[Pure] public static function hasError(): bool
+    {
+		return (bool)Session::get('error');
+	}
+
+	public static function getError()
+	{
+		$message = Session::get('error') ?: null;
+		Session::unset('error');
+		return $message;
+	}
+}

@@ -12,29 +12,31 @@ function localDate($ctime,$format="%A, %d %B, %Y"){
   return utf8_encode(strftime($format,$dateObj->getTimestamp()));
 }
 $user_id = Session::get('user_id');
-$cronovida=[];
-$result=$common->db->select("SELECT * FROM cronovida WHERE user_id='".$user_id."'");
-if($result && $result->num_rows>0 ){
-  $cronovida = $result -> fetch_assoc();
+$cronovida = [];
+$result = $common->first("cronovida", 'user_id = :user_id', ['user_id' => $user_id]);
+if($result) {
+  $cronovida = $result;
 }
-if(isset($_POST) && !empty($_POST)){
- 
-  $dob=isset($_POST['dob'])? $_POST['dob']:[];
-  $max_years=isset($_POST['max_years'])? $_POST['max_years']:0;
-  if(!empty($dob) && !empty($max_years)){
-    $birthday=date('Y-m-d',mktime(0, 0, 0, $dob['month'], $dob['day'], $dob['year']));
 
-    if(empty($cronovida)){
-      $common->insert('cronovida(user_id,dob,age)', '("'.$user_id.'","'.$birthday.'","'.$max_years.'")');         
-    }else{
-      $sql="UPDATE cronovida SET dob='".$birthday."', age='".$max_years."' WHERE user_id=".$user_id;
-      $common->db->update($sql);
+if (isset($_POST) && !empty($_POST)) {
+
+    $dob = isset($_POST['dob']) ? $_POST['dob'] : [];
+    $max_years = isset($_POST['max_years']) ? $_POST['max_years'] : 0;
+    if (!empty($dob) && !empty($max_years)) {
+        $birthday = date('Y-m-d', mktime(0, 0, 0, $dob['month'], $dob['day'], $dob['year']));
+
+        if (empty($cronovida)) {
+            $common->insert('cronovida', ['user_id' => $user_id, 'dob' => $birthday, 'age' => $max_years]);
+        } else {
+            $sql = "UPDATE cronovida SET dob='" . $birthday . "', age='" . $max_years . "' WHERE user_id=" . $user_id;
+            $common->db->update($sql);
+        }
     }
-  }
 }
-$result=$common->db->select("SELECT * FROM cronovida WHERE user_id='".$user_id."'");
-if($result && $result->num_rows>0 ){
-  $cronovida = $result -> fetch_assoc();
+
+$result = $common->first("cronovida", 'user_id = :user_id', ['user_id' => $user_id]);
+if($result) {
+  $cronovida = $result;
 }
 
 if(isset($_GET['timezoneoffset'])){
@@ -79,12 +81,6 @@ $ym = date('Y-m',strtotime($selectedDate));
 
   </script>
 <?php endif; ?>
-<?php
-
-
-
-?>
-
 
 <script>
  

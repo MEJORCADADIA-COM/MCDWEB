@@ -13,10 +13,7 @@ $common = new Common();
 
 if (Session::get('user_id') !== NULL) {
 	$user_id = Session::get('user_id');
-    $user_info = $common->select("`users`", "`id` = '$user_id'");
-    if ($user_info) {
-      $user_infos = mysqli_fetch_assoc($user_info);
-    }
+    $user_infos = $common->first("`users`", "`id` = :id", ['id' => $user_id]);
 }
 
 Session::checkSession();

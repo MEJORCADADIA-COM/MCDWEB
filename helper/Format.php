@@ -21,7 +21,6 @@ class Format {
 		$data = trim($data);
 		$data = stripcslashes($data);
 		$data = htmlspecialchars($data);
-		$data = mysqli_real_escape_string($this->db->link, $data);
 		return $data;
 	}
 	public function removeAndSlash($value) {
