@@ -660,6 +660,159 @@ if (isset($_POST['DeleteDailyGoals']) && ($_POST['DeleteDailyGoals'] == 'DeleteD
     }
     echo 'Deleted';
 }
+
+
+if (isset($_POST['action']) && ($_POST['action'] == 'DeleteNotes')) {
+    $user_id = Session::get('user_id');
+    if (!$user_id) {
+        $rememberCookieData = RememberCookie::getRememberCookieData();
+        if ($rememberCookieData) {
+            $user_id = $rememberCookieData[RememberCookie::ID];
+        }
+    }
+    $id=isset($_POST['id'])? $_POST['id']:0; 
+    $resArr=[];    
+    if($id>0){
+         $common->delete("user_notes", "id = :id", ['id' => $id]);
+    }
+    echo json_encode($resArr);
+}
+
+
+if (isset($_POST['action']) && ($_POST['action'] == 'moveNotes')) {
+    $user_id = Session::get('user_id');
+    if (!$user_id) {
+        $rememberCookieData = RememberCookie::getRememberCookieData();
+        if ($rememberCookieData) {
+            $user_id = $rememberCookieData[RememberCookie::ID];
+        }
+    }
+    $folder_id=isset($_POST['folder_id'])? $_POST['folder_id']:0; 
+    $id=isset($_POST['id'])? $_POST['id']:0; 
+
+    $resArr = ['success' => false,  'date'=>date('d-m-Y'),'id'=>$id,'folder_id'=>$folder_id, 'message' => ""];
+    if(!empty($id)){
+        $common->update(
+            'user_notes',
+            ['folder_id'=>$folder_id],
+            'id = :id AND user_id = :user_id',
+            ['id' => $id, 'user_id' => $user_id],
+            modifiedColumnName: 'updated_at'
+        );
+        $resArr['message'] = "updated successfully";
+        $resArr['success'] = true;
+    }   
+    
+    echo json_encode($resArr);
+
+
+}
+
+if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'getNotes')) {
+    $user_id = Session::get('user_id');
+    if (!$user_id) {
+        $rememberCookieData = RememberCookie::getRememberCookieData();
+        if ($rememberCookieData) {
+            $user_id = $rememberCookieData[RememberCookie::ID];
+        }
+    }
+    $id=isset($_REQUEST['id'])? $_REQUEST['id']:0;   
+    $row = $common->first(
+        table: "user_notes",
+        cond: 'user_id = :user_id  AND id = :id',
+        params: ['user_id' => $user_id, 'id' => $id],
+        orderBy: 'id',
+        order: 'DESC'
+    );
+    $resArr['note']=$row;
+    if(!empty($row)){
+        $resArr['success']=true;
+    }else{
+        $resArr['success']=false;
+    }
+    echo json_encode($resArr);
+}
+if (isset($_POST['action']) && ($_POST['action'] == 'createNotes')) {
+    $user_id = Session::get('user_id');
+    if (!$user_id) {
+        $rememberCookieData = RememberCookie::getRememberCookieData();
+        if ($rememberCookieData) {
+            $user_id = $rememberCookieData[RememberCookie::ID];
+        }
+    }
+    $notes = empty($_POST['notes']) ? '' : $_POST['notes'];
+    //$title = empty($_POST['title']) ? '' : $_POST['title'];
+    $title=substr(strip_tags($notes),0,80);
+    $folder_id=isset($_POST['folder_id'])? $_POST['folder_id']:0; 
+    $id=isset($_POST['id'])? $_POST['id']:0;     
+    $resArr = ['success' => false, 'new'=>true, 'title'=>$title, 'date'=>date('d-m-Y'),'id'=>$id,'folder_id'=>$folder_id,'notes' => $notes, 'message' => ""];
+    
+    if(empty($id)){
+        $common->insert('user_notes', [
+            'user_id' => $user_id,
+            'folder_id' => $folder_id,
+            'notes' => $notes
+        ]);
+        $id = $common->insertId();
+        $resArr['success'] = true;
+        $resArr['message'] = "created successfully";
+        $resArr['id'] = $id;
+    }else{
+       
+        $common->update(
+            'user_notes',
+            ['notes' => $notes,'folder_id'=>$folder_id],
+            'id = :id AND user_id = :user_id',
+            ['id' => $id, 'user_id' => $user_id],
+            modifiedColumnName: 'updated_at'
+        );
+        $resArr['new'] = false;
+        $resArr['message'] = "updated successfully";
+        $resArr['success'] = true;
+
+    }    
+    
+    echo json_encode($resArr);
+
+
+}
+if (isset($_POST['action']) && ($_POST['action'] == 'createFolder')) {
+    $user_id = Session::get('user_id');
+    if (!$user_id) {
+        $rememberCookieData = RememberCookie::getRememberCookieData();
+        if ($rememberCookieData) {
+            $user_id = $rememberCookieData[RememberCookie::ID];
+        }
+    }
+    $folder_name = $format->validation($_POST['folder_name']);
+    $folder_id=isset($_POST['folder_id'])? $_POST['folder_id']:0;    
+    $resArr = ['success' => false, 'new'=>true, 'folder_id'=>$folder_id,'folder_name' => $folder_name, 'message' => ""];
+    if(empty($folder_id)){
+        $common->insert('user_folders', [
+            'user_id' => $user_id,
+            'name' => $folder_name
+        ]);
+        $folder_id = $common->insertId();
+        $resArr['success'] = true;
+        $resArr['message'] = "created successfully";
+        $resArr['folder_id'] = $folder_id;
+    }else{
+        $common->update(
+            table: "user_folders",
+            data: ['name' => $folder_name],
+            cond: 'WHERE user_id = :user_id AND id = :id',
+            params: ['user_id' => $user_id, 'id' => $folder_id]
+        );
+        $resArr['new'] = false;
+        $resArr['message'] = "updated successfully";
+        $resArr['success'] = true;
+
+    }    
+    
+    echo json_encode($resArr);
+
+
+}
 if (isset($_POST['action']) && ($_POST['action'] == 'SaveVictory7Box')) {
     $user_id = Session::get('user_id');
     if (!$user_id) {

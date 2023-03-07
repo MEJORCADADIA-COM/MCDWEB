@@ -286,6 +286,60 @@ endif;
         }, 10000)
     }
 </script>
+<script>
+    const createFolderModal = document.getElementById('createFolderModal');
+    const createFolderForm = document.getElementById('createFolderForm');
+    createFolderForm.addEventListener('submit', event => {
+        event.preventDefault();
+        var folder_name=document.getElementById('folder_name').value;
+        var folder_id=document.getElementById('folder_id').value; 
+        console.log(folder_name,folder_id) ;     
+        $.ajax({
+                url: SITE_URL + "/users/ajax/ajax.php",
+                type: "POST",
+                data: {
+                    action: 'createFolder',
+                    folder_name: folder_name,
+                    folder_id: folder_id,
+                },
+                success: function(json) {
+                   
+                    const obj = JSON.parse(json);
+                    console.log(obj);
+                    if(obj.success){
+                        if(obj.new){
+                            $('ul.my-notes-menu').find(' > li.create-folder-nav').before('<li class="nav-item"><a class="nav-link" href="mynotes.php?folder_id='+obj.folder_id+'">'+obj.folder_name+'</a></li>');
+                        }else{
+
+                        }
+                        document.getElementById('folder_name').value="";
+                        document.getElementById('folder_id').value=0;
+                        const modal = bootstrap.Modal.getInstance(createFolderModal);
+                        modal.hide();
+                    }
+                }
+            });
+            
+       return false;
+        
+    });
+    
+    createFolderModal.addEventListener('show.bs.modal', event => {
+    // Button that triggered the modal
+    const button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    const recipient = button.getAttribute('data-bs-whatever')
+    // If necessary, you could initiate an AJAX request here
+    // and then do the updating in a callback.
+    //
+    // Update the modal's content.
+    const modalTitle = createFolderModal.querySelector('.modal-title')
+    const modalBodyInput = createFolderModal.querySelector('.modal-body input')
+
+    //modalTitle.textContent = `New message to ${recipient}`
+    //modalBodyInput.value = recipient
+    })
+</script>
 </body>
 
 </html>

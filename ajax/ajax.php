@@ -84,6 +84,8 @@ if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'fa
             $CLIENT_ID = "51609443177-jb3b6pl4onl6h54pnq11isn07bqhr563.apps.googleusercontent.com";
             $id_token = $_POST['credential'];
             $client = new Google_Client(['client_id' => $CLIENT_ID]);
+            $jwt = new \Firebase\JWT\JWT;
+            $jwt::$leeway = 60;
             $payload = $client->verifyIdToken($id_token);
 
             $full_name = $format->validation($payload['name']);

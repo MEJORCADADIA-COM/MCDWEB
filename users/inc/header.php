@@ -27,10 +27,12 @@ if ($rememberCookieData) {
         ['id' => $rememberCookieData[RememberCookie::ID], 'remember_token' => $rememberCookieData[RememberCookie::REMEMBER_TOKEN], 'password' => $rememberCookieData[RememberCookie::PASSWORD]]
     );
 }
-
+$userFolders=[];
+$user_id = Session::get('user_id');
 if (!$user_infos && Session::get('user_id') !== NULL) {
     $user_id = Session::get('user_id');
     $user_infos = $common->first("`users`", "`id` = :id", ['id' => $user_id]);
+    
 }
 
 if (!Session::checkSession() && !$user_infos) {
@@ -48,9 +50,16 @@ if ($current_file_name == 'supergoals.php') {
     $goalType = isset($_REQUEST['type']) ? trim($_REQUEST['type']) : 'weekly';
 }
 
+$profile_info = $common;
+$my_notes_count=0;
 
+if (Session::get('user_id') !== NULL) {
+    $user_id = Session::get('user_id');   
+   $userFolders=$common->db->query('SELECT user_folders.*, (SELECT count(*) FROM user_notes WHERE folder_id=user_folders.id) as notes_count FROM user_folders WHERE user_id='.$user_id)->fetchAll();
+   $my_notes_count = $common->count("user_notes", 'user_id = :user_id AND folder_id = :folder_id', ['user_id' => $user_id, 'folder_id' => 0]);
+}
 
-$profile_info = $common
+//$common->db->query('ALTER TABLE user_notes DROP COLUMN title;');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -464,6 +473,27 @@ $profile_info = $common
 </head>
 
 <body>
+<!-- Modal -->
+<div class="modal fade" id="createFolderModal" tabindex="-1" aria-labelledby="createFolderModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form method="post" id="createFolderForm">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="createFolderModalLabel">Create Folder</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" name="folder_name" id="folder_name" class="form-control" required placeHolder="New Folder">
+        <input type="hidden" name="folder_id" id="folder_id" value="0">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" id="saveCreateFolderBtn" class="btn btn-primary">Save changes</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
     <!-- Alerts Start -->
     <?php if (Session::hasSuccess()) : ?>
         <div class="alert-timeout alert alert-success w-sm-100 w-md-50 mx-auto fixed-top" role="alert">
@@ -515,9 +545,37 @@ $profile_info = $common
             </div>
             <div class="offcanvas-body">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <?php  if($current_file_name=='mynotes.php'): ?>
+                        <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="<?= SITE_URL; ?>/users/dailygoals.php">Back</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                                <a class="nav-link" href="#" role="button">MejorNotes</a>
+                                <ul class="submenu my-notes-menu" id="mynotesmenu">
+                                    <li class="nav-item folder-item" id="folder-0">
+                                        <a class="nav-link" href="mynotes.php" role="button">
+                                        <i class="fa fa-list me-3"></i>
+                                        My Notes
+                                        <span data-count="<?=$my_notes_count;?>" class="badge rounded-pill pull-right bg-light text-dark"><?=$my_notes_count;?></span>
+                                        </a>
+                                    </li>
+                                    <?php foreach($userFolders as $folder): ?>
+                                        <li class="nav-item folder-item" id="folder-<?=$folder['id']; ?>">
+                                        <a class="nav-link " href="mynotes.php?folder_id=<?=$folder['id']; ?>" role="button"><i class="fa fa-folder-o me-3"></i><?=$folder['name']; ?>  <span data-count="<?=$folder['notes_count'];?>" class="badge rounded-pill pull-right bg-light text-dark"><?=$folder['notes_count'];?></span> </a>
+                                    </li>
+                                    <?php endforeach; ?>
+                                    <li class="nav-item create-folder-nav" id="create_folder_nav_item">
+                                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createFolderModal" role="button"><i class="fa fa-folder-open me-3"></i>Create Folder</a> 
+                                    </li>                                    
+
+                                </ul>
+                            </li>  
+                    <?php else: ?>  
+                    
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="<?= SITE_URL; ?>">Home</a>
                     </li>
+                    
                     <li class="nav-item dropdown">
                         <a class="nav-link" href="#" role="button">MejorJournal</a>
                         <ul class="submenu">
@@ -587,8 +645,12 @@ $profile_info = $common
                                     <li class="nav-item"><a class="nav-link" href="https://mejorcadadia.com/users/notebook.php">Escribe Carta</a></li>
                                 </ul>
                             </li>
+                            <li class="nav-item">
+                       <a class="nav-link" aria-current="page" href="mynotes.php">MejorNotes</a>
+                    </li>
                         </ul>
                     </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="https://blog.mejorcadadia.com">MejorBlog</a>
                     </li>
@@ -601,7 +663,7 @@ $profile_info = $common
                     <li class="nav-item">
                         <a class="nav-link" href="<?= SITE_URL; ?>/users/logout.php" onclick="return confirm('Are you sure to logout?');">Salir</a>
                     </li>
-
+                    <?php endif; ?>   
 
                 </ul>
             </div>
@@ -616,10 +678,39 @@ $profile_info = $common
                     <div class="sidebar-sticky" style="padding-top: 0px;width: 100%;background-color: #1076be;">
 
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
+                            
+                            
+                            <?php  if($current_file_name=='mynotes.php'): ?>
+                                <li class="nav-item">
+                                    <a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/dailygoals.php">Back</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                <a class="nav-link" href="#" role="button">MejorNotes</a>
+                                <ul class="submenu my-notes-menu" id="mynotesmenu">
+                                    <li class="nav-item folder-item" id="folder-0">
+                                        <a class="nav-link" href="mynotes.php" role="button">
+                                        <i class="fa fa-list me-3"></i>
+                                        My Notes
+                                        <span data-count="<?=$my_notes_count;?>" class="badge rounded-pill pull-right bg-light text-dark"><?=$my_notes_count;?></span>
+                                        </a>
+                                    </li>
+                                    <?php foreach($userFolders as $folder): ?>
+                                        <li class="nav-item folder-item" id="folder-<?=$folder['id']; ?>">
+                                        <a class="nav-link " href="mynotes.php?folder_id=<?=$folder['id']; ?>" role="button"><i class="fa fa-folder-o me-3"></i><?=$folder['name']; ?>  <span data-count="<?=$folder['notes_count'];?>" class="badge rounded-pill pull-right bg-light text-dark"><?=$folder['notes_count'];?></span> </a>
+                                    </li>
+                                    <?php endforeach; ?>
+                                    <li class="nav-item create-folder-nav" id="create_folder_nav_item">
+                                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createFolderModal" role="button"><i class="fa fa-folder-open me-3"></i>Create Folder</a> 
+                                    </li>                                    
+
+                                </ul>
+                            </li>  
+                            <?php else: ?>
+                                <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="<?= SITE_URL; ?>">Home</a>
-                            </li>
-                            <li class="nav-item dropdown">
+                                </li>
+                                
+                                <li class="nav-item dropdown">
                                 <a class="nav-link" href="#" role="button">MejorJournal</a>
                                 <ul class="submenu">
                                     <li class="nav-item">
@@ -698,6 +789,9 @@ $profile_info = $common
                                             <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/notebook.php">Escribe Carta</a></li>
                                         </ul>
                                     </li>
+                                    <li class="nav-item">
+                                    <a class="nav-link" aria-current="page" href="mynotes.php">MejorNotes</a>
+                                </li>
                                 </ul>
                             </li>
                             <li class="nav-item">
@@ -711,7 +805,12 @@ $profile_info = $common
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= SITE_URL; ?>/users/logout.php" onclick="return confirm('Are you sure to logout?');">Salir</a>
-                            </li>
+                            </li>  
+                            <?php endif; ?>
+                             
+                            
+                           
+                            
 
 
                         </ul>
