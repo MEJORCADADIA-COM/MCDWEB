@@ -742,10 +742,14 @@ if (isset($_POST['action']) && ($_POST['action'] == 'createNotes')) {
     }
     $notes = empty($_POST['notes']) ? '' : $_POST['notes'];
     //$title = empty($_POST['title']) ? '' : $_POST['title'];
-    $title=substr(strip_tags($notes),0,80);
+    $title=substr(strip_tags($notes),0,30);
     $folder_id=isset($_POST['folder_id'])? $_POST['folder_id']:0; 
     $id=isset($_POST['id'])? $_POST['id']:0;     
-    $resArr = ['success' => false, 'new'=>true, 'title'=>$title, 'date'=>date('d-m-Y'),'id'=>$id,'folder_id'=>$folder_id,'notes' => $notes, 'message' => ""];
+    setlocale(LC_ALL, "es_ES");
+    $string = date('Y-m-d H:i:s');
+    $dateObj = DateTime::createFromFormat("Y-m-d H:i:s", $string); 
+    $cDate=utf8_encode(strftime("%A, %d %B, %Y %H:%M", $dateObj->getTimestamp()));
+    $resArr = ['success' => false, 'new'=>true, 'title'=>$title, 'date'=>$cDate,'id'=>$id,'folder_id'=>$folder_id,'notes' => $notes, 'message' => ""];
     
     if(empty($id)){
         $common->insert('user_notes', [

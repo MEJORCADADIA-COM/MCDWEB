@@ -479,11 +479,11 @@ if (Session::get('user_id') !== NULL) {
     <div class="modal-content">
         <form method="post" id="createFolderForm">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="createFolderModalLabel">Create Folder</h1>
+        <h1 class="modal-title fs-5" id="createFolderModalLabel">Carpeta</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <input type="text" name="folder_name" id="folder_name" class="form-control" required placeHolder="New Folder">
+        <input type="text" name="folder_name" id="folder_name" class="form-control" required placeHolder="Carpeta">
         <input type="hidden" name="folder_id" id="folder_id" value="0">
       </div>
       <div class="modal-footer">
@@ -547,7 +547,7 @@ if (Session::get('user_id') !== NULL) {
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <?php  if($current_file_name=='mynotes.php'): ?>
                         <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?= SITE_URL; ?>/users/dailygoals.php">Back</a>
+                        <a class="nav-link active" aria-current="page" href="<?= SITE_URL; ?>/users/dailygoals.php"><i class="fa fa-arrow-left"></i> Atrás</a>
                     </li>
                     <li class="nav-item dropdown">
                                 <a class="nav-link" href="#" role="button">MejorNotes</a>
@@ -555,7 +555,7 @@ if (Session::get('user_id') !== NULL) {
                                     <li class="nav-item folder-item" id="folder-0">
                                         <a class="nav-link" href="mynotes.php" role="button">
                                         <i class="fa fa-list me-3"></i>
-                                        My Notes
+                                        Mis Notas
                                         <span data-count="<?=$my_notes_count;?>" class="badge rounded-pill pull-right bg-light text-dark"><?=$my_notes_count;?></span>
                                         </a>
                                     </li>
@@ -565,7 +565,7 @@ if (Session::get('user_id') !== NULL) {
                                     </li>
                                     <?php endforeach; ?>
                                     <li class="nav-item create-folder-nav" id="create_folder_nav_item">
-                                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createFolderModal" role="button"><i class="fa fa-folder-open me-3"></i>Create Folder</a> 
+                                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createFolderModal" role="button"><i class="fa fa-folder-open me-3"></i>Carpeta</a> 
                                     </li>                                    
 
                                 </ul>
@@ -682,7 +682,7 @@ if (Session::get('user_id') !== NULL) {
                             
                             <?php  if($current_file_name=='mynotes.php'): ?>
                                 <li class="nav-item">
-                                    <a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/dailygoals.php">Back</a>
+                                    <a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/dailygoals.php"><i class="fa fa-arrow-left"></i> Atrás</a>
                                 </li>
                                 <li class="nav-item dropdown">
                                 <a class="nav-link" href="#" role="button">MejorNotes</a>
@@ -690,7 +690,7 @@ if (Session::get('user_id') !== NULL) {
                                     <li class="nav-item folder-item" id="folder-0">
                                         <a class="nav-link" href="mynotes.php" role="button">
                                         <i class="fa fa-list me-3"></i>
-                                        My Notes
+                                        Mis Notas
                                         <span data-count="<?=$my_notes_count;?>" class="badge rounded-pill pull-right bg-light text-dark"><?=$my_notes_count;?></span>
                                         </a>
                                     </li>
@@ -700,7 +700,7 @@ if (Session::get('user_id') !== NULL) {
                                     </li>
                                     <?php endforeach; ?>
                                     <li class="nav-item create-folder-nav" id="create_folder_nav_item">
-                                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createFolderModal" role="button"><i class="fa fa-folder-open me-3"></i>Create Folder</a> 
+                                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createFolderModal" role="button"><i class="fa fa-folder-open me-3"></i>Carpeta</a> 
                                     </li>                                    
 
                                 </ul>

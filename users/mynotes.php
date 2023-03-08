@@ -1,6 +1,7 @@
 <?php
     /*Just for your server-side code*/
    // header('Content-Type: text/html; charset=ISO-8859-1');
+   
 ?>
 <?php require_once "inc/header.php"; ?>
 <?php 
@@ -8,7 +9,7 @@
 $user_id = Session::get('user_id');
 $folder_id=empty($_GET['folder_id'])? 0: $_GET['folder_id'];
 
-$notesItems = $common->get(table: "user_notes", cond: 'user_id = :user_id AND folder_id = :folder_id', params: ['user_id' => $user_id,'folder_id' => $folder_id], orderBy: 'created_at',order: 'DESC');
+$notesItems = $common->get(table: "user_notes", cond: 'user_id = :user_id AND folder_id = :folder_id', params: ['user_id' => $user_id,'folder_id' => $folder_id], orderBy: 'updated_at',order: 'DESC');
 $currentFolder = $common->first(
   "user_folders",
   "`id` = :id AND user_id = :user_id",
@@ -111,12 +112,18 @@ $currentFolder = $common->first(
         padding:0;
         background:none;
         opacity: 0.8;
+        padding: 0.5rem 1rem;
       }
       .modal-header .actions-menu .dropdown-toggle::after{
         display:none;
       }
       .modal-header .btn-close i, .modal-header .actions-menu svg{
         color:#FFF;
+        font-size:1.1rem;
+      }
+      #notes{
+        overflow-y: scroll;
+        color:#000;
       }
       @media screen and (max-width: 767px) {
         h2.maintitle{font-size:1.3rem;}
@@ -157,8 +164,14 @@ $currentFolder = $common->first(
       }
       td.notebody .date{
         float:right;
-        font-size:12px;
+        font-size:10px;
+        color: #808080;
       }
+      td.notebody .content{
+        color: #000;
+      font-size: 1rem;
+      }
+     
       /*td.notebody{
         overflow: hidden;
         text-overflow: ellipsis; 
@@ -181,26 +194,33 @@ $currentFolder = $common->first(
                 <?php if(!empty($currentFolder)): ?>
                   <h1 style="text-transform: capitalize;"><?=$currentFolder['name']?></h1>
                 <?php else: ?>
-                  <h1 style="text-transform: capitalize;">My Notes</h1>
+                  <h1 style="text-transform: capitalize;">Mis Notas</h1>
                 <?php endif; ?>
                   
                 </div>             
             </div>
           </header> 
-         
-       
-          <table class="table table-light table-hover" id="notesTable">
+        
+         <div class="bd-example" style="margin-right: 0;
+    margin-left: 0;
+    border-width: 1px;
+    border-radius: 0.375rem;
+    padding: 5px;
+    background: #FFF;">       
+          <table class="table table-light table-hover rounded" id="notesTable">
             <thead>
               <tr>                
-                <th>Notes</th>
+                <th scope="col">Notas</th>
               </tr>
             </thead>
             <tbody>
-             <?php foreach($notesItems as $item): ?>
+             <?php foreach($notesItems as $item): setlocale(LC_ALL, "es_ES");
+        $string = date('Y-m-d H:i:s', strtotime($item['updated_at']));
+        $dateObj = DateTime::createFromFormat("Y-m-d H:i:s", $string); ?>
               <tr id="nid-<?=$item['id']?>">
               <td class="notebody" data-bs-id="<?=$item['id']?>" data-bs-toggle="modal" data-bs-target="#createNotesModal">
-                <div class="content"><?=substr(strip_tags($item['notes']),0,80);?></div>
-                <p class="date"><?=date('m-d-Y',strtotime($item['created_at']));?></p>
+                <div class="content"><?=substr(strip_tags($item['notes']),0,30);?></div>
+                <p class="date"> <?= utf8_encode(strftime("%A, %d %B, %Y %H:%M", $dateObj->getTimestamp())); ?></p>
               </td>
                 
               </tr>
@@ -209,12 +229,12 @@ $currentFolder = $common->first(
              
             </tbody>
           </table>
-            
+             </div>
        
         <button id="createNotesBtn" type="button" class="btn btn-lg btn-primary rounded-circle" data-bs-toggle="modal" data-bs-target="#createNotesModal"> <i class="fa fa-plus"></i></button>
             <!-- Modal -->
           <div class="modal fade" id="createNotesModal" tabindex="-1" aria-labelledby="createNotesModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-fullscreen-md-down">
+            <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable">
               <div class="modal-content">
                 <form method="POST" id="createNotesForm">
                 <div class="modal-header text-bg-primary">
@@ -235,9 +255,8 @@ $currentFolder = $common->first(
                 </div>
                 <div class="modal-body">
                   
-                  <div class="form-group">
-                    <textarea class="form-control" style="height:100%; min-height:400px;" name="notes" id="notes"></textarea>
-                  </div>
+                    <textarea class="form-control" style="height:100%; min-height:400px; overflow-y: scroll;" name="notes" id="notes"></textarea>
+                  
                   <input type="hidden" name="notes_id" id="notes_id" value="0">
                 </div>
                 <div class="modal-footer">                  
@@ -426,9 +445,11 @@ $currentFolder = $common->first(
      });
       createNotesModal.addEventListener('show.bs.modal', event => {     
         const button = event.relatedTarget;
-        const nid = button.getAttribute('data-bs-id');
-        console.log(nid);
-       
+        const nid = button.getAttribute('data-bs-id');        
+       var s_height = window.innerHeight-100;
+      if(window.innerWidth<768){
+        document.getElementById('notes').setAttribute('style','height:'+s_height+'px');
+      }     
         
       const modalTitle = createNotesModal.querySelector('.modal-title');
       const modalBodyInput = createNotesModal.querySelector('.modal-body textarea');
@@ -440,9 +461,9 @@ $currentFolder = $common->first(
         modalBodyId.value=nid;
         const xhttp = new XMLHttpRequest();
         xhttp.onload = function() {
-          console.log(this.responseText);
+         // console.log(this.responseText);
           var obj=JSON.parse(this.responseText);
-          console.log(obj);
+          //console.log(obj);
           if(obj.success){
             modalBodyInput.value=obj.note.notes;
             //tinyMCE.get('notes').setContent(obj.note.notes);
@@ -469,9 +490,8 @@ $currentFolder = $common->first(
         var notes_id=document.getElementById('notes_id').value;
         //var notes = tinyMCE.get('notes').getContent();
         var notes=document.getElementById('notes').value;
-        console.log('notes_id',notes_id,notes);
-        console.log(folder_name,folder_id) ;     
-        $.ajax({
+        if(notes!="" && notes!=null){
+          $.ajax({
                 url: SITE_URL + "/users/ajax/ajax.php",
                 type: "POST",
                 data: {
@@ -507,11 +527,14 @@ $currentFolder = $common->first(
                           c2.innerHTML = '<div class="content">'+obj.title+'</div><p class="date">'+obj.date+'</p>';
                          
                           row.appendChild(c2);
-                          notesTable.tBodies[0].appendChild(row);
-                         
-                           
+                          //notesTable.tBodies[0].appendChild(row);
+                          notesTable.tBodies[0].prepend(row);
                         }else{
+                          
                           $("#nid-"+notes_id+" td.notebody .content").html(obj.title);
+                          $("#nid-"+notes_id+" td.notebody .date").html(obj.date);
+                          var row = $("tr#nid-"+notes_id+":first");
+                          row.prependTo(notesTable.tBodies[0]);    
 
                         }
                         document.getElementById('folder_name').value="";
@@ -520,7 +543,9 @@ $currentFolder = $common->first(
                         modal.hide();
                     }
                 }
-      });
+            });
+        }
+        
       }
       createNotesForm.addEventListener('submit', event => {
         event.preventDefault();
