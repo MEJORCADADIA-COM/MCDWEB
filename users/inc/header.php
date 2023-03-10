@@ -585,7 +585,7 @@ if (Session::get('user_id') !== NULL) {
                                 </a>
                             </li>
                             <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button">Victoria7</a> </li>
-
+                            <li class="nav-item"><a class="nav-link" href="capsules.php" role="button">MejorCapsules</a> </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="dailycommitments.php" role="button">
                                     Guerrero Diario
@@ -719,7 +719,7 @@ if (Session::get('user_id') !== NULL) {
                                         </a>
                                     </li>
                                     <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button">Victoria7</a> </li>
-
+                                    <li class="nav-item"><a class="nav-link" href="capsules.php" role="button">MejorCapsules</a> </li>
                                     <li class="nav-item">
                                         <a class="nav-link" href="dailycommitments.php" role="button">
                                             Guerrero Diario

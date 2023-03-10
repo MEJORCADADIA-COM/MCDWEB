@@ -16,5 +16,6 @@ define("SITE_URL", 'http://localhost/vault/raza/mejorcadadia.com');
 
     //mail sender
 define("RECIPIENT_EMAIL", 'verify@mejorcadadia.com');
+error_reporting(0)
 
 ?>

@@ -661,7 +661,21 @@ if (isset($_POST['DeleteDailyGoals']) && ($_POST['DeleteDailyGoals'] == 'DeleteD
     echo 'Deleted';
 }
 
-
+if (isset($_POST['action']) && ($_POST['action'] == 'DeleteCapsule')) {
+    $user_id = Session::get('user_id');
+    if (!$user_id) {
+        $rememberCookieData = RememberCookie::getRememberCookieData();
+        if ($rememberCookieData) {
+            $user_id = $rememberCookieData[RememberCookie::ID];
+        }
+    }
+    $id=isset($_POST['id'])? $_POST['id']:0; 
+    $resArr=[];    
+    if($id>0){
+         $common->delete("user_capsules", "id = :id", ['id' => $id]);
+    }
+    echo json_encode($resArr);
+}
 if (isset($_POST['action']) && ($_POST['action'] == 'DeleteNotes')) {
     $user_id = Session::get('user_id');
     if (!$user_id) {
@@ -677,6 +691,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'DeleteNotes')) {
     }
     echo json_encode($resArr);
 }
+
 
 
 if (isset($_POST['action']) && ($_POST['action'] == 'moveNotes')) {
@@ -731,6 +746,54 @@ if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'getNotes')) {
         $resArr['success']=false;
     }
     echo json_encode($resArr);
+}
+
+if (isset($_POST['action']) && ($_POST['action'] == 'createCapsule')) {
+    $user_id = Session::get('user_id');
+    if (!$user_id) {
+        $rememberCookieData = RememberCookie::getRememberCookieData();
+        if ($rememberCookieData) {
+            $user_id = $rememberCookieData[RememberCookie::ID];
+        }
+    }
+    $content = empty($_POST['content']) ? '' : $_POST['content'];    
+    $id=isset($_POST['id'])? $_POST['id']:0;     
+    setlocale(LC_ALL, "es_ES");
+    $string = date('Y-m-d H:i:s');
+    $dateObj = DateTime::createFromFormat("Y-m-d H:i:s", $string); 
+    $cDate=utf8_encode(strftime("%A, %d %B, %Y %H:%M", $dateObj->getTimestamp()));
+    $resArr = ['success' => false, 'new'=>true,  'date'=>$cDate,'id'=>$id,'content' => $content, 'message' => ""];
+    if(!empty($content)){
+        if(empty($id)){
+            $common->insert('user_capsules', [
+                'user_id' => $user_id,
+                'content' => $content
+            ]);
+            $id = $common->insertId();
+            $resArr['success'] = true;
+            $resArr['message'] = "created successfully";
+            $resArr['id'] = $id;
+        }else{
+           
+            $common->update(
+                'user_capsules',
+                ['content' => $content],
+                'id = :id AND user_id = :user_id',
+                ['id' => $id, 'user_id' => $user_id],
+                modifiedColumnName: 'updated_at'
+            );
+            $resArr['new'] = false;
+            $resArr['message'] = "updated successfully";
+            $resArr['success'] = true;
+    
+        } 
+    }else{
+
+    }
+    
+    echo json_encode($resArr);
+
+
 }
 if (isset($_POST['action']) && ($_POST['action'] == 'createNotes')) {
     $user_id = Session::get('user_id');

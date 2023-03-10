@@ -188,6 +188,12 @@ require_once "../inc/inspirationQuote.php";
             <div class="py-2">
                 <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/notebook.php">Escribe Carta</a>
             </div>
+            <div class="py-2">
+                <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/mynotes.php">MejorNotes</a>
+            </div>
+            <div class="py-2">
+                <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/capsules.php">MejorCapsule</a>
+            </div>
         </div>
         <div class="col-7">
             <div class="py-2">
