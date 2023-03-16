@@ -21,12 +21,12 @@ function getStartAndEndDate($week, $year)
 }
 
 
-function localDate($cdate)
+function localDate($cdate,$format="%A, %d %B, %Y")
 {
   setlocale(LC_ALL, "es_ES");
   $string = date('d/m/Y', strtotime($cdate));
   $dateObj = DateTime::createFromFormat("d/m/Y", $string);
-  return utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp()));
+  return utf8_encode(strftime($format, $dateObj->getTimestamp()));
 }
 $today = date('Y-m-d');
 
@@ -471,7 +471,7 @@ if ($row) {
           <div class="row">
             <div class="col-sm-3 col-3" style="text-align:left;"><a class="prev-arrow" href="<?= SITE_URL; ?>/users/supergoals.php?type=monthly&month=<?= date("m", strtotime("-1 month", strtotime($start_date))) ?>&year=<?= date("Y", strtotime("-1 month", strtotime($start_date))) ?>" ;><i class="fa fa-arrow-left"></i></a></div>
             <div class="col-sm-6 col-6" style="text-align:center;">
-              <h2 class="">Mes</h2>
+              <h2 class="" style="text-transform:uppercase;"><?= localDate($end_date,"%B"); ?></h2>
             </div>
             <div class="col-sm-3 col-3" style="text-align:right;"><a class="next-arrow" href="<?= SITE_URL; ?>/users/supergoals.php?type=monthly&&month=<?= date("m", strtotime("+1 month", strtotime($start_date))) ?>&year=<?= date("Y", strtotime("+1 month", strtotime($start_date))) ?>"><i class="fa fa-arrow-right"></i></a></div>
           </div>
@@ -482,7 +482,7 @@ if ($row) {
           <div class="row">
             <div class="col-sm-3 col-3" style="text-align:left;"><a class="prev-arrow" href="<?= SITE_URL; ?>/users/supergoals.php?type=yearly&year=<?= $selectedYear - 1; ?>" ;><i class="fa fa-arrow-left"></i></a></div>
             <div class="col-sm-6 col-6" style="text-align:center;">
-              <h2 class="">AÑO</h2>
+              <h2 class=""><?=$selectedYear;?></h2>
             </div>
             <div class="col-sm-3 col-3" style="text-align:right;"><a class="next-arrow" href="<?= SITE_URL; ?>/users/supergoals.php?type=yearly&year=<?= $selectedYear + 1; ?>"><i class="fa fa-arrow-right"></i></a></div>
           </div>

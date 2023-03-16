@@ -7,9 +7,12 @@ use Users\services\Email;
 ?>
 
 <?php
+
 $userVisions = $common->first('visions', 'user_id = :user_id', ['user_id' => $user_infos['id']]);
 
 if (isset($_POST['save_vision'])) {
+    
+    $visionMonths = $fm->validation($_POST['next_month_vision']);
     $vision3Years = $fm->validation($_POST['next_3_years_vision']);
     $vision5Years = $fm->validation($_POST['next_5_years_vision']);
     $vision10Years = $fm->validation($_POST['next_10_years_vision']);
@@ -18,14 +21,14 @@ if (isset($_POST['save_vision'])) {
         if ($userVisions) {
             $common->update(
                 'visions',
-                ['next_3_years_vision' => $vision3Years, 'next_5_years_vision' => $vision5Years, 'next_10_years_vision' => $vision10Years],
+                ['next_month_vision' => $visionMonths, 'next_3_years_vision' => $vision3Years, 'next_5_years_vision' => $vision5Years, 'next_10_years_vision' => $vision10Years],
                 'id = :id',
                 ['id' => $userVisions['id']]
             );
         } else {
             $common->insert(
                 'visions',
-                ['user_id' => $user_infos['id'], 'next_3_years_vision' => $vision3Years, 'next_5_years_vision' => $vision5Years, 'next_10_years_vision' => $vision10Years]
+                ['user_id' => $user_infos['id'], 'next_month_vision' => $visionMonths, 'next_3_years_vision' => $vision3Years, 'next_5_years_vision' => $vision5Years, 'next_10_years_vision' => $vision10Years]
             );
         }
     } catch (Exception $e) {
@@ -39,6 +42,7 @@ if (isset($_POST['save_vision'])) {
 }
 
 if (isset($_POST['send_email'])) {
+    $visionMonths = $fm->validation($_POST['next_month_vision']);
     $vision3Years = $fm->validation($_POST['next_3_years_vision']);
     $vision5Years = $fm->validation($_POST['next_5_years_vision']);
     $vision10Years = $fm->validation($_POST['next_10_years_vision']);
@@ -51,12 +55,14 @@ if (isset($_POST['send_email'])) {
         return;
     }
 
-    if (empty($vision3Years) && empty($vision5Years) && empty($vision10Years)) {
+    if (empty($vision3Years) && empty($vision5Years) && empty($vision10Years) && empty($visionMonths)) {
         setError('Visions can not be empty');
         redirect('users/vision.php');
         return;
     }
-
+    if (!empty($visionMonths)) {
+        $visions = "<h4>Describe la Vida Más Espectacular que Puedas Imaginar:</h4><div>".html_entity_decode($visionMonths)."</div>";
+    }
     if (!empty($vision3Years)) {
         $visions = "<h4>Describe en detalle tu Visión para los Próximos 3 Años:</h4><div>".html_entity_decode($vision3Years)."</div>";
     }
@@ -108,6 +114,10 @@ if (isset($_POST['send_email'])) {
             <h2 class="toptitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;">Creando un Futuro Extraordinario:</h2>
         </div>
         <form class="px-1 px-lg-0" action="" method="post">
+            <div class="mb-4">
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="next-3-years-vision">Describe la Vida Más Espectacular que Puedas Imaginar:</label>
+                <textarea name="next_month_vision" id="next-month-vision" class="tinymce-editor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['next_month_vision'] ?? '' ?></textarea>
+            </div>
             <div class="mb-4">
                 <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="next-3-years-vision">Describe en detalle tu Visión para los Próximos 3 Años:</label>
                 <textarea name="next_3_years_vision" id="next-3-years-vision" class="tinymce-editor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['next_3_years_vision'] ?? '' ?></textarea>

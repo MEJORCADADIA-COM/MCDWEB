@@ -892,25 +892,29 @@ if (isset($_POST['action']) && ($_POST['action'] == 'SaveVictory7Box')) {
     $body = $format->validation($_POST['body']);
     $selectedDate = isset($_POST['currentDate']) ? $_POST['currentDate'] : date('Y-m-d');
     $resArr = ['success' => false, 'goals' => [], 'message' => ""];
-    if ($selectedDate < $today) {
+    
+    /*if ($selectedDate < $today) {
         $resArr['message'] = 'Not allowed in past.';
-    } else if ($selectedDate >= $today && !empty($box)) {
-        $result = $common->count("victory7boxes", 'user_id = :user_id AND box = :box AND created_at = :created_at', ['user_id' => $user_id, 'box' => $box, 'created_at' => $today]);
+    } else */
+    if (!empty($box)) {
+        $result = $common->count("victory7boxes", 'user_id = :user_id AND box = :box AND created_at = :created_at', ['user_id' => $user_id, 'box' => $box, 'created_at' => $selectedDate]);
+        
         if ($result > 0) {
-            $common->update(
+            $updated=$common->update(
                 table: "victory7boxes",
                 data: ['body' => $body],
-                cond: 'WHERE user_id = :user_id AND box = :box AND created_at = :created_at',
-                params: ['user_id' => $user_id, 'box' => $box, 'created_at' => $today],
+                cond: 'user_id = :user_id AND box = :box AND created_at = :created_at',
+                params: ['user_id' => $user_id, 'box' => $box, 'created_at' => $selectedDate],
                 modifiedColumnName: 'modified_at'
             );
+          
             $resArr['success'] = true;
         } else {
             $common->insert('victory7boxes', [
                 'user_id' => $user_id,
                 'box' => $box,
                 'body' => $body,
-                'created_at' => $today
+                'created_at' => $selectedDate
             ]);
             $resArr['success'] = true;
         }

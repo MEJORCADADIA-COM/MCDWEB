@@ -176,14 +176,15 @@ require_once "../inc/inspirationQuote.php";
             </div>
         </div>
         <div class="col-5">
-            <div class="py-2">
-                <a class="text-decoration-none text-white py-1" href="cronovida.php">CronoVida</a>
-            </div>
-            <div class="py-2">
+        <div class="py-2">
                 <a class="text-decoration-none text-white py-1" href="dailygoals.php">Victoria7</a>
             </div>
             <div class="py-2">
-                <a class="text-decoration-none text-white py-1 <?= $path == 'index.php' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/index.php" id="navbarDropdown">Tablero</a>
+                <a class="text-decoration-none text-white py-1" href="cronovida.php">CronoVida</a>
+            </div>
+            
+            <div class="py-2">
+                <a class="text-decoration-none text-white py-1 <?= $path == 'index.php' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/index.php" id="navbarDropdown">Cartas</a>
             </div>
             <div class="py-2">
                 <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/notebook.php">Escribe Carta</a>
@@ -283,6 +284,7 @@ if (!$user_infos) :
 endif;
 ?>
 <script>
+
     const alerts = document.querySelectorAll('.alert-timeout')
     if (alerts.length > 0) {
         setTimeout(() => {
@@ -344,7 +346,11 @@ endif;
 
     //modalTitle.textContent = `New message to ${recipient}`
     //modalBodyInput.value = recipient
-    })
+    });
+    console.log(window);
+    window.onbeforeunload=function(){
+        return null;
+    };
 </script>
 </body>
 

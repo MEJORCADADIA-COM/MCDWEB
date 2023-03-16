@@ -91,7 +91,9 @@ if (Session::get('user_id') !== NULL) {
             font-family: 'Montserrat';
         }
 
-
+        .goals-area {
+                padding: 20px 0px;
+        }
         @media screen and (max-width: 767px) {
             .navbar-brand {
                 order: 2;
@@ -113,9 +115,7 @@ if (Session::get('user_id') !== NULL) {
                 align-items: baseline;
             }
 
-            .goals-area {
-                padding: 20px 0px;
-            }
+            
 
             .migualtitle {
                 font-size: 10px;
@@ -239,10 +239,11 @@ if (Session::get('user_id') !== NULL) {
             }
 
             .migualtitle {
-                font-size: 22px;
+                font-size: 20px;
                 color: #ffffff;
                 margin-right: 1rem !important;
             }
+            .migualtitle p{font-size:18px; margin-top:2px;}
 
             .buttondiv {
                 width: 40%;
@@ -409,7 +410,9 @@ if (Session::get('user_id') !== NULL) {
             width: 1.8em;
             height: 1.8em;
         }
-
+        .offcanvas{
+            z-index: 9999;
+        }
         .offcanvas .navbar-nav .nav-link.active {
             font-weight: bold;
             color: #FFF;
@@ -467,8 +470,16 @@ if (Session::get('user_id') !== NULL) {
             padding-left: 0;
             padding-right: 0
         }
-
-        ;
+        .lastfooteritem{
+            margin-top:40px;
+        }
+        .lastfooteritem .migualtitle{
+            font-size:20px; text-align:center;
+        }
+        .lastfooteritem .migualtitle p{
+            font-size:16px; 
+            margin-top:4px;
+        }
     </style>
 </head>
 
@@ -516,11 +527,14 @@ if (Session::get('user_id') !== NULL) {
             <a class="navbar-brand mr-0 py-0" href="<?php echo SITE_URL; ?>">
                 <img src="https://mejorcadadia.com/users/assets/logo.png" alt="image" width="100px">
             </a>
-            <h1 class="heading1 d-none d-sm-block">Making Every Day Extraordinary</h1>
+            <h1 class="heading1 d-none d-sm-block">Making Every Day Masterpiece</h1>
             <!-- Example single danger button -->
             <div class="brand-info-bar">
-                <h1 class="heading1 d-block d-md-none">Making Every Day Extraordinary</h1>
-                <h1 class="migualtitle">By Miguel De La Fuente</h1>
+                <h1 class="heading1 d-block d-md-none">Making Every Day a Masterpiece</h1>
+                <h1 class="migualtitle">By Miguel De La Fuente
+                    <br>
+                    <p>+507 6445-1418</p>
+                </h1>
 
 
             </div>
@@ -579,12 +593,13 @@ if (Session::get('user_id') !== NULL) {
                     <li class="nav-item dropdown">
                         <a class="nav-link" href="#" role="button">MejorJournal</a>
                         <ul class="submenu">
+                        <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button">Victoria7</a> </li>
+                            
                             <li class="nav-item">
                                 <a class="nav-link" href="cronovida.php" role="button">
                                     CronoVida
                                 </a>
                             </li>
-                            <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button">Victoria7</a> </li>
                             <li class="nav-item"><a class="nav-link" href="capsules.php" role="button">MejorCapsules</a> </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="dailycommitments.php" role="button">
@@ -641,7 +656,7 @@ if (Session::get('user_id') !== NULL) {
                                     Cartas para la Eternidad
                                 </a>
                                 <ul id="dentletter" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
-                                    <li class="nav-item"><a class="nav-link<?= $path == 'index.php' ? ' active' : ''; ?>" href="https://mejorcadadia.com/users/index.php" id="navbarDropdown">Tablero</a></li>
+                                    <li class="nav-item"><a class="nav-link<?= $path == 'index.php' ? ' active' : ''; ?>" href="https://mejorcadadia.com/users/index.php" id="navbarDropdown">Cartas</a></li>
                                     <li class="nav-item"><a class="nav-link" href="https://mejorcadadia.com/users/notebook.php">Escribe Carta</a></li>
                                 </ul>
                             </li>
@@ -663,7 +678,13 @@ if (Session::get('user_id') !== NULL) {
                     <li class="nav-item">
                         <a class="nav-link" href="<?= SITE_URL; ?>/users/logout.php" onclick="return confirm('Are you sure to logout?');">Salir</a>
                     </li>
-                    <?php endif; ?>   
+                    <?php endif; ?>  
+                    <li class="nav-item lastfooteritem">
+                    <h1 class="migualtitle">By Miguel De La Fuente
+                        <br>
+                        <p>+507 6445-1418</p>
+                    </h1>
+                    </li> 
 
                 </ul>
             </div>
@@ -675,7 +696,7 @@ if (Session::get('user_id') !== NULL) {
 
                 <nav class="col-md-2 d-none d-md-block sidebar desktop-left-sidebar" style="top: 89px;position: inherit;">
                     <h1 style="color: #ffffff; font-size: 17px; text-align: center; background-color: #fdaf40; padding: 7px; margin: 0px;">Menu</h1>
-                    <div class="sidebar-sticky" style="padding-top: 0px;width: 100%;background-color: #1076be;">
+                    <div class="sidebar-sticky bg-info" style="padding-top: 0px;width: 100%;">
 
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             
@@ -713,12 +734,13 @@ if (Session::get('user_id') !== NULL) {
                                 <li class="nav-item dropdown">
                                 <a class="nav-link" href="#" role="button">MejorJournal</a>
                                 <ul class="submenu">
+                                <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button">Victoria7</a> </li>
+                                    
                                     <li class="nav-item">
                                         <a class="nav-link" href="cronovida.php" role="button">
                                             CronoVida
                                         </a>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button">Victoria7</a> </li>
                                     <li class="nav-item"><a class="nav-link" href="capsules.php" role="button">MejorCapsules</a> </li>
                                     <li class="nav-item">
                                         <a class="nav-link" href="dailycommitments.php" role="button">
@@ -785,7 +807,7 @@ if (Session::get('user_id') !== NULL) {
                                             Cartas para la Eternidad
                                         </a>
                                         <ul id="dentletter" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
-                                            <li class="nav-item"><a class="nav-link <?= $path == 'index.php' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/index.php" id="navbarDropdown">Tablero</a></li>
+                                            <li class="nav-item"><a class="nav-link <?= $path == 'index.php' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/index.php" id="navbarDropdown">Cartas</a></li>
                                             <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/notebook.php">Escribe Carta</a></li>
                                         </ul>
                                     </li>

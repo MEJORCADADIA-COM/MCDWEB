@@ -500,11 +500,11 @@ if ($dailyLifeGoals) {
         </div>
 
       </header>
-      <?php if ($today <= $currentDate) : ?>
+    
         <div>
           <button class="btn btn-primary rounded-circle fixed-save-btn text-white" type="button" id="floatingSaveBtn" name="saveBtn"><i class="fa fa-save fa-lg"></i></button>
         </div>
-      <?php endif; ?>
+     
 
       <!-- Slider Start -->
       <div class="d-flex w-100 slider">
@@ -560,7 +560,7 @@ if ($dailyLifeGoals) {
 
             <div class="cardd my-5" id="section-2" style="padding:0 5px;">
               <div class="d-flex justify-content-between my-1">
-                <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Mi Mayor Victoria Hoy:</h5>
+                <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Mi Mayor Victoria Hoy:</h5>
                 <a href="<?= SITE_URL; ?>/users/dailyVictories.php" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none">Más <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
               </div>
               <div class="card-body">
@@ -586,7 +586,7 @@ if ($dailyLifeGoals) {
 
             <div class="cardd my-5" id="section-2" style="padding:0 5px;">
               <div class="d-flex justify-content-between my-1">
-                <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Eventos para Recordar:</h5>
+                <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">¿Cómo Puedo Mejorar?:</h5>
                 <a href="<?= SITE_URL; ?>/users/toRemember.php" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none">Más <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
 
               </div>
@@ -710,9 +710,9 @@ if ($dailyLifeGoals) {
                 <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="Guardar pdf" />
 
                 <!-- Floating Save Start -->
-                <?php if ($today <= $currentDate) : ?>
+                <?php //if ($today <= $currentDate) : ?>
                   <input class="btn btn-info letter" type="button" id="saveBtn" name="saveBtn" value="Guardar" />
-                <?php endif; ?>
+                <?php // endif; ?>
                 <!-- Floating Save End -->
 
               </div>
