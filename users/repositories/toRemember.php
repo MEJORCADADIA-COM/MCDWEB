@@ -45,7 +45,8 @@ function addTagsToRemember($toRemembers): array
         'to_remember_user_tag.user_tag_id = user_tags.id',
         'to_remember_id IN (' . $inPlaceHolders . ')',
         $ids,
-        ['user_tags.*', 'to_remember_user_tag.to_remember_id']
+        ['user_tags.*', 'to_remember_user_tag.to_remember_id'],
+        'to_remember_user_tag.id'
     );
 
     foreach ($tags as $tag) {

@@ -73,8 +73,10 @@ if ($dailyVictory) {
     'daily_victory_user_tag.user_tag_id = user_tags.id',
     'daily_victory_user_tag.daily_victory_id = :victory_id',
     ['victory_id' => $dailyVictory['id']],
-    ['tag']
+    ['tag','daily_victory_user_tag.id'],
+    'daily_victory_user_tag.id'
   );
+  
 }
 
 $toRemember = $common->first(
@@ -90,7 +92,8 @@ if ($toRemember) {
     'to_remember_user_tag.user_tag_id = user_tags.id',
     'to_remember_user_tag.to_remember_id = :to_remember_id',
     ['to_remember_id' => $toRemember['id']],
-    ['tag']
+    ['tag','to_remember_user_tag.id'],
+    'to_remember_user_tag.id'
   );
 }
 
@@ -107,6 +110,7 @@ if ($selectedDate < $today) {
 } else {
   $goalDate = $today;
 }
+$isPastDate=false;
 
 $dailyLifeGoals = $common->get("dailylifegoals", "user_id = :user_id AND created_at <= :created_at", ['user_id' => $user_id, 'created_at' => $goalDate]);
 if ($dailyLifeGoals) {
@@ -535,7 +539,7 @@ if ($dailyLifeGoals) {
                 </ol>
 
                 <div class="form-group" id="new-top-goal-creation-container"></div>
-                <?php if ($today <= $currentDate && count($dailyTopGoals) < 7) : ?>
+                <?php if (count($dailyTopGoals) < 7) : ?>
                   <div class="form-group screenonly" style="padding:20px; text-align:right;" id="create-top-goal-btn-wrapper">
 
                     <button type="button" id="save-new-top-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewTopGoals()"><i class="fa fa-save"></i> Guarda Nuevo Objetivo</button>
