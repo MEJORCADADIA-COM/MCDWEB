@@ -101,7 +101,7 @@ function syncVictoryTags(int $victoryId, int $userId, array $newTags)
     }
 
     foreach ($newTags as $tag) {
-        $tag = strtolower(trim($tag));
+        $tag = trim($tag);
         if (!empty($tag)) {
             if (isset($alreadyTaggedMap[$tag])) {
                 $alreadyTaggedMap[$tag] = true;

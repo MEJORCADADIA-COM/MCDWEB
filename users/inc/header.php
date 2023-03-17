@@ -532,8 +532,7 @@ if (Session::get('user_id') !== NULL) {
             <div class="brand-info-bar">
                 <h1 class="heading1 d-block d-md-none">Making Every Day a Masterpiece</h1>
                 <h1 class="migualtitle">By Miguel De La Fuente
-                    <br>
-                    <p>+507 6445-1418</p>
+                    <p class="d-none d-md-block d-lg-block">+507 6445-1418</p>
                 </h1>
 
 

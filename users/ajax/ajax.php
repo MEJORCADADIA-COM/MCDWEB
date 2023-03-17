@@ -520,7 +520,7 @@ if (isset($_POST['UpdateDailyGoals']) && ($_POST['UpdateDailyGoals'] == 'UpdateD
 
         if(!empty($dailyVictory)) {
             foreach ($dailyVictoryTags as $newTag) {
-                $tag = strtolower(trim($newTag));
+                $tag = trim($newTag);
                 if (str_contains($tag, " ")) {
                     echo json_encode(['success' => false, 'message' => 'Tags can not have spaces in them']);
                     return;
@@ -535,7 +535,7 @@ if (isset($_POST['UpdateDailyGoals']) && ($_POST['UpdateDailyGoals'] == 'UpdateD
 
         if (!empty($toRemember)) {
             foreach ($toRememberTags as $newTag) {
-                $tag = strtolower(trim($newTag));
+                $tag = trim($newTag);
                 if (str_contains($tag, " ")) {
                     echo json_encode(['success' => false, 'message' => 'Tags can not have spaces in them']);
                     return;

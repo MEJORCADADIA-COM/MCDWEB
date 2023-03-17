@@ -530,7 +530,7 @@ if ($row) {
                 <label id="list-label-<?= $item['id']; ?>">
 
                   <span style="font-size: 1rem;" id="goalText-<?= $item['id']; ?>"><?= $item['goal']; ?> </span>
-                  <input class="me-1" data-id="<?= $item['id']; ?>" value="<?= $item['id']; ?>" class="input-goals" name="achieved[<?= $item['id']; ?>]" type="checkbox" <?php if ($item['achieved'] == 1) echo 'checked'; ?>>
+                  <input class="me-1 input-goals" data-id="<?= $item['id']; ?>" value="<?= $item['id']; ?>" name="achieved[<?= $item['id']; ?>]" type="checkbox" <?php if ($item['achieved'] == 1) echo 'checked'; ?>>
                   <a class="edit-actions edit-goal-btn" data-id="<?= $item['id']; ?>" href="#"><i class="fa fa-pencil"></i></a>
                   <a class="edit-actions delete-goal-btn" data-id="<?= $item['id']; ?>" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                 </label>
@@ -810,7 +810,8 @@ if ($row) {
     }
     $('#goals-area').toggleClass('edit');
   });
-  $('input.input-goals').change(function() {
+
+  $(document).on('change', 'input.input-goals', function() {
     var checked = $(this).is(':checked');
     var goalId = $(this).val();
     var goalText = $("#goalText-" + goalId).text();
@@ -833,7 +834,7 @@ if ($row) {
         console.log('data', data);
         if (data == 'Update') {
           $('#show').css('display', 'block');
-          $('#error_success_msg_verification').css('color', '#000000');
+          $('#error_success_msg_verification').css('color', '#me-');
           $('#error_success_msg_verification').css('background-color', '#ddffff');
           $('#success_msg_verification_text').html('Update Successfully');
           setTimeout(() => {

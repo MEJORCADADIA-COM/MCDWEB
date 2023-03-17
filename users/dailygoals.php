@@ -547,7 +547,7 @@ if ($dailyLifeGoals) {
               </div>
             </div>
             <div class="cardd mb-5" id="section-2" style="padding:0 5px;">
-              <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Resumen del día. Las 7-Victorias o Triunfos Hoy:</h5>
+              <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Mini Resumen de Hoy:</h5>
               <div class="card-body">
                 <div class="form-group">
                   <div class="description-area">
@@ -586,7 +586,7 @@ if ($dailyLifeGoals) {
 
             <div class="cardd my-5" id="section-2" style="padding:0 5px;">
               <div class="d-flex justify-content-between my-1">
-                <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">¿Cómo Puedo Mejorar?:</h5>
+                <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Momentos para Recordar:</h5>
                 <a href="<?= SITE_URL; ?>/users/toRemember.php" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none">Más <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
 
               </div>
@@ -611,7 +611,7 @@ if ($dailyLifeGoals) {
             </div>
 
             <div class="cardd mb-5" id="section-3" style="padding:0 5px;">
-              <h5 class="card-header" style="color:#FFF; margin:5px 0; font-size: 1rem;">Qué Podías haber hecho Mejor?: </h5>
+              <h5 class="card-header" style="color:#FFF; margin:5px 0; font-size: 1rem;">¿Cómo Puedo Mejorar?: </h5>
 
               <div class="card-body">
                 <div class="form-group">
@@ -1203,7 +1203,7 @@ if ($dailyLifeGoals) {
 
   });
 
-  $('input.input-topgoals').change(function() {
+  $(document).on('change', 'input.input-topgoals', function() {
     var checked = $(this).is(':checked');
     var goalId = $(this).val();
     var goalText = $("#topGoalText-" + goalId).text();
@@ -1235,7 +1235,7 @@ if ($dailyLifeGoals) {
       }
     });
   });
-  $('input.input-lifegoals').change(function() {
+  $(document).on('change', 'input.input-lifegoals', function() {
     var checked = $(this).is(':checked');
     var goalId = $(this).val();
     var goalText = $("#lifeGoalText-" + goalId).text();
