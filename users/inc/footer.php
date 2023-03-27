@@ -136,9 +136,10 @@ require_once "../inc/inspirationQuote.php";
 <nav class="navbar d-block d-md-none m-0 p-0">
     <div class="bg-primary row g-4 px-3 py-1 pb-3" style="font-size: 1.1rem;">
         <div class="col-5">
-            <div class="py-2">
-                <a class="text-decoration-none text-white py-1" href="dailycommitments.php">Guerrero D</a>
+        <div class="py-2">
+                <a class="text-decoration-none text-white py-1" href="dailygoals.php">Victoria7</a>
             </div>
+            
             <div class="py-2">
                 <a class="text-decoration-none text-white py-1 <?= $goalType == 'weekly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php">Semanal</a>
             </div>
@@ -177,7 +178,7 @@ require_once "../inc/inspirationQuote.php";
         </div>
         <div class="col-5">
         <div class="py-2">
-                <a class="text-decoration-none text-white py-1" href="dailygoals.php">Victoria7</a>
+                <a class="text-decoration-none text-white py-1" href="dailycommitments.php">Guerrero D</a>
             </div>
             <div class="py-2">
                 <a class="text-decoration-none text-white py-1" href="cronovida.php">CronoVida</a>
