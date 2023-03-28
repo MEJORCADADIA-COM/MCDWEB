@@ -74,8 +74,7 @@ function getTDClass($day, $monthlyDailyToRemember): string
 ?>
 
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
-<script src="https://mejorcadadia.com/users/assets/tinymce.min.js" referrerpolicy="origin"></script>
-<script src="https://mejorcadadia.com/users/assets/tinymce-jquery.min.js"></script>
+
 <style>
     @media screen and (max-width: 480px) {
 
@@ -368,7 +367,7 @@ function getTDClass($day, $monthlyDailyToRemember): string
             year: <?= $year; ?>,
 
             async saveMonthlyToRemember() {
-                let monthlyToRemember = tinyMCE.get('monthlyToRemember').getContent().trim();
+                let monthlyToRemember = window.editors['monthlyToRemember'].getData().trim();
                 if (monthlyToRemember === '') {
                     this.showToast('Note can not be empty.', 'error');
                     return;
@@ -438,34 +437,17 @@ function getTDClass($day, $monthlyDailyToRemember): string
     // }
 
     // Editor
-    tinymce.init({
-        selector: 'textarea.editor-textarea',
-        height: 600,
-        plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'help', 'wordcount', 'autoresize',
-            'autosave', 'codesample', 'directionality', 'emoticons', 'importcss',
-            'nonbreaking', 'pagebreak', 'quickbars', 'save', 'template', 'visualchars'
-        ],
-        toolbar: 'undo redo | blocks | ' +
-            'bold italic backcolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | help' +
-            'anchor | restoredraft | ' +
-            'charmap | code | codesample | ' +
-            'ltr rtl | emoticons | fullscreen | ' +
-            'image | importcss | insertdatetime | ' +
-            'link | numlist bullist | media | nonbreaking | ' +
-            'pagebreak | preview | save | searchreplace | ' +
-            'table tabledelete | tableprops tablerowprops tablecellprops | ' +
-            'tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
-            'tableinsertcolbefore tableinsertcolafter tabledeletecol | ' +
-            'template | visualblocks | visualchars | wordcount | undo redo | ' +
-            'blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | ' +
-            'bullist numlist outdent indent',
-        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
+    document.querySelectorAll( 'textarea.editor-textarea' ).forEach( ( node, index ) => {  
+        ClassicEditor.create( node, {} )
+        .then( newEditor => {      
+            if(node.id){
+                window.editors[ node.id ] = newEditor;
+            }else{
+                window.editors[ index ] = newEditor	;
+            }			
+        });
     });
+ 
 
     document.querySelector("input[type=month]").addEventListener("change", (e) => {
         let monthYear = e.target.value;

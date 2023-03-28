@@ -200,8 +200,7 @@ if ($row) {
   var endDate = '<?= $end_date; ?>';
 </script>
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
-<script src="https://mejorcadadia.com/users/assets/tinymce.min.js" referrerpolicy="origin"></script>
-<script src="https://mejorcadadia.com/users/assets/tinymce-jquery.min.js"></script>
+
 <style>
   @media screen and (max-width: 480px) {
     .tox-notifications-container {
@@ -616,35 +615,18 @@ if ($row) {
 </div>
 <script>
   $('#show').css('display', 'none');
-
-  tinymce.init({
-    selector: 'textarea.LetterApplication',
-    height: 600,
-    plugins: [
-      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-      'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-      'insertdatetime', 'media', 'table', 'help', 'wordcount', 'autoresize',
-      'autosave', 'codesample', 'directionality', 'emoticons', 'importcss',
-      'nonbreaking', 'pagebreak', 'quickbars', 'save', 'template', 'visualchars'
-    ],
-    toolbar: 'undo redo | blocks | ' +
-      'bold italic backcolor | alignleft aligncenter ' +
-      'alignright alignjustify | bullist numlist outdent indent | ' +
-      'removeformat | help' +
-      'anchor | restoredraft | ' +
-      'charmap | code | codesample | ' +
-      'ltr rtl | emoticons | fullscreen | ' +
-      'image | importcss | insertdatetime | ' +
-      'link | numlist bullist | media | nonbreaking | ' +
-      'pagebreak | preview | save | searchreplace | ' +
-      'table tabledelete | tableprops tablerowprops tablecellprops | ' +
-      'tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
-      'tableinsertcolbefore tableinsertcolafter tabledeletecol | ' +
-      'template | visualblocks | visualchars | wordcount | undo redo | ' +
-      'blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | ' +
-      'bullist numlist outdent indent',
-    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
-  });
+  document.querySelectorAll( '.LetterApplication' ).forEach( ( node, index ) => {  
+	ClassicEditor
+	.create( node, {} )
+	.then( newEditor => {      
+      if(node.id){
+        window.editors[ node.id ] = newEditor;
+      }else{
+        window.editors[ index ] = newEditor	;
+      }			
+	});
+});
+ 
   var goalstobeadded = 0;
   var newgoalsInput = [];
 
@@ -875,7 +857,7 @@ var toastList = toastElList.map(function(toastEl) {
 toastList.forEach(toast => toast.show()); // This show them
 }
   function UpdateGoals() {
-    var LetterApplication = tinyMCE.get('LetterApplication').getContent();
+    var LetterApplication = window.editors['LetterApplication'].getData();
     $("#print-evaluation").html(LetterApplication);
     var goalsData = [];
     $('input.input-goals').each(function() {
@@ -935,7 +917,7 @@ toastList.forEach(toast => toast.show()); // This show them
     UpdateGoals();
   });
   $('#savePrintBtn').click(function() {
-    var LetterApplication = tinyMCE.get('LetterApplication').getContent();
+    var LetterApplication = window.editors['LetterApplication'].getData();
     $("#print-evaluation").html(LetterApplication);
     window.print();
   });
@@ -949,7 +931,7 @@ toastList.forEach(toast => toast.show()); // This show them
 
     if (toEmail && toEmail != '') {
       $(this).text('Sending...');
-      var LetterApplication = tinyMCE.get('LetterApplication').getContent();
+      var LetterApplication = window.editors['LetterApplication'].getData();
       $.ajax({
         url: SITE_URL + "/users/ajax/ajax.php",
         type: "POST",

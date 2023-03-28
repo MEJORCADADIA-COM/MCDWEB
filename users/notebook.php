@@ -14,8 +14,7 @@ if (!empty($letterid)) {
 ?>
 
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
-<script src="https://mejorcadadia.com/users/assets/tinymce.min.js" referrerpolicy="origin"></script>
-<script src="https://mejorcadadia.com/users/assets/tinymce-jquery.min.js"></script>
+
 <style>
   @media screen and (max-width: 480px) {
     .tox-notifications-container {
@@ -202,34 +201,18 @@ if (!empty($letterid)) {
 </div>
 <script>
   $('#show').css('display', 'none');
-  tinymce.init({
-    selector: 'textarea#LetterApplication',
-    height: 600,
-    plugins: [
-      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-      'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-      'insertdatetime', 'media', 'table', 'help', 'wordcount', 'autoresize',
-      'autosave', 'codesample', 'directionality', 'emoticons', 'importcss',
-      'nonbreaking', 'pagebreak', 'quickbars', 'save', 'template', 'visualchars'
-    ],
-    toolbar: 'undo redo | blocks | ' +
-      'bold italic backcolor | alignleft aligncenter ' +
-      'alignright alignjustify | bullist numlist outdent indent | ' +
-      'removeformat | help' +
-      'anchor | restoredraft | ' +
-      'charmap | code | codesample | ' +
-      'ltr rtl | emoticons | fullscreen | ' +
-      'image | importcss | insertdatetime | ' +
-      'link | numlist bullist | media | nonbreaking | ' +
-      'pagebreak | preview | save | searchreplace | ' +
-      'table tabledelete | tableprops tablerowprops tablecellprops | ' +
-      'tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
-      'tableinsertcolbefore tableinsertcolafter tabledeletecol | ' +
-      'template | visualblocks | visualchars | wordcount | undo redo | ' +
-      'blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | ' +
-      'bullist numlist outdent indent',
-    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
-  });
+  document.querySelectorAll( '#LetterApplication' ).forEach( ( node, index ) => {  
+	ClassicEditor
+	.create( node, {} )
+	.then( newEditor => {      
+      if(node.id){
+        window.editors[ node.id ] = newEditor;
+      }else{
+        window.editors[ index ] = newEditor	;
+      }			
+	});
+});
+ 
 
   $('#close').click(function() {
     $('#show').css('display', 'none');
@@ -287,7 +270,7 @@ if (!empty($letterid)) {
             setTimeout(() => {
               $('#show').css('display', 'none');
             }, 3000);
-            if (tinyMCE.get('LetterApplication').getContent() != '') {
+            if (window.editors['LetterApplication'].getData() != '') {
               $('#show').css('display', 'none');
               $('#error_success_msg_verification').css('color', '#000000');
               $('#error_success_msg_verification').css('background-color', '#ffdddd');
@@ -301,7 +284,7 @@ if (!empty($letterid)) {
               var emailto = $('#emailto').val();
               var Date = $('#date').val();
               var Title = $('#Title').val();
-              var LetterApplication = tinyMCE.get('LetterApplication').getContent();
+              var LetterApplication = window.editors['LetterApplication'].getData();
               $.ajax({
                 url: SITE_URL + "/users/ajax/ajax.php",
                 type: "POST",
@@ -389,7 +372,7 @@ if (!empty($letterid)) {
   });
 
   $('#savePrintBtn').click(function() {
-    // var dailyEvolution = tinyMCE.get('dailyEvolution').getContent(); 
+   
     //$("#print-evaluation").html(dailyEvolution); 
     window.print();
   });

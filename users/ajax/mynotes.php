@@ -26,8 +26,7 @@ $currentFolder = $common->first(
       var folder_id='<?=$folder_id;?>';
       </script>
     <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
-    <script src="https://mejorcadadia.com/users/assets/tinymce.min.js" referrerpolicy="origin"></script>
-    <script src="https://mejorcadadia.com/users/assets/tinymce-jquery.min.js"></script>
+
     <script src="<?=SITE_URL; ?>/users/assets/countdown.min.js"></script>
     <style>
       
@@ -305,62 +304,20 @@ $currentFolder = $common->first(
   </div>
    </div>
     <script>
-      tinymce.init({
-    selector: 'textarea.LetterApplication',
-    height: 600,
-    setup: function(editor) {
-      editor.on('Change', function(e) {
-        if (e.target.targetElm.classList.contains('boxitem')) {
-          if (e.target.targetElm.dataset.box) {
-            let box = e.target.targetElm.dataset.box;
-            let body = this.getContent();
-            $.ajax({
-              url: SITE_URL + "/users/ajax/ajax.php",
-              type: "POST",
-              data: {
-                action: 'SaveVictory7Box',
-                box: box,
-                currentDate: currentDate,
-                body: body
-              },
-              success: function(data) {
-                var jsonObj = JSON.parse(data);
-                console.log('data', data, jsonObj);
-
-              }
-            });
-          }
-
-        }
-      });
-    },
-    plugins: [
-      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-      'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-      'insertdatetime', 'media', 'table', 'help', 'wordcount', 'autoresize',
-      'autosave', 'codesample', 'directionality', 'emoticons', 'importcss',
-      'nonbreaking', 'pagebreak', 'quickbars', 'save', 'template', 'visualchars'
-    ],
-
-    toolbar: 'paste | undo redo | blocks | ' +
-      'bold italic backcolor | alignleft aligncenter ' +
-      'alignright alignjustify | bullist numlist outdent indent | ' +
-      'removeformat | help' +
-      'anchor | restoredraft | ' +
-      'charmap | code | codesample | ' +
-      'ltr rtl | emoticons | fullscreen | ' +
-      'image | importcss | insertdatetime | ' +
-      'link | numlist bullist | media | nonbreaking | ' +
-      'pagebreak | preview | save | searchreplace | ' +
-      'table tabledelete | tableprops tablerowprops tablecellprops | ' +
-      'tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
-      'tableinsertcolbefore tableinsertcolafter tabledeletecol | ' +
-      'template | visualblocks | visualchars | wordcount | undo redo | ' +
-      'blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | ' +
-      'bullist numlist outdent indent',
-    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
-    paste_as_text: true,
-  });
+document.querySelectorAll( 'textarea.LetterApplication' ).forEach( ( node, index ) => {  
+	ClassicEditor
+		.create( node, {} )
+		.then( newEditor => {
+    
+      if(node.id){
+        window.editors[ node.id ] = newEditor;
+      }else{
+        window.editors[ index ] = newEditor	;
+      }
+			
+		} );
+} );
+    
   function MoveToFolder(fid,nid){
     let move_note_id=document.getElementById("move_note_id").value; 
     $.ajax({
@@ -458,7 +415,7 @@ $currentFolder = $common->first(
           console.log(obj);
           if(obj.success){
             modalBodyInput.value=obj.note.notes;
-            //tinyMCE.get('notes').setContent(obj.note.notes);
+            
           }
           
         }
@@ -468,7 +425,7 @@ $currentFolder = $common->first(
           
       }else{
         //modalTitle.textContent='Create Notes';
-        //tinyMCE.get('notes').setContent('');
+      
         modalBodyInput.value="";
         //modalBodyNotesTitle.value="";
         modalBodyId.value=0;
@@ -480,7 +437,7 @@ $currentFolder = $common->first(
       function submitNotesForm(){
         console.log('submitNotesForm');
         var notes_id=document.getElementById('notes_id').value;
-        //var notes = tinyMCE.get('notes').getContent();
+       
         var notes=document.getElementById('notes').value;
         console.log('notes_id',notes_id,notes);
         console.log(folder_name,folder_id) ;     

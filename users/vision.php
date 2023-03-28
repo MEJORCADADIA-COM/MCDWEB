@@ -116,19 +116,19 @@ if (isset($_POST['send_email'])) {
         <form class="px-1 px-lg-0" action="" method="post">
             <div class="mb-4">
                 <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="next-3-years-vision">Describe la Vida Más Espectacular que Puedas Imaginar:</label>
-                <textarea name="next_month_vision" id="next-month-vision" class="tinymce-editor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['next_month_vision'] ?? '' ?></textarea>
+                <textarea name="next_month_vision" id="next-month-vision" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['next_month_vision'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
                 <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="next-3-years-vision">Describe en detalle tu Visión para los Próximos 3 Años:</label>
-                <textarea name="next_3_years_vision" id="next-3-years-vision" class="tinymce-editor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['next_3_years_vision'] ?? '' ?></textarea>
+                <textarea name="next_3_years_vision" id="next-3-years-vision" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['next_3_years_vision'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
                 <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="next-5-years-vision">Describe en detalle tu Visión para los Próximos 5 Años:</label>
-                <textarea name="next_5_years_vision" id="next-3-years-vision" class="tinymce-editor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['next_5_years_vision'] ?? '' ?></textarea>
+                <textarea name="next_5_years_vision" id="next-3-years-vision" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['next_5_years_vision'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
                 <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="next-10-years-vision">Describe en detalle tu Visión para los Próximos 10 Años:</label>
-                <textarea name="next_10_years_vision" id="next-10-years-vision" class="tinymce-editor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['next_10_years_vision'] ?? '' ?></textarea>
+                <textarea name="next_10_years_vision" id="next-10-years-vision" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['next_10_years_vision'] ?? '' ?></textarea>
             </div>
             <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Email</button>
             <button class="btn btn-info letter" type="submit" name="save_vision">Guardar</button>
@@ -164,8 +164,7 @@ if (isset($_POST['send_email'])) {
 </main>
 
 <script src="<?= SITE_URL ?>/admin/assets/jquery-3.6.0.min.js"></script>
-<script src="<?= SITE_URL ?>/admin/assets/tinymce.min.js" referrerpolicy="origin"></script>
-<script src="<?= SITE_URL ?>/admin/assets/tinymce-jquery.min.js"></script>
+
 <style>
     .tox-notifications-container {
         display: none !important;
@@ -177,34 +176,18 @@ if (isset($_POST['send_email'])) {
     }
 </style>
 <script>
-    tinymce.init({
-        selector: '.tinymce-editor',
-        height: 600,
-        plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'help', 'wordcount', 'autoresize',
-            'autosave', 'codesample', 'directionality', 'emoticons', 'importcss',
-            'nonbreaking', 'pagebreak', 'quickbars', 'save', 'template', 'visualchars'
-        ],
-        toolbar: 'undo redo | blocks | ' +
-            'bold italic backcolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | help' +
-            'anchor | restoredraft | ' +
-            'charmap | code | codesample | ' +
-            'ltr rtl | emoticons | fullscreen | ' +
-            'image | importcss | insertdatetime | ' +
-            'link | numlist bullist | media | nonbreaking | ' +
-            'pagebreak | preview | save | searchreplace | ' +
-            'table tabledelete | tableprops tablerowprops tablecellprops | ' +
-            'tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
-            'tableinsertcolbefore tableinsertcolafter tabledeletecol | ' +
-            'template | visualblocks | visualchars | wordcount | undo redo | ' +
-            'blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | ' +
-            'bullist numlist outdent indent',
-        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
-    });
+    document.querySelectorAll( '.ckeditor' ).forEach( ( node, index ) => {  
+	ClassicEditor
+	.create( node, {} )
+	.then( newEditor => {      
+      if(node.id){
+        window.editors[ node.id ] = newEditor;
+      }else{
+        window.editors[ index ] = newEditor	;
+      }			
+	});
+});
+   
 
     $('#savePrintBtn').click(function() {
         window.print();

@@ -112,8 +112,6 @@ for ($day = 1; $day <= $day_count; $day++, $str++) {
   var selectedDate = '<?= $selectedDate; ?>';
 </script>
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
-<script src="https://mejorcadadia.com/users/assets/tinymce.min.js" referrerpolicy="origin"></script>
-<script src="https://mejorcadadia.com/users/assets/tinymce-jquery.min.js"></script>
 <style>
   @media screen and (max-width: 480px) {
     .tox-notifications-container {
@@ -430,35 +428,18 @@ for ($day = 1; $day <= $day_count; $day++, $str++) {
 </div>
 <script>
   $('#show').css('display', 'none');
-
-  tinymce.init({
-    selector: 'textarea.LetterApplication',
-    height: 600,
-    plugins: [
-      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-      'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-      'insertdatetime', 'media', 'table', 'help', 'wordcount', 'autoresize',
-      'autosave', 'codesample', 'directionality', 'emoticons', 'importcss',
-      'nonbreaking', 'pagebreak', 'quickbars', 'save', 'template', 'visualchars'
-    ],
-    toolbar: 'undo redo | blocks | ' +
-      'bold italic backcolor | alignleft aligncenter ' +
-      'alignright alignjustify | bullist numlist outdent indent | ' +
-      'removeformat | help' +
-      'anchor | restoredraft | ' +
-      'charmap | code | codesample | ' +
-      'ltr rtl | emoticons | fullscreen | ' +
-      'image | importcss | insertdatetime | ' +
-      'link | numlist bullist | media | nonbreaking | ' +
-      'pagebreak | preview | save | searchreplace | ' +
-      'table tabledelete | tableprops tablerowprops tablecellprops | ' +
-      'tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
-      'tableinsertcolbefore tableinsertcolafter tabledeletecol | ' +
-      'template | visualblocks | visualchars | wordcount | undo redo | ' +
-      'blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | ' +
-      'bullist numlist outdent indent',
-    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
-  });
+  document.querySelectorAll( '.LetterApplication' ).forEach( ( node, index ) => {  
+	ClassicEditor
+	.create( node, {} )
+	.then( newEditor => {      
+      if(node.id){
+        window.editors[ node.id ] = newEditor;
+      }else{
+        window.editors[ index ] = newEditor	;
+      }			
+	});
+});
+  
 
   var goalstobeadded = 0;
   var newgoalsInput = [];
@@ -789,7 +770,7 @@ for ($day = 1; $day <= $day_count; $day++, $str++) {
   });
 
   function UpdateDailyGoals() {
-    var dailyEvolution = tinyMCE.get('dailyEvolution').getContent();
+    var dailyEvolution = window.editors['dailyEvolution'].getData(); 
 
     $("#print-evaluation").html(dailyEvolution);
 
@@ -818,9 +799,8 @@ for ($day = 1; $day <= $day_count; $day++, $str++) {
     UpdateDailyGoals();
   });
   $('#savePrintBtn').click(function() {
-    var dailyEvolution = tinyMCE.get('dailyEvolution').getContent();
+    var dailyEvolution = window.editors['dailyEvolution'].getData();
     $("#print-evaluation").html(dailyEvolution);
-
     window.print();
   });
   $('#sendBtn').click(function() {
@@ -830,7 +810,7 @@ for ($day = 1; $day <= $day_count; $day++, $str++) {
     $("#toEmail").parent().removeClass('has-errors');
     var toEmail = $("#toEmail").val();
     console.log('toEmail', toEmail);
-    var dailyEvolution = tinyMCE.get('dailyEvolution').getContent();
+    var dailyEvolution = window.editors['dailyEvolution'].getData();
     $("#print-evaluation").html(dailyEvolution);
 
     if (toEmail && toEmail != '') {

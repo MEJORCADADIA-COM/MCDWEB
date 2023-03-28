@@ -142,8 +142,6 @@ if ($dailyLifeGoals) {
   var remainingLifeGoals = 7 - lifeGoalsCounts;
 </script>
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
-<script src="https://mejorcadadia.com/users/assets/tinymce.min.js" referrerpolicy="origin"></script>
-<script src="https://mejorcadadia.com/users/assets/tinymce-jquery.min.js"></script>
 <style>
   @media screen and (max-width: 480px) {
     .tox-notifications-container {
@@ -556,7 +554,7 @@ if ($dailyLifeGoals) {
                 <div class="form-group">
                   <div class="description-area">
                     <div class="print-description" id="print-evaluation"><?= $dailyEvolution; ?></div>
-                    <textarea id="dailyEvolution" class="LetterApplication" name="dailyEvolution"><?= $dailyEvolution; ?></textarea>
+                    <textarea id="dailyEvolution" rows="5" class="LetterApplication editor ckeditor" name="dailyEvolution"><?= $dailyEvolution; ?></textarea>
                   </div>
                 </div>
               </div>
@@ -571,7 +569,7 @@ if ($dailyLifeGoals) {
                 <div class="form-group">
                   <div class="description-area">
                     <div class="print-description" id="print-daily-victory"><?= $dailyVictory['daily_victory'] ?? ''; ?></div>
-                    <textarea id="daily_victory" class="LetterApplication" name="daily_victory"><?= $dailyVictory['daily_victory'] ?? ''; ?></textarea>
+                    <textarea id="daily_victory" class="LetterApplication editor ckeditor" name="daily_victory"><?= $dailyVictory['daily_victory'] ?? ''; ?></textarea>
                   </div>
                 </div>
               </div>
@@ -692,7 +690,7 @@ if ($dailyLifeGoals) {
                   <div class="section_header">
                     <h2><?= $bitem['title'] ?></h2> <small><?= $bitem['subtitle'] ?></small>
                   </div>
-                  <div class="section_content"><textarea name="box[<?= $bitem['id'] ?>]" data-box="<?= $bitem['id'] ?>" class="LetterApplication boxitem"><?= $bitem['body'] ?></textarea></div>
+                  <div class="section_content"><textarea name="box[<?= $bitem['id'] ?>]" data-box="<?= $bitem['id'] ?>" id="boxitem-<?= $bitem['id'] ?>" class="LetterApplication boxitem"><?= $bitem['body'] ?></textarea></div>
                 </div>
               <?php endforeach; ?>
 
@@ -807,15 +805,15 @@ if ($dailyLifeGoals) {
 <script>
   $('#show').css('display', 'none');
 
-  tinymce.init({
-    selector: 'textarea.LetterApplication',
-    height: 600,
-    setup: function(editor) {
-      editor.on('Change', function(e) {
-        if (e.target.targetElm.classList.contains('boxitem')) {
-          if (e.target.targetElm.dataset.box) {
-            let box = e.target.targetElm.dataset.box;
-            let body = this.getContent();
+  document.querySelectorAll( '.LetterApplication' ).forEach( ( node, index ) => {  
+	ClassicEditor
+		.create( node, {} )
+		.then( newEditor => {
+      newEditor.model.document.on( 'change:data', (e) => {
+        if (newEditor.sourceElement.classList.contains('boxitem')) {
+            if (newEditor.sourceElement.dataset.box) {
+            let box = newEditor.sourceElement.dataset.box;
+            let body = newEditor.getData();
             $.ajax({
               url: SITE_URL + "/users/ajax/ajax.php",
               type: "POST",
@@ -832,38 +830,19 @@ if ($dailyLifeGoals) {
               }
             });
           }
-
         }
+             // console.log( 'The data has changed!',newEditor.getData(),newEditor.sourceElement.classList );
       });
-    },
-    plugins: [
-      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-      'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-      'insertdatetime', 'media', 'table', 'help', 'wordcount', 'autoresize',
-      'autosave', 'codesample', 'directionality', 'emoticons', 'importcss',
-      'nonbreaking', 'pagebreak', 'quickbars', 'save', 'template', 'visualchars'
-    ],
-
-    toolbar: 'paste | undo redo | blocks | ' +
-      'bold italic backcolor | alignleft aligncenter ' +
-      'alignright alignjustify | bullist numlist outdent indent | ' +
-      'removeformat | help' +
-      'anchor | restoredraft | ' +
-      'charmap | code | codesample | ' +
-      'ltr rtl | emoticons | fullscreen | ' +
-      'image | importcss | insertdatetime | ' +
-      'link | numlist bullist | media | nonbreaking | ' +
-      'pagebreak | preview | save | searchreplace | ' +
-      'table tabledelete | tableprops tablerowprops tablecellprops | ' +
-      'tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
-      'tableinsertcolbefore tableinsertcolafter tabledeletecol | ' +
-      'template | visualblocks | visualchars | wordcount | undo redo | ' +
-      'blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | ' +
-      'bullist numlist outdent indent',
-    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
-    paste_as_text: true,
-  });
-  // Slider JS
+      if(node.id){
+        window.editors[ node.id ] = newEditor;
+      }else{
+        window.editors[ index ] = newEditor	;
+      }
+			
+		} );
+} );
+ 
+ 
   let currentCount = 0;
   const slide1 = document.getElementById('slide-1');
   const slide2 = document.getElementById('slide-2');
@@ -1272,10 +1251,12 @@ if ($dailyLifeGoals) {
   });
 
   function UpdateData() {
-    var dailyEvolution = tinyMCE.get('dailyEvolution').getContent();
-    var dailyImprovements = tinyMCE.get('dailyImprovements').getContent();
-    const dailyVictory = tinyMCE.get('daily_victory').getContent();
-    const toRemember = tinyMCE.get('to_remember').getContent();
+    var dailyEvolution = window.editors['dailyEvolution'].getData();
+    console.log('dailyEvolution html',dailyEvolution);
+
+    var dailyImprovements = window.editors['dailyImprovements'].getData(); 
+    const dailyVictory = window.editors['daily_victory'].getData();
+    const toRemember = window.editors['to_remember'].getData();
     const dailyVictoryTags = [];
     document.querySelectorAll('.daily-victory-tags').forEach(tag => tag.value.trim() !== '' ? dailyVictoryTags.push(tag.value) : '');
     const toRememberTags = [];
@@ -1335,9 +1316,10 @@ if ($dailyLifeGoals) {
     UpdateData();
   });
   $('#savePrintBtn').click(function() {
-    var dailyEvolution = tinyMCE.get('dailyEvolution').getContent();
+
+    var dailyEvolution = window.editors['dailyEvolution'].getData();
     $("#print-evaluation").html(dailyEvolution);
-    var dailyImprovements = tinyMCE.get('dailyImprovements').getContent();
+    var dailyImprovements = window.editors['dailyImprovements'].getData(); 
     $("#print-improvements").html(dailyImprovements);
     window.print();
   });
@@ -1348,9 +1330,9 @@ if ($dailyLifeGoals) {
     $("#toEmail").parent().removeClass('has-errors');
     var toEmail = $("#toEmail").val();
     console.log('toEmail', toEmail);
-    var dailyEvolution = tinyMCE.get('dailyEvolution').getContent();
+    var dailyEvolution = window.editors['dailyEvolution'].getData(); 
     $("#print-evaluation").html(dailyEvolution);
-    var dailyImprovements = tinyMCE.get('dailyImprovements').getContent();
+    var dailyImprovements = window.editors['dailyImprovements'].getData();
     $("#print-improvements").html(dailyImprovements);
     if (toEmail && toEmail != '') {
       $(this).text('Sending...');

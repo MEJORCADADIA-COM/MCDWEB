@@ -285,7 +285,9 @@ if (!$user_infos) :
 endif;
 ?>
 <script>
+    	  
 
+		
     const alerts = document.querySelectorAll('.alert-timeout')
     if (alerts.length > 0) {
         setTimeout(() => {

@@ -119,23 +119,23 @@ if (isset($_POST['send_email'])) {
         <form class="px-1 px-lg-0" action="" method="post">
             <div class="mb-4">
                 <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="promise_1">Promesa #1 que me Hago a mí Mismo/a:</label>
-                <textarea name="promise_1" id="promise_1" class="tinymce-editor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userPromises['promise_1'] ?? '' ?></textarea>
+                <textarea name="promise_1" id="promise_1" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userPromises['promise_1'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
                 <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="promise_2">Promesa #2 que me Hago a mí Mismo/a:</label>
-                <textarea name="promise_2" id="promise_2" class="tinymce-editor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userPromises['promise_2'] ?? '' ?></textarea>
+                <textarea name="promise_2" id="promise_2" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userPromises['promise_2'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
                 <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="promise_3">Promesa #3 que me Hago a mí Mismo/a:</label>
-                <textarea name="promise_3" id="promise_3" class="tinymce-editor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userPromises['promise_3'] ?? '' ?></textarea>
+                <textarea name="promise_3" id="promise_3" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userPromises['promise_3'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
                 <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="promise_4">Promesa #4 que me Hago a mí Mismo/a:</label>
-                <textarea name="promise_4" id="promise_4" class="tinymce-editor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userPromises['promise_4'] ?? '' ?></textarea>
+                <textarea name="promise_4" id="promise_4" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userPromises['promise_4'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
                 <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="promise_5">Promesa #5 que me Hago a mí Mismo/a:</label>
-                <textarea name="promise_5" id="promise_5" class="tinymce-editor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userPromises['promise_5'] ?? '' ?></textarea>
+                <textarea name="promise_5" id="promise_5" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userPromises['promise_5'] ?? '' ?></textarea>
             </div>
             <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Email</button>
             <button class="btn btn-info letter" type="submit" name="save_promises">Save</button>
@@ -171,8 +171,7 @@ if (isset($_POST['send_email'])) {
 </main>
 
 <script src="<?= SITE_URL ?>/admin/assets/jquery-3.6.0.min.js"></script>
-<script src="<?= SITE_URL ?>/admin/assets/tinymce.min.js" referrerpolicy="origin"></script>
-<script src="<?= SITE_URL ?>/admin/assets/tinymce-jquery.min.js"></script>
+
 <style>
     .tox-notifications-container {
         display: none !important;
@@ -184,34 +183,18 @@ if (isset($_POST['send_email'])) {
     }
 </style>
 <script>
-    tinymce.init({
-        selector: '.tinymce-editor',
-        height: 600,
-        plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'help', 'wordcount', 'autoresize',
-            'autosave', 'codesample', 'directionality', 'emoticons', 'importcss',
-            'nonbreaking', 'pagebreak', 'quickbars', 'save', 'template', 'visualchars'
-        ],
-        toolbar: 'undo redo | blocks | ' +
-            'bold italic backcolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | help' +
-            'anchor | restoredraft | ' +
-            'charmap | code | codesample | ' +
-            'ltr rtl | emoticons | fullscreen | ' +
-            'image | importcss | insertdatetime | ' +
-            'link | numlist bullist | media | nonbreaking | ' +
-            'pagebreak | preview | save | searchreplace | ' +
-            'table tabledelete | tableprops tablerowprops tablecellprops | ' +
-            'tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
-            'tableinsertcolbefore tableinsertcolafter tabledeletecol | ' +
-            'template | visualblocks | visualchars | wordcount | undo redo | ' +
-            'blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | ' +
-            'bullist numlist outdent indent',
-        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
-    });
+document.querySelectorAll( '.ckeditor' ).forEach( ( node, index ) => {  
+	ClassicEditor
+	.create( node, {} )
+	.then( newEditor => {      
+      if(node.id){
+        window.editors[ node.id ] = newEditor;
+      }else{
+        window.editors[ index ] = newEditor	;
+      }			
+	});
+});
+  
 
     $('#savePrintBtn').click(function() {
         window.print();

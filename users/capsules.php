@@ -31,8 +31,7 @@ if(!empty($date) && !empty($filter)){
  var selectedDate='<?=$date; ?>';
 </script>
     <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
-    <script src="https://mejorcadadia.com/users/assets/tinymce.min.js" referrerpolicy="origin"></script>
-    <script src="https://mejorcadadia.com/users/assets/tinymce-jquery.min.js"></script>
+
     <script src="<?=SITE_URL; ?>/users/assets/countdown.min.js"></script>
     <style>
       .maincontonent {

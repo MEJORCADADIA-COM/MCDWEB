@@ -83,10 +83,16 @@ if (Session::get('user_id') !== NULL) {
 
     <link rel="stylesheet" href="./assets/style.css">
     <link rel="stylesheet" href="<?= SITE_URL; ?>/users/assets/button.css">
+   <script src="<?= SITE_URL; ?>/build/ckeditor.js"></script>
     <script>
+        window.editors = {};
         var SITE_URL = '<?= SITE_URL; ?>';
     </script>
     <style>
+        .ck-editor__editable_inline {
+            min-height: 180px;
+            font-size:16px
+        }
         body {
             font-family: 'Montserrat';
         }
