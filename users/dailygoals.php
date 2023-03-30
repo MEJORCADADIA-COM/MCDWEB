@@ -831,7 +831,7 @@ if ($dailyLifeGoals) {
             });
           }
         }
-             // console.log( 'The data has changed!',newEditor.getData(),newEditor.sourceElement.classList );
+       
       });
       if(node.id){
         window.editors[ node.id ] = newEditor;

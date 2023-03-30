@@ -105,7 +105,7 @@ if (isset($_POST['send_email'])) {
 }
 ?>
 
-<main role="main" class="col-md-9 ml-sm-auto col-lg-10 text-white">
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 ">
     <!-- Secondary Nav -->
     <?php require_once 'inc/secondaryNav.php'; ?>
     <!-- Secondary Nav -->
@@ -115,23 +115,23 @@ if (isset($_POST['send_email'])) {
         </div>
         <form class="px-1 px-lg-0" action="" method="post">
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="victory_1">Victorias #1:</label>
+                <label class="px-1 text-white" style="margin: 5px 0px; font-size:1rem;" for="victory_1">Victorias #1:</label>
                 <textarea name="victory_1" id="victory_1" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $biggestVictories['biggest_victory_1'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="victory_2">Victorias #2:</label>
+                <label class="px-1 text-white" style="margin: 5px 0px; font-size:1rem;" for="victory_2">Victorias #2:</label>
                 <textarea name="victory_2" id="victory_2" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $biggestVictories['biggest_victory_2'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="victory_3">Victorias #3:</label>
+                <label class="px-1 text-white" style="margin: 5px 0px; font-size:1rem;" for="victory_3">Victorias #3:</label>
                 <textarea name="victory_3" id="victory_3" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $biggestVictories['biggest_victory_3'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="victory_4">Victorias #4:</label>
+                <label class="px-1 text-white" style="margin: 5px 0px; font-size:1rem;" for="victory_4">Victorias #4:</label>
                 <textarea name="victory_4" id="victory_4" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $biggestVictories['biggest_victory_4'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="victory_5">Victorias #5:</label>
+                <label class="px-1 text-white" style="margin: 5px 0px; font-size:1rem;" for="victory_5">Victorias #5:</label>
                 <textarea name="victory_5" id="victory_5" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $biggestVictories['biggest_victory_5'] ?? '' ?></textarea>
             </div>
             <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Email</button>

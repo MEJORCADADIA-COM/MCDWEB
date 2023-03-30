@@ -93,6 +93,17 @@ if (Session::get('user_id') !== NULL) {
             min-height: 180px;
             font-size:16px
         }
+        .ck-rounded-corners .ck.ck-editor__main>.ck-editor__editable, .ck.ck-editor__main>.ck-editor__editable.ck-rounded-corners {
+            border-radius: 10px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+        .ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-toolbar, .ck.ck-editor__top .ck-sticky-panel .ck-toolbar.ck-rounded-corners {
+            border-radius: 10px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
         body {
             font-family: 'Montserrat';
         }

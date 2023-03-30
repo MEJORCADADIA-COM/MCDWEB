@@ -130,90 +130,52 @@ require_once "../inc/inspirationQuote.php";
             display: none;
         }
     }
+    footer.page-footer ul li{
+        padding:10px 0;
+    }
+    footer.page-footer ul li a{
+        font-size:1rem;
+    }
 </style>
 <div class="clearfix" style="float:none; clear:both;"></div>
-<!-- Mobile Navbar Start -->
-<nav class="navbar d-block d-md-none m-0 p-0">
-    <div class="bg-primary row g-4 px-3 py-1 pb-3" style="font-size: 1.1rem;">
-        <div class="col-5">
-        <div class="py-2">
-                <a class="text-decoration-none text-white py-1" href="dailygoals.php">Victoria7</a>
+<footer class="page-footer bg-primary d-block d-md-none g-4 px-3 py-1 pb-2">
+    <div class="container">
+        <div class="row">
+            <div class="col-5">
+                <ul class="list-unstyled">
+                    <li><a class="text-decoration-none text-white py-1" href="dailygoals.php">Victoria7</a></li>
+                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'weekly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php">Semanal</a></li>
+                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'monthly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=monthly">Mensual</a></li>
+                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'quarterly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=quarterly">Trimestral</a></li>
+                    <li> <a class="text-decoration-none text-white py-1 <?= $goalType == 'yearly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=yearly">Anual</a></li>
+                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=lifetime">De por Vida</a></li>
+                    <li><a class="text-decoration-none text-white py-1" href="dailycommitments.php">Guerrero D</a></li>
+                    <li><a class="text-decoration-none text-white py-1" href="cronovida.php">CronoVida</a></li>
+                    <li> <a class="text-decoration-none text-white py-1 <?= $path == 'index.php' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/index.php" id="navbarDropdown">Cartas</a></li>
+                    <li>  <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/notebook.php">Escribe Carta</a></li>
+                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/mynotes.php">MejorNotes</a></li>
+                    
+                </ul>
             </div>
-            
-            <div class="py-2">
-                <a class="text-decoration-none text-white py-1 <?= $goalType == 'weekly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php">Semanal</a>
-            </div>
-            <div class="py-2">
-                <a class="text-decoration-none text-white py-1 <?= $goalType == 'monthly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=monthly">Mensual</a>
-            </div>
-            <div class="py-2">
-                <a class="text-decoration-none text-white py-1 <?= $goalType == 'quarterly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=quarterly">Trimestral</a>
-            </div>
-            <div class="py-2">
-                <a class="text-decoration-none text-white py-1 <?= $goalType == 'yearly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=yearly">Anual</a>
-            </div>
-            <div class="py-2">
-                <a class="text-decoration-none text-white py-1 <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=lifetime">De por Vida</a>
-            </div>
-        </div>
-        <div class="col-7">
-            <div class="py-2">
-                <a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/missions.php">Mi Missión</a>
-            </div>
-            <div class="py-2">
-                <a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/vision.php">Mi Visión</a>
-            </div>
-            <div class="py-2">
-                <a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/commitments.php">Mis Compromisos</a>
-            </div>
-            <div class="py-2">
-                <a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/agreements.php">Mis Acuerdos</a>
-            </div>
-            <div class="py-2">
-                <a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/promises.php">Mis Promesas</a>
-            </div>
-            <div class="py-2">
-                <a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/lifeTasks.php">Mi tarea de Vida</a>
-            </div>
-        </div>
-        <div class="col-5">
-        <div class="py-2">
-                <a class="text-decoration-none text-white py-1" href="dailycommitments.php">Guerrero D</a>
-            </div>
-            <div class="py-2">
-                <a class="text-decoration-none text-white py-1" href="cronovida.php">CronoVida</a>
-            </div>
-            
-            <div class="py-2">
-                <a class="text-decoration-none text-white py-1 <?= $path == 'index.php' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/index.php" id="navbarDropdown">Cartas</a>
-            </div>
-            <div class="py-2">
-                <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/notebook.php">Escribe Carta</a>
-            </div>
-            <div class="py-2">
-                <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/mynotes.php">MejorNotes</a>
-            </div>
-            <div class="py-2">
-                <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/capsules.php">MejorCapsule</a>
-            </div>
-        </div>
-        <div class="col-7">
-            <div class="py-2">
-                <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/dailyVictories.php">Mi Victoria Diaria</a>
-            </div>
-            <div class="py-2">
-                <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/toRemember.php">Eventos para Recordar</a>
-            </div>
-            <div class="py-2">
-                <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/biggestVictories.php">Mis Mayores Victorias</a>
-            </div>
-            <div class="py-2">
-                <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/inspirations.php">MejorInspiration</a>
+            <div class="col-7">
+                <ul class="list-unstyled">
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/missions.php">Mi Missión</a></li>
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/vision.php">Mi Visión</a></li>
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/commitments.php">Mis Compromisos</a></li>
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/agreements.php">Mis Acuerdos</a></li>
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/promises.php">Mis Promesas</a></li>
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/lifeTasks.php">Mi tarea de Vida</a></li>
+                    <li> <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/dailyVictories.php">Mi Victoria Diaria</a></li>
+                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/toRemember.php">Eventos para Recordar</a></li>
+                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/biggestVictories.php">Mis Mayores Victorias</a></li>
+                    <li> <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/inspirations.php">MejorInspiration</a></li>
+                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/capsules.php">MejorCapsule</a></li>
+                   
+                </ul>
             </div>
         </div>
     </div>
-</nav>
-<!-- Mobile Navbar End -->
+</footer>
 <!-- Inspiration Quote Capsule Start -->
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
