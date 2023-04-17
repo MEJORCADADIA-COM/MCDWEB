@@ -13,7 +13,7 @@ function getMonthlyVictoriesWithTags($userId, $month, $year): array
 {
     global $common;
 
-    $firstDay = date('N', strtotime("{$year}-{$month}-01"));
+    $firstDay = date('j', strtotime("{$year}-{$month}-01"));
     $numOfDays = date('t', strtotime("{$year}-{$month}-01"));
 
     $victories = $common->get(

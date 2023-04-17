@@ -1408,6 +1408,297 @@ if (isset($_POST['action']) && ($_POST['action'] == 'EmailSendDailyCommitment'))
     $Date = date('Y-m-d');
     sendEmail($user_id, 'Guerrero Diario', $toEmail, $goalBodyHtml);
 }
+if (isset($_POST['action']) && ($_POST['action'] == 'DeleteV7MediaFile')) {
+    if (isset($_POST['id'])) {
+        $id = $_POST['id'];
+        $app_delete = $common->delete("uploaded_files", "id = :id", ['id' => $id]);
+        echo 'Delete';
+    } else {
+        echo 'Something is wrong!';
+    }
+}
+if (isset($_POST['action']) && ($_POST['action'] == 'DeleteDreamWallImage')) {
+    if (isset($_POST['id'])) {
+        $id = $_POST['id'];
+        $app_delete = $common->delete("dreamwall_images", "id = :id", ['id' => $id]);
+        echo 'Delete';
+    } else {
+        echo 'Something is wrong!';
+    }
+}
+
+const IMAGE_HANDLERS = [
+    IMAGETYPE_JPEG => [
+        'load' => 'imagecreatefromjpeg',
+        'save' => 'imagejpeg',
+        'quality' => 100
+    ],
+    IMAGETYPE_PNG => [
+        'load' => 'imagecreatefrompng',
+        'save' => 'imagejpeg',
+        'quality' => 100
+    ],
+    IMAGETYPE_GIF => [
+        'load' => 'imagecreatefromgif',
+        'save' => 'imagejpeg'
+    ],
+    IMAGETYPE_WEBP => [
+        'load' => 'imagecreatefromwebp',
+        'save' => 'imagejpeg'
+    ],
+     
+];
+function createThumbnail($src, $dest, $targetWidth, $targetHeight = null) {
+
+    
+    $type = exif_imagetype($src);
+    if (!$type || !IMAGE_HANDLERS[$type]) {
+        return null;
+    }
+    $image = call_user_func(IMAGE_HANDLERS[$type]['load'], $src);
+    
+
+    // no image found at supplied location -> exit
+    if (!$image) {
+        return null;
+    }
+
+
+    $width = imagesx($image);
+    $height = imagesy($image);
+
+    // maintain aspect ratio when no height set
+    if ($targetHeight == null) {
+
+        // get width to height ratio
+        $ratio = $width / $height;
+
+        // if is portrait
+        // use ratio to scale height to fit in square
+        if ($width > $height) {
+            $targetHeight = floor($targetWidth / $ratio);
+        }
+        // if is landscape
+        // use ratio to scale width to fit in square
+        else {
+            $targetHeight = $targetWidth;
+            $targetWidth = floor($targetWidth * $ratio);
+        }
+    }
+
+    
+    // create duplicate image based on calculated target size
+    $thumbnail = imagecreatetruecolor($targetWidth, $targetHeight);
+
+    // set transparency options for GIFs and PNGs
+    if ($type == IMAGETYPE_GIF || $type == IMAGETYPE_PNG) {
+
+        // make image transparent
+        imagecolortransparent(
+            $thumbnail,
+            imagecolorallocate($thumbnail, 0, 0, 0)
+        );
+
+        // additional settings for PNGs
+        if ($type == IMAGETYPE_PNG) {
+            imagealphablending($thumbnail, false);
+            imagesavealpha($thumbnail, true);
+        }
+    }
+
+    // copy entire source image to duplicate image and resize
+    imagecopyresampled(
+        $thumbnail,
+        $image,
+        0, 0, 0, 0,
+        $targetWidth, $targetHeight,
+        $width, $height
+    );
+    try{
+        $exif = exif_read_data($src);
+        if(!empty($exif) && !empty($exif['Orientation'])){
+            $orientation = $exif['Orientation'];
+            switch ($orientation) {
+                case 2:
+                    imageflip($thumbnail, IMG_FLIP_HORIZONTAL);
+                    break;
+                case 3:
+                    $thumbnail = imagerotate($thumbnail, 180, 0);
+                    break;
+                case 4:
+                    imageflip($thumbnail, IMG_FLIP_VERTICAL);
+                    break;
+                case 5:
+                    $thumbnail = imagerotate($thumbnail, -90, 0);
+                    imageflip($thumbnail, IMG_FLIP_HORIZONTAL);
+                    break;
+                case 6:
+                    $thumbnail = imagerotate($thumbnail, -90, 0);
+                    break;
+                case 7:
+                    $thumbnail = imagerotate($thumbnail, 90, 0);
+                    imageflip($image, IMG_FLIP_HORIZONTAL);
+                    break;
+                case 8:
+                    $thumbnail = imagerotate($thumbnail, 90, 0); 
+                    break;
+            }
+        }
+    }catch(Exception $exp) {
+
+    }
+    
+   
+    $thumbImage=imagejpeg($thumbnail,$dest);
+   
+    return $thumbImage;
+}
+
+
+if (isset($_POST['action']) && ($_POST['action'] == 'UploadDreamWallImage')) {
+    
+    $maxAllowed=20;
+    $selectedDate=$today;
+    $hash = $format->validation($_POST['hash']);
+    $user_id = Session::get('user_id');
+    if (!$user_id) {
+        $rememberCookieData = RememberCookie::getRememberCookieData();
+        if ($rememberCookieData) {
+            $user_id = $rememberCookieData[RememberCookie::ID];
+        }
+    }
+    $resAr=['url'=>"",'success'=>false,'msg'=>'','hash'=>$hash];
+    $fileCounts = $common->count(
+        "dreamwall_images",
+        'user_id = :user_id',
+        ['user_id' => $user_id]
+    );
+    if($fileCounts<$maxAllowed){
+        $file_name=strtolower(basename($_FILES["file"]["name"])); 
+        $target_dir = "../uploads/dreamwall/".$user_id."/";
+        if ( !is_dir( $target_dir ) ) {
+            mkdir( $target_dir,0777,true );       
+        }
+        $target_file = $target_dir . $file_name;
+        $target_thumb = $target_dir .$file_name.'_thumb.jpg';
+        $target_file_url=SITE_URL."/users/uploads/dreamwall/".$user_id."/".$file_name;
+        $target_thumb_url=$target_file_url.'_thumb.jpg';
+        
+        $FileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        $resAr['file_type']=$FileType;
+        $check = getimagesize($_FILES["file"]["tmp_name"]);
+        $uploadOk=1;
+        if ($uploadOk == 0) {  
+         $resAr['msg']="Sorry, your file was not uploaded.";
+       } else {
+         if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) { 
+            $postData=[
+                'user_id' => $user_id,
+                'created_at' => $selectedDate,
+                'url' => $target_file_url,
+                'thumb' => $target_file_url
+            ];
+            try {
+                createThumbnail($target_file,$target_thumb, 300,300);
+                $postData['thumb']=$target_thumb_url;
+
+            }catch (ImagickException $e) {
+                $resAr['msg']=$e->getMessage();
+            }    
+            $file_insert = $common->insert("dreamwall_images", $postData);
+            $fileId = $common->insertId(); 
+            $resAr['thumb_url']=$target_thumb_url;           
+           $resAr['file_url']=$target_file_url;
+           $resAr['success']=true;
+           $resAr['id']=$fileId;
+         } else {
+             $resAr['msg']="Sorry, there was an error uploading your file.";
+           
+         }
+       }
+    }else{
+        $resAr['msg']="Maximum limit reached.";
+    }
+    echo  json_encode($resAr);
+}
+if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'UploadV7File')) {
+    
+    $date = $format->validation($_POST['date']);
+    $type = $format->validation($_POST['type']);
+    $maxAllowed=1;
+    if($type=='image')
+        $maxAllowed=2;
+    $selectedDate=$today;
+    if(!empty($date))
+    $selectedDate=$date;
+    $user_id = Session::get('user_id');
+    if (!$user_id) {
+        $rememberCookieData = RememberCookie::getRememberCookieData();
+        if ($rememberCookieData) {
+            $user_id = $rememberCookieData[RememberCookie::ID];
+        }
+    }
+    $resAr=['url'=>"",'success'=>false,'msg'=>'','type'=>$type];
+    $fileCounts = $common->count(
+        "uploaded_files",
+        'type = :type AND user_id = :user_id AND DATE(created_at) = :created_at',
+        ['type' => $type, 'user_id' => $user_id, 'created_at' => $selectedDate]
+    );
+    if($fileCounts<$maxAllowed){
+        $file_name=strtolower(basename($_FILES["file"]["name"])); 
+        $target_dir = "../uploads/victory7/".$user_id."/".$selectedDate."/";
+        if ( !is_dir( $target_dir ) ) {
+            mkdir( $target_dir,0777,true );       
+        }
+        $target_file = $target_dir . $file_name;
+        $target_thumb = $target_dir .$file_name.'_thumb.jpg';
+        $target_file_url=SITE_URL."/users/uploads/victory7/".$user_id."/".$selectedDate."/".$file_name;
+        $target_thumb_url=$target_file_url.'_thumb.jpg';
+        
+        $FileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        $resAr['file_type']=$FileType;
+        $check = getimagesize($_FILES["file"]["tmp_name"]);
+        $uploadOk=1;
+        if ($uploadOk == 0) {  
+         $resAr['msg']="Sorry, your file was not uploaded.";
+       } else {
+         if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) { 
+            $postData=[
+                'type' => $type,
+                'user_id' => $user_id,
+                'created_at' => $selectedDate,
+                'url' => $target_file_url,
+                'thumb' => $target_file_url
+            ];
+            try {
+                createThumbnail($target_file,$target_thumb, 300,300);
+                $postData['thumb']=$target_thumb_url;
+
+            }catch (ImagickException $e) {
+                echo $e->getMessage();
+            }    
+            $file_insert = $common->insert("uploaded_files", $postData);
+            $fileId = $common->insertId(); 
+            if($type=='image'){
+                $resAr['url']=$target_thumb_url;
+            }else{
+                $resAr['url']=$target_file_url;
+            }
+           
+           $resAr['file_url']=$target_file_url;
+           $resAr['success']=true;
+           $resAr['id']=$fileId;
+         } else {
+             $resAr['msg']="Sorry, there was an error uploading your file.";
+           
+         }
+       }
+    }else{
+        $resAr['msg']="Maximum limit reached.";
+    }
+    echo  json_encode($resAr);
+}
+
 
 function sendEmail($user_id, $Title, $toEmail, $body)
 {

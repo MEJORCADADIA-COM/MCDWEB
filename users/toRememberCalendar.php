@@ -35,7 +35,7 @@ if (isset($_POST['update_daily_to_remember'])) {
     return;
 }
 
-$month = date('m');
+$month = date('n');
 $year = date('Y');
 if (!empty($_GET['month_year'])) {
     list($month, $year) = sscanf($_GET['month_year'], "%d-%d");
@@ -58,10 +58,12 @@ if ($month + 1 > 12) {
 }
 
 $monthlyDailyToRemembers = getMonthlyDailyToRememberWithTags($user_infos['id'], $month, $year);
+
 $dates = array_column($monthlyDailyToRemembers, 'date');
 $monthlyDailyToRemembers = array_combine($dates, $monthlyDailyToRemembers);
 
 $monthlyToRemember = $common->first('monthly_to_remembers', 'user_id = :user_id AND month_year = :month_year', ['user_id' => $user_infos['id'], 'month_year' => "{$month}_{$year}"]);
+
 
 function getTDClass($day, $monthlyDailyToRemember): string
 {
@@ -338,11 +340,12 @@ function getTDClass($day, $monthlyDailyToRemember): string
                 ?>
             </tbody>
         </table>
-        <div class="mt-5 px-1 px-lg-0">
+       
+        <div class="mt-5 px-1 px-lg-0 ">
             <h4 class="text-center">Monthly Notes</h4>
-            <div x-data="monthlyToRemembers">
-                <div>
-                    <textarea class="editor-textarea" id="monthlyToRemember" x-ref="monthlyToRemember"><?= $monthlyToRemember['to_remember'] ?? ''; ?></textarea>
+            <div x-data="monthlyToRemembers" class="text-dark">
+                <div  class="text-dark">>
+                    <textarea class="editor-textarea" id="monthlyToRemember" x-ref="monthlyToRemember"><?=$monthlyToRemember['to_remember'] ?? ''; ?></textarea>
                     <button class="btn btn-info letter my-5" @click="saveMonthlyToRemember">Save</button>
                 </div>
 

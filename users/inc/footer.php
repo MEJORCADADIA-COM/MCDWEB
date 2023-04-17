@@ -148,7 +148,8 @@ require_once "../inc/inspirationQuote.php";
                     <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'monthly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=monthly">Mensual</a></li>
                     <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'quarterly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=quarterly">Trimestral</a></li>
                     <li> <a class="text-decoration-none text-white py-1 <?= $goalType == 'yearly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=yearly">Anual</a></li>
-                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=lifetime">De por Vida</a></li>
+                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=lifetime">100 Dreams</a></li>
+                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/dream-wall.php">Dream Wall</a></li>
                     <li><a class="text-decoration-none text-white py-1" href="dailycommitments.php">Guerrero D</a></li>
                     <li><a class="text-decoration-none text-white py-1" href="cronovida.php">CronoVida</a></li>
                     <li> <a class="text-decoration-none text-white py-1 <?= $path == 'index.php' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/index.php" id="navbarDropdown">Cartas</a></li>

@@ -58,6 +58,7 @@ if ($month + 1 > 12) {
 }
 
 $monthlyDailyVictories = getMonthlyVictoriesWithTags($user_infos['id'], $month, $year);
+
 $dates = array_column($monthlyDailyVictories, 'date');
 $monthlyDailyVictories = array_combine($dates, $monthlyDailyVictories);
 
@@ -340,8 +341,8 @@ function getTDClass($day, $monthlyDailyVictory): string
 
         <div class="mt-5 px-1 px-lg-0">
             <h4 class="text-center">Monthly Notes</h4>
-            <div x-data="monthlyVictory">
-                <div>
+            <div x-data="monthlyVictory" class="text-dark">
+                <div class="text-dark">
                     <textarea class="editor-textarea" id="monthlyVictory" x-ref="monthlyVictory"><?= $monthlyVictory['victory'] ?? ''; ?></textarea>
                     <button class="btn btn-info letter my-5" @click="saveMonthlyVictory">Save</button>
                 </div>

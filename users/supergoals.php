@@ -151,6 +151,11 @@ $goals = $common->get(
   'user_id = :user_id AND type = :type AND DATE(start_date) >= :start_date AND DATE(end_date) <= :end_date',
   ['user_id' => $user_id, 'type' => $type, 'start_date' => $start_date, 'end_date' => $end_date]
 );
+$dreamWallImages = $common->get(
+  "dreamwall_images",
+  'user_id = :user_id',
+  ['user_id' => $user_id]
+);
 
 //if(isset($_GET['test'])){
 //  $result=$common->db->select("SELECT * FROM supergoals WHERE id='226'");
@@ -420,6 +425,87 @@ if ($row) {
   .projects {
     border: none;
   }
+  .v7-media-box{
+    position:relative;
+  }
+  .v7-media-box img{
+    height:106px; 
+    border-radius: 10px;
+    max-width:100%;
+  }
+  .v7-media-box .file-actions{
+  position:absolute; top:0; right:0;
+}
+.v7-media-box.file-added .upload-file-box{
+    display:none;
+  }
+  .upload-file-box{   
+    cursor:pointer;
+  }
+  .v7-media-box .media-thumb-wrapper{
+    width:106px;
+    height:106px;
+    text-align:center;
+    background:#000;
+    border-radius: 10px;
+    position: relative;
+  }
+  .inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.inputfile + label {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: 000;
+    display: inline-block;
+    border: 1px dotted #aeacac;
+    padding: 2.2rem;
+    border-radius: 10px;
+    background: #f7f7f7;
+    WIDTH:106PX;
+}
+.inputfile + label .fa {
+    cursor: pointer;
+    font-size: 2rem;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background-color: #e2e2e2;
+}
+.inputfile + label {
+	cursor: pointer; /* "hand" cursor */
+}
+.inputfile:focus + label {
+	outline: 1px dotted #000;
+	outline: -webkit-focus-ring-color auto 5px;
+}
+.inputfile + label * {
+	pointer-events: none;
+}
+.jquery-uploader-preview-progress{
+  position: absolute;
+    width: 64px;
+    height: 64px;
+    top: calc(50% - 32px);
+    left: calc(50% - 32px);
+    background: #d2cdcd99;
+    border-radius: 50%;
+    text-align: center;
+    padding: 14px;
+    border: 1px solid #656565;
+}
+ .progress-loading .fa{
+   
+     font-size:1.5rem;
+    
+}
+  
 </style>
 
 <?php
@@ -560,19 +646,17 @@ if ($row) {
             </div>
           </div>
           <div class="form-group screenonly">
-            <div class="button-wrapper" style="margin:30px 0;">
+            <div class="button-wrapper" style="margin:30px 0; overflow:hidden;">
               <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Email</button>
 
               <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="Guardar pdf" />
 
-              <!-- Floating Save Start -->
-              <?php if ($today <= $end_date) : ?>
+             
                 <input class="btn btn-info letter" type="button" id="saveBtn" name="saveBtn" value="Guardar" />
                 <div>
                   <button class="btn btn-primary rounded-circle fixed-save-btn text-white" type="button" id="floatingSaveBtn" name="saveBtn"><i class="fa fa-save"></i></button>
                 </div>
-              <?php endif; ?>
-              <!-- Floating Save End -->
+              
 
             </div>
           </div>
@@ -581,6 +665,42 @@ if ($row) {
     </div>
   </div>
   <div class="clearfix;"></div>
+  <div class="clearfix;"></div>
+          <div class="cardd mb-5" id="media-section" style="padding:0 5px; margin-left:5px; margin-right:5px;">
+          <label style="color:#FFF; font-size:1.1rem; margin:5px 0;">DreamWall</label>
+            <div class="card-body">
+              <div class="d-flex flex-wrap bd-highlight mb-3">
+                <?php for($i=0; $i<10; $i++): ?>
+                  <div class="p-1 bd-highlight v7-media-box <?=(count($dreamWallImages)>0 && isset($dreamWallImages[$i]))? 'file-added':''; ?>" id="mediabox<?=$i;?>">
+                        <?php if(count($dreamWallImages)>0 && isset($dreamWallImages[$i])): ?>
+                          <div class="media-thumb-wrapper" data-file="<?=$dreamWallImages[$i]['id'];?>" id="fileid-<?=$dreamWallImages[$i]['id'];?>">
+                          <a href="<?=$dreamWallImages[$i]['url'];?>" data-bs-toggle="modal" data-bs-target="#mediaLightBoxModal"> <img class="rounded-3"  src="<?=$dreamWallImages[$i]['thumb'];?>"></a>
+                          <div class="file-actions">
+                          <div class="dropdown">
+                            <button class="btn btn-light btn-sm p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+</svg>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item file_delete" href="#">Delete</a></li>
+                            </ul>
+                          </div>
+                         </div>
+                        </div> 
+                        <?php endif; ?>
+                        <div class="upload-box-image upload-file-box" data-type="image">                        
+                          <input type="file" name="imagefile[]" id="imageFile<?=$i;?>" class="inputfile" accept="image/png, image/gif, image/jpeg"  />
+                          <label for="imageFile<?=$i;?>"><i class="fa fa-camera"></i></label>
+                        </div>
+                    </div>
+                 
+                <?php endfor; ?>
+                </div>
+              <div>
+              <div class="card-footer text-right" style="overflow:hidden; text-align:right;"><a class="btn btn-sm button btn-info" href="<?= SITE_URL; ?>/users/dream-wall.php">DreamWall<i class="fa fa-angle-double-right" aria-hidden="true"></i></a></div>
+            
+            <div>
 </main>
 <!-- Modal Starts-->
 
@@ -605,6 +725,20 @@ if ($row) {
   </div>
 </div>
 <!-- Modal Ends -->
+<div class="modal fade p-0" id="mediaLightBoxModal" tabindex="-1" aria-labelledby="mediaLightBoxModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen-md-down modal-xl modal-dialog-centered modal-dialog-scrollable ">
+    <div class="modal-content bg-dark">
+      <div class="modal-header border-0"> 
+       <h5 class="modal-title" id="exampleModalLabel"></h5>      
+        <button type="button" class="btn-close bg-white border border-warning" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="text-align:center;">       
+        <img src="" class="img-fluid">
+       
+      </div>
+    </div>
+  </div>
+</div>
 <div class="toast-container position-absolute top-0 end-0 p-3">
   <div class="toast" id="toast">
 
@@ -626,7 +760,18 @@ if ($row) {
       }			
 	});
 });
- 
+var mediaLightBoxModal = document.getElementById('mediaLightBoxModal')
+  mediaLightBoxModal.addEventListener('show.bs.modal', function (event) {
+  // Button that triggered the modal
+  var button = event.relatedTarget
+  var imgsrc=button.getAttribute('href');
+  var imgDate=button.getAttribute('data-date');
+  console.log('imgsrc',imgsrc,imgDate);
+  var modalBodyInput = mediaLightBoxModal.querySelector('.modal-body img');
+  var modalCaptionInput = mediaLightBoxModal.querySelector('.modal-header .modal-title');
+  modalBodyInput.src = imgsrc;
+  modalCaptionInput.innerHTML=imgDate;
+});
   var goalstobeadded = 0;
   var newgoalsInput = [];
 
@@ -1005,6 +1150,183 @@ toastList.forEach(toast => toast.show()); // This show them
 
         });
     }
+  });
+  function createFilePreviewEle(id, url, type,$wrapper){
+    console.log('createFilePreviewEle',id, url, type,$wrapper);
+    
+        let filePreview ='';
+        if(type=='image/jpeg' || type=='image/png' || type.startsWith("image")){
+          filePreview= `<img alt="preview" class="files_img rounded-3" src="${url}"/>`;
+        }
+        if(type=='audio/mpeg' || type=='audio/x-m4a' || type.startsWith("audio")){
+          filePreview= `<span class="preview-thumb"><i class="fa fa-file-audio-o "></i> </span>`;
+        }
+        if(type=='video/mp4' || type.startsWith("video")){
+          filePreview= `<span class="preview-thumb"><i class="fa fa-file-video-o"></i> </span>`;
+        }  
+        console.log('filePreview',filePreview);
+        let $previewCard = $(
+            `<div class="media-thumb-wrapper" id="${id}">
+                    ${filePreview}
+                        <div class="file-actions">
+                        <div class="dropdown">
+                            <button class="btn btn-light btn-sm p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+</svg>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item file_delete" href="#">Delete</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="jquery-uploader-preview-progress">
+                            <div class="progress-mask"></div>
+                            <div class="progress-loading">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                 </div>`);
+        $wrapper.prepend($previewCard);
+        $wrapper.addClass("file-added");
+        return $previewCard
+  }
+  function uuid() {
+    let s = [];
+    let hexDigits = "0123456789abcdef";
+    for (let i = 0; i < 36; i++) {
+        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+    }
+    s[14] = "4";
+    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);
+    s[8] = s[13] = s[18] = s[23] = "-";
+    return s.join("");
+}
+  const BLOB_UTILS = function () {
+    const windowURL = window.URL || window.webkitURL;
+    /**
+     * blob缓存
+     * @type {Map<String, Blob>}
+     */
+    let dict = new Map()
+    return {
+        // 创建blob url
+        createBlobUrl: function (blob) {
+            let blobUrl = windowURL.createObjectURL(blob)
+            dict.set(blobUrl, blob)
+            return blobUrl
+        },
+        // 销毁 blob 对象
+        revokeBlobUrl: function (url) {
+            windowURL.revokeObjectURL(url)
+            dict.delete(url)
+        },
+        //根据 url 获取 blob对象
+        getBlobFromUrl: function (url) {
+            return dict.get(url)
+        }
+    }
+}();
+  function paramsBuilder(uploaderFile,upload_type) {
+        let form = new FormData();
+        form.append("file", uploaderFile.file);
+        form.append("action", 'UploadDreamWallImage');
+       // form.append("date", currentDate);        
+        return form;
+  }
+  function handleFileUpload(files,$fileWrapperElem){
+    let addFiles = [];
+    for (let i = 0; i < files.length; i++) {
+            let file = files[i]
+            let type = file.type;
+            let url = BLOB_UTILS.createBlobUrl(file)
+            let id = uuid()
+            let $previewCard = createFilePreviewEle(id, url, type,$fileWrapperElem)
+            
+            addFiles.push({
+                id: id,
+                type: type,
+                name: file.name,
+                url: type,
+                file: file,
+                $ele: $previewCard
+            })
+        }
+        addFiles.forEach(file => {
+          $.ajax({
+            url: SITE_URL+'/users/ajax/ajax.php',
+            contentType: false,
+            processData: false,
+            method: "POST",
+            data: paramsBuilder(file),
+            success: function (json) {
+              
+              var response=JSON.parse(json);  
+              console.log('success response',response);          
+              if(response.success){
+                $fileWrapperElem.find('.jquery-uploader-preview-progress').hide();                
+                
+                 // $fileWrapperElem.find('img').attr('src',response.url);
+                 $fileWrapperElem.find('img').remove();
+                  let $audioElm=$(`<a href="${response.file_url}" data-bs-toggle="modal" data-bs-target="#mediaLightBoxModal"> <img class="rounded-3"  src="${response.thumb_url}"></a>`);
+                  $fileWrapperElem.find('.media-thumb-wrapper').prepend($audioElm);
+              }else{
+                console.log(response);
+                showToast('danger', response.msg);
+              }
+             
+            },
+            error: function (response) {
+                console.error("上传异常", response)
+               
+            },
+            xhr: function () {
+                let xhr = new XMLHttpRequest();
+                //使用XMLHttpRequest.upload监听上传过程，注册progress事件，打印回调函数中的event事件
+                xhr.upload.addEventListener('progress', function (e) {
+                    let progressRate = (e.loaded / e.total) * 100;
+                    console.log('success progressCallback',progressRate);
+                    $fileWrapperElem.find('.progress-mask').innerHTML=Math.ceil(progressRate)+'%';                    
+                    
+                })
+                return xhr;
+            }
+        })
+        });
+        
+   
+  }
+  var inputs = document.querySelectorAll( '.inputfile' );
+  Array.prototype.forEach.call( inputs, function( input )  {
+    input.addEventListener( 'change', function( e ){      
+      var $elem=e.target; 
+      var $wrapper=this.closest('.v7-media-box');
+      var $fileWrapperElem=$("#"+$wrapper.id);
+     handleFileUpload(this.files,$fileWrapperElem)
+      
+    });
+});
+$(document).on('click','.file-actions .file_delete',function(e){
+    console.log('de;ete');
+    e.preventDefault();
+    $parentElem=$(this).parents('.v7-media-box');
+    $fileElm=$parentElem.find('.media-thumb-wrapper');
+    let fileId=$fileElm.data('file');
+
+    $.ajax({
+        url: SITE_URL + "/users/ajax/ajax.php",
+        type: "POST",
+        data: {
+          action: 'DeleteDreamWallImage',
+          id: fileId,
+        },
+        success: function(data) {
+          console.log('data', data);
+          $fileElm.remove();
+          $parentElem.removeClass('file-added');
+        }
+      });
+    
   });
 </script>
 <?php require_once "inc/footer.php"; ?>

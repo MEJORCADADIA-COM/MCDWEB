@@ -54,28 +54,6 @@ $dailyImprovements = '';
 
 $dailyTopGoals = [];
 $dailyLifeGoals = [];
-
-$dailyV7Files=[];
-
-$dailyV7Files = $common->get('uploaded_files', 'user_id = :user_id AND DATE(created_at) = :created_at', ['user_id' => $user_id, 'created_at' => $currentDate]);
-
-$dailyV7Images=[];
-$dailyV7Audios=[];
-$dailyV7Videos=[];
-
-foreach ($dailyV7Files as $file) {
- if($file['type']=='audio'){
-  $dailyV7Audios[]=$file;
- }
- if($file['type']=='video'){
-  $dailyV7Videos[]=$file;
- }
- if($file['type']=='image'){
-  $dailyV7Images[]=$file;
- }
-}
-
-
 $row = $common->first('dailygaols', 'user_id = :user_id AND created_at = :created_at', ['user_id' => $user_id, 'created_at' => $currentDate]);
 if ($row) {
   $dailyEvolution = $row['evolution'];
@@ -164,8 +142,6 @@ if ($dailyLifeGoals) {
   var remainingLifeGoals = 7 - lifeGoalsCounts;
 </script>
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
-<script src="<?=SITE_URL; ?>/users/dist/recorder.js"></script>
-
 <style>
   @media screen and (max-width: 480px) {
     .tox-notifications-container {
@@ -485,153 +461,7 @@ if ($dailyLifeGoals) {
     border: none;
     border-bottom: 1px solid white;
     outline: none;
-  } 
-  
-  .v7-media-box{
-    position:relative;
   }
-  .v7-media-box.file-added .upload-file-box{
-    display:none;
-  }
-  .upload-file-box{   
-    cursor:pointer;
-  }
-
-
-
-  .v7-media-box img{
-    height:120px; width:120px;
-    border-radius: 10px;
-  }
-  .v7-media-box video{max-width:100%; width:180px; height:150px;}
-#mediaLightBoxModal .modal-body img{width:100%;}
-.v7-media-box audio, .v7-media-box video{max-width:100%; max-height:180px;}
-.file-actions{
-  position:absolute; top:0; right:0;
-}
-#audioMediaBox.has-audio-file .file-actions{
-  position:absolute; top:13px; right:0px;
-}
-.media-thumb-wrapper{position: relative;}
-.jquery-uploader-preview-progress{
-  position: absolute;
-    width: 64px;
-    height: 64px;
-    top: calc(50% - 32px);
-    left: calc(50% - 32px);
-    background: #d2cdcd99;
-    border-radius: 50%;
-    text-align: center;
-    padding: 14px;
-    border: 1px solid #656565;
-}
- .progress-loading .fa{
-   
-     font-size:1.5rem;
-    
-}
-.media-thumb-wrapper .preview-thumb{
-  border: 1px dotted #aeacac;
-    padding: 2.2rem; 
-    border-radius: 10px;
-    background: #f7f7f7;
-    height: 104px;
-    display: block;
-    width: 104px;
-}
-.media-thumb-wrapper .preview-thumb .fa {
-    cursor: pointer;
-    font-size: 2rem;
-}
-@media screen and (max-width: 767px) {
-  .upload-file-box > label{
-    margin: 0 auto;
-  }
-}
-.inputfile {
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
-}
-.inputfile + label {
-    font-size: 1.25em;
-    font-weight: 700;
-    color: #000;
-    display: inline-block;
-    border: 1px dotted #aeacac;
-    padding: 2.2rem;
-    border-radius: 10px;
-    background: #f7f7f7;
-}
-.inputfile + label .fa {
-    cursor: pointer;
-    font-size: 2rem;
-}
-
-.inputfile:focus + label,
-.inputfile + label:hover {
-    background-color: #e2e2e2;
-}
-.inputfile + label {
-	cursor: pointer; /* "hand" cursor */
-}
-.inputfile:focus + label {
-	outline: 1px dotted #000;
-	outline: -webkit-focus-ring-color auto 5px;
-}
-.inputfile + label * {
-	pointer-events: none;
-}
-#audio-recorder .elapsed-time{
-  font-size:2.2rem;
-}
-#audio-recorder .max-duration-label{
-  font-size:1rem;
-  margin-bottom:2rem;
-}
-.audio-player-preview audio{
-  display:block;
-  margin-bottom:1rem;
-}
-.audio-player-preview a.btn{
-  margin:0.375rem 0.75rem;
-}
-                        .custom-audio-picker button{
-                          font-size: 1.25em;
-                          font-weight: 700;
-                          color: 000;
-                          display: inline-block;
-                          border: 1px dotted #aeacac;
-                          padding: 2.2rem;
-                          border-radius: 10px;
-                          background: #f7f7f7;
-                        }
-                        
-                        .custom-audio-picker button:hover, .custom-audio-picker button.btn.show, .custom-audio-picker button.btn:active{
-                          background:#e2e2e2;
-                        }
-                        .custom-audio-picker button .fa {
-                              cursor: pointer;
-                              font-size: 2rem;
-                              color:#000;
-                          }
-                          .custom-audio-picker .dropdown-menu .inputfile + label, .custom-audio-picker .dropdown-menu .dropdown-item{
-                            border:none; 
-                            width:100%;
-                            color: #000;
-                            background-color: transparent;
-                            padding: 0.25rem 0.75rem;
-                            font-weight: 400;
-                            font-size: 1rem;
-                          }
-                          .custom-audio-picker .dropdown-menu .fa{
-                            font-size:1rem;
-                            width:16px;
-                          }
-                        
 </style>
 
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 mb-3">
@@ -794,156 +624,6 @@ if ($dailyLifeGoals) {
                 </div>
               </div>
             </div>
-            
-            <div class="cardd mb-5" id="media-section" style="padding:0 5px; margin-left:5px; margin-right:5px;">
-              <div class="card-body">
-        
-              <div class="d-flex bd-highlight mb-3">
-                <div class="p-1 bd-highlight" >
-                  <div class="v7-media-box <?=count($dailyV7Images)>0? 'file-added':''; ?>" id="mediabox1" >
-                      <?php if(!empty($dailyV7Images) && count($dailyV7Images)>0):  ?>                      
-                        <div class="media-thumb-wrapper" data-file="<?=$dailyV7Images[0]['id'];?>" id="fileid-<?=$dailyV7Images[0]['id'];?>">
-                          <a href="<?=$dailyV7Images[0]['url'];?>" data-bs-toggle="modal" data-bs-target="#mediaLightBoxModal"> <img class="rounded-3"  src="<?=$dailyV7Images[0]['thumb'];?>"></a>
-                          <div class="file-actions">
-                          <div class="dropdown">
-                            <button class="btn btn-light btn-sm p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-</svg>
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item file_delete" href="#">Delete</a></li>
-                            </ul>
-                          </div>
-                          
-                        </div>
-                        </div>                      
-                      <?php endif; ?>
-                      <div class="upload-box-image upload-file-box" data-type="image">                        
-                        <input type="file" name="image1File" id="image1File" class="inputfile" accept="image/png, image/gif, image/jpeg"  />
-                        <label for="image1File"><i class="fa fa-camera"></i></label>
-                      </div>
-                    </div>  
-                </div>
-                <div class="p-1 bd-highlight" >
-                <div class="v7-media-box <?=count($dailyV7Images)>1? 'file-added':''; ?>" id="mediabox2">
-                      <?php if(!empty($dailyV7Images) && count($dailyV7Images)>1):  ?>                      
-                        <div class="media-thumb-wrapper" data-file="<?=$dailyV7Images[1]['id'];?>" id="fileid-<?=$dailyV7Images[1]['id'];?>">
-                          <a href="<?=$dailyV7Images[1]['url'];?>" data-bs-toggle="modal" data-bs-target="#mediaLightBoxModal"> <img class="rounded-3" src="<?=$dailyV7Images[1]['thumb'];?>"></a>
-                          <div class="file-actions">
-                          <div class="dropdown">
-                            <button class="btn btn-light btn-sm p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-</svg>
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item file_delete" href="#">Delete</a></li>
-                            </ul>
-                          </div>
-                        </div>
-                        </div>                      
-                      <?php endif; ?>
-                      <div class="upload-box-image upload-file-box" data-type="image">
-                        <input type="file" name="image2File" id="image2File" class="inputfile" accept="image/png, image/gif, image/jpeg" />
-                        <label for="image2File"><i class="fa fa-camera"></i></label>
-                      </div>
-                    </div> 
-                </div>
-                <div class="ms-auto p-1 bd-highlight"><a class="btn btn-sm button btn-info pull-right" href="<?= SITE_URL; ?>/users/victory-images.php?date=<?=$currentDate;?>">Más<i class="fa fa-angle-double-right" aria-hidden="true"></i></a></div>
-              </div>
-              <hr>
-              <div class="d-flex bd-highlight mb-3">
-                <div class="p-1 bd-highlight">
-
-                <div class="v7-media-box <?=count($dailyV7Audios)>0? 'file-added has-audio-file':''; ?>" id="audioMediaBox">
-                      <?php if(!empty($dailyV7Audios) && count($dailyV7Audios)>0):  ?>                      
-                        <div class="media-thumb-wrapper" data-file="<?=$dailyV7Audios[0]['id'];?>" id="fileid-<?=$dailyV7Audios[0]['id'];?>">
-                        <audio controls src="<?=$dailyV7Audios[0]['url'];?>">
-                              <a href="<?=$dailyV7Audios[0]['url'];?>">
-                                  Download audio
-                              </a> </audio>
-                              <div class="file-actions">
-                              <div class="dropdown">
-                            <button class="btn btn-light btn-sm p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-</svg>
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item file_delete" href="#">Delete</a></li>
-                            </ul>
-                          </div>
-                        </div>
-                        </div>                      
-                      <?php endif; ?>
-                      
-                      <!--  <div class="upload-box-image upload-file-box" data-type="audio">
-                        <input type="file" name="audio1File" id="audio1File" class="inputfile" accept="audio/mp3,audio/x-m4a,audio/*;capture=microphone" />
-                        <label for="audio1File"><i class="fa fa-file-audio-o"></i></label>
-                      </div>   -->
-                      
-                      <div class="dropdown custom-audio-picker upload-box-image upload-file-box" data-type="audio">                        
-                        <button class="btn btn-secondary " type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-file-audio-o"></i>
-                        </button>
-                        <ul class="dropdown-menu">
-                          <li>
-                          <input type="file" name="audio12File" id="audio12File" class="inputfile dropdown-item" accept="audio/mp3,audio/x-m4a,audio/*;capture=microphone" />
-                            <label for="audio12File"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload</label>
-                          </li>
-                          <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#audioRecorderModal"><i class="fa fa-microphone" aria-hidden="true"></i> Record</a></li>
-                        </ul>
-                      </div>
-                      <!--     -->
-                    </div> 
-                </div>
-                <div class="ms-auto p-1 bd-highlight">
-                <a class="btn btn-sm button btn-info pull-right" href="<?= SITE_URL; ?>/users/victory-media.php?type=audio&date=<?=$currentDate;?>">Más<i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
-
-                </div>
-              </div>
-               <hr>
-               <div class="d-flex bd-highlight mb-3">
-                  <div class="p-1 bd-highlight">
-
-                  <div class="v7-media-box <?=count($dailyV7Videos)>0? 'file-added':''; ?>" id="mediabox4">
-                      <?php if(!empty($dailyV7Videos) && count($dailyV7Videos)>0):  ?>                      
-                        <div class="media-thumb-wrapper" data-file="<?=$dailyV7Videos[0]['id'];?>" id="fileid-<?=$dailyV7Videos[0]['id'];?>">
-                        <video controls preload="auto">
-                        <source src="<?=$dailyV7Videos[0]['url'];?>#t=0.2" type="video/mp4">
-                        Your browser does not support the video tag.
-                      </video>
-                      <div class="file-actions">
-                      <div class="dropdown">
-                            <button class="btn btn-light btn-sm p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-</svg>
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item file_delete" href="#">Delete</a></li>
-                            </ul>
-                          </div>
-                        </div>
-                        </div>                      
-                      <?php endif; ?>
-                      <div class="upload-box-image upload-file-box" data-type="video">                        
-                        <input type="file" name="video1File" id="video1File" class="inputfile" accept="video/*" />
-                        <label for="video1File"><i class="fa fa-file-video-o"></i></label>
-                      </div>
-                      
-                    </div> 
-                  </div>
-                  <div class="ms-auto p-1 bd-highlight">
-                  <a class="btn btn-sm button btn-info pull-right" href="<?= SITE_URL; ?>/users/victory-media.php?type=video&date=<?=$currentDate;?>">Más<i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
-
-                  </div>
-                </div>
-
-               
-              </div>
-            </div>
             <div class="py-2 py-3" style="background-color: #fef200; padding: 10px">
               <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden;">Tus 7-Objetivos y Prioridades Más Importantes para tu Vida:
                 <?php if ($isPastDate == false) : ?>
@@ -1031,8 +711,11 @@ if ($dailyLifeGoals) {
 
                 <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="Guardar pdf" />
 
+                <!-- Floating Save Start -->
+                <?php //if ($today <= $currentDate) : ?>
                   <input class="btn btn-info letter" type="button" id="saveBtn" name="saveBtn" value="Guardar" />
-                
+                <?php // endif; ?>
+                <!-- Floating Save End -->
 
               </div>
             </div>
@@ -1106,51 +789,7 @@ if ($dailyLifeGoals) {
     </div>
   </div>
 </div>
-<!-- Lightbox (made with Bootstrap modal and carousel) -->
-<!-- Modal -->
-<div class="modal fade p-0" id="mediaLightBoxModal" tabindex="-1" aria-labelledby="mediaLightBoxModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-fullscreen-md-down modal-xl modal-dialog-centered modal-dialog-scrollable ">
-    <div class="modal-content bg-dark">
-      <div class="modal-header border-0">        
-        <button type="button" class="btn-close bg-white border border-warning" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">       
-        <img src="" class="img-fluid">
-      </div>
-    </div>
-  </div>
-</div>
 
-
-<div class="modal fade p-0" id="audioRecorderModal" tabindex="-1" aria-labelledby="audioRecorderModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-fullscreen-md-down modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content bg-dark">
-      <div class="modal-header border-0">        
-        <button type="button" class="btn-close bg-white border border-warning" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" style="min-height:350px;">  
-      <di class="d-flex align-items-center justify-content-center"  style=" height:100%; ">
-      <div class="audio-recording-container text-white text-center" id="audio-recorder">
-          <div class="recording-info-wrapper" id="recording-info"> 
-            <div class="recording-elapsed-time">
-              <p class="elapsed-time"></p>
-              <p class="max-duration-label">Max duration 2 minutes</p>
-            </div> 
-            <div id="recordingsList"></div>
-            <div class="controls">
-              <button disabled class="rounded-circle border border-3 btn btn-danger stop-recording-button " id="stopButton"> <i class="fa fa-circle" aria-hidden="true"></i></button>
-              <button disabled class="rounded-circle border border-3 btn btn-danger cancel-recording-button " id="pauseButton"><i class=" fa fa-pause" aria-hidden="true"></i></button>
-            </div>
-          </div>
-          <button style="margin:2rem auto;" class="rounded-circle border border-3 btn btn-danger start-recording-button" id="recordButton"><i class=" fa fa-microphone" aria-hidden="true"></i></button>
-          
-        </div>
-      </div>     
-        
-      </div>
-    </div>
-  </div>
-</div>
 
 
 
@@ -1165,15 +804,7 @@ if ($dailyLifeGoals) {
 </div>
 <script>
   $('#show').css('display', 'none');
- 
-  var mediaLightBoxModal = document.getElementById('mediaLightBoxModal');
-  mediaLightBoxModal.addEventListener('show.bs.modal', function (event) {
-  // Button that triggered the modal
-  var button = event.relatedTarget
-  var imgsrc=button.getAttribute('href');
-  var modalBodyInput = mediaLightBoxModal.querySelector('.modal-body img');
-  modalBodyInput.src = imgsrc;
-});
+
   document.querySelectorAll( '.LetterApplication' ).forEach( ( node, index ) => {  
 	ClassicEditor
 		.create( node, {} )
@@ -1200,7 +831,7 @@ if ($dailyLifeGoals) {
             });
           }
         }
-       
+             // console.log( 'The data has changed!',newEditor.getData(),newEditor.sourceElement.classList );
       });
       if(node.id){
         window.editors[ node.id ] = newEditor;
@@ -1396,28 +1027,7 @@ if ($dailyLifeGoals) {
 
 
   }
-  $(document).on('click','.file-actions .file_delete',function(e){
-    console.log('de;ete');
-    e.preventDefault();
-    $parentElem=$(this).parents('.v7-media-box');
-    $fileElm=$parentElem.find('.media-thumb-wrapper');
-    let fileId=$fileElm.data('file');
-    $.ajax({
-        url: SITE_URL + "/users/ajax/ajax.php",
-        type: "POST",
-        data: {
-          action: 'DeleteV7MediaFile',
-          currentDate: currentDate,
-          id: fileId,
-        },
-        success: function(data) {
-          console.log('data', data);
-          $fileElm.remove();
-          $parentElem.removeClass('file-added');
-        }
-      });
-    
-  });
+
   $(document).on('click', '#btnLoadMoreTenSections', function(e) {
     e.preventDefault();
     if ($(this).text() == 'Mostrar más') {
@@ -1698,222 +1308,7 @@ if ($dailyLifeGoals) {
 
   }
 
-  function createFilePreviewEle(id, url, type,$wrapper){
-    console.log('createFilePreviewEle'+type,type,id, url, type,$wrapper);
-    
-        let filePreview ='';
-        if(type=='image/jpeg' || type=='image/png' || type.startsWith("image")){
-          filePreview= `<img alt="preview" class="files_img rounded-3" src="${url}"/>`;
-        }
-        if(type=='audio/mpeg' || type=='audio/x-m4a' || type.startsWith("audio")){
-          filePreview= `<span class="preview-thumb"><i class="fa fa-file-audio-o "></i> </span>`;
-        }
-        if(type=='video/mp4' || type.startsWith("video")){
-          filePreview= `<span class="preview-thumb"><i class="fa fa-file-video-o"></i> </span>`;
-        }  
-        console.log('filePreview',filePreview);
-        let $previewCard = $(
-            `<div class="media-thumb-wrapper" id="${id}">
-                    ${filePreview}
-                        <div class="file-actions">
-                        <div class="dropdown">
-                            <button class="btn btn-light btn-sm p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-</svg>
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item file_delete" href="#">Delete</a></li>
-                            </ul>
-                          </div>
-                        </div>
-                        <div class="jquery-uploader-preview-progress">
-                            <div class="progress-mask"></div>
-                            <div class="progress-loading">
-                                <i class="fa fa-spinner fa-spin"></i>
-                            </div>
-                        </div>
-                 </div>`);
-        $wrapper.prepend($previewCard);
-        $wrapper.addClass("file-added");
-        return $previewCard
-  }
-  function uuid() {
-    let s = [];
-    let hexDigits = "0123456789abcdef";
-    for (let i = 0; i < 36; i++) {
-        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
-    }
-    s[14] = "4";
-    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);
-    s[8] = s[13] = s[18] = s[23] = "-";
-    return s.join("");
-}
-  const BLOB_UTILS = function () {
-    const windowURL = window.URL || window.webkitURL;
-    /**
-     * blob缓存
-     * @type {Map<String, Blob>}
-     */
-    let dict = new Map()
-    return {
-        // 创建blob url
-        createBlobUrl: function (blob) {
-            let blobUrl = windowURL.createObjectURL(blob)
-            dict.set(blobUrl, blob)
-            return blobUrl
-        },
-        // 销毁 blob 对象
-        revokeBlobUrl: function (url) {
-            windowURL.revokeObjectURL(url)
-            dict.delete(url)
-        },
-        //根据 url 获取 blob对象
-        getBlobFromUrl: function (url) {
-            return dict.get(url)
-        }
-    }
-}();
-function paramsBuilder(uploaderFile,upload_type) {
-        let form = new FormData();
-        form.append("file", uploaderFile.file);
-        form.append("action", 'UploadV7File');
-        form.append("type", upload_type);
-        form.append("date", currentDate);        
-        return form;
-  }
-  function handleFileUpload(files,upload_type,$fileWrapperElem){
-    let addFiles = [];
-    for (let i = 0; i < files.length; i++) {
-            let file = files[i]
-            let type = file.type;
-            let url = BLOB_UTILS.createBlobUrl(file)
-            let id = uuid();
-            if(upload_type=='audio' && type==''){
-              type='audio/wav';
-            }
-            let $previewCard = createFilePreviewEle(id, url, type,$fileWrapperElem)
-            
-            addFiles.push({
-                id: id,
-                type: type,
-                name: file.name,
-                url: type,
-                file: file,
-                $ele: $previewCard
-            })
-        }
-        addFiles.forEach(file => {
-          $.ajax({
-            url: SITE_URL+'/users/ajax/ajax.php?action=UploadV7File&date='+currentDate,
-            contentType: false,
-            processData: false,
-            method: "POST",
-            data: paramsBuilder(file,upload_type),
-            success: function (json) {
-              console.log('success response',json);
-              let response=JSON.parse(json);            
-              if(response.success){
-                $fileWrapperElem.find('.jquery-uploader-preview-progress').hide();                
-                $fileWrapperElem.find('.preview-thumb').remove();
-                if(response.type=='audio'){
-                  let $audioElm=$(`<audio controls="" src="${response.url}">
-                              <a href="${response.url}">
-                                  Download audio
-                              </a> </audio>`);
-                  $fileWrapperElem.find('.media-thumb-wrapper').prepend($audioElm);
-                  $fileWrapperElem.addClass("has-audio-file");
-                }else if(response.type=='video'){
-                  let $audioElm=$(`<video controls="" preload="metadata">
-                  <source src="${response.url}#t=0.2" type="video/mp4">
-                        Your browser does not support the video tag.</video>`);
-                 $fileWrapperElem.find('.media-thumb-wrapper').prepend($audioElm);
-                }else{
-                 // $fileWrapperElem.find('img').attr('src',response.url);
-                 $fileWrapperElem.find('img').remove();
-                  let $audioElm=$(`<a href="${response.file_url}" data-bs-toggle="modal" data-bs-target="#mediaLightBoxModal"> <img class="rounded-3"  src="${response.url}"></a>`);
-                  $fileWrapperElem.find('.media-thumb-wrapper').prepend($audioElm);
-                }
-                
-              }
-             
-            },
-            error: function (response) {
-                console.error("上传异常", response)
-               
-            },
-            xhr: function () {
-                let xhr = new XMLHttpRequest();
-                //使用XMLHttpRequest.upload监听上传过程，注册progress事件，打印回调函数中的event事件
-                xhr.upload.addEventListener('progress', function (e) {
-                    let progressRate = (e.loaded / e.total) * 100;
-                    console.log('success progressCallback',progressRate);
-                    $fileWrapperElem.find('.progress-mask').innerHTML=Math.ceil(progressRate)+'%';                    
-                    
-                })
-                return xhr;
-            }
-        })
-        });
-        
-   
-  }
-  function padTo2Digits(num) {
-        return num.toString().padStart(2, '0');
-  }
-  function getDurationTIme(totalSeconds){
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = Math.floor(totalSeconds % 60);
-    const result = `${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`;
-    return result;
-  }
-  var inputs = document.querySelectorAll( '.inputfile' );
-  Array.prototype.forEach.call( inputs, function( input )  {
-    input.addEventListener( 'change', function( e ){      
-      var $elem=e.target; 
-      var $wrapper=this.closest('.v7-media-box');
-      var $fileWrapperElem=$("#"+$wrapper.id);
-      let upload_type=this.closest('.upload-file-box').getAttribute('data-type'); 
-      if(upload_type=='audio' || upload_type=='video'){
-        let media;
-        let maxAllowed=60;
-        let allowedMsg='';
-        const inputFile=this.files[0];
-        if (inputFile.type.startsWith('audio/')) {
-          media = document.createElement('audio');
-          maxAllowed=120;
-          allowedMsg="This audio is ";
-        } else if (inputFile.type.startsWith('video/')) {
-          media = document.createElement('video');
-          maxAllowed=60;
-        }
-        media.src = URL.createObjectURL(inputFile);
-        media.addEventListener('loadedmetadata', () => {
-          const duration = media.duration;
-          if(duration>maxAllowed){
-            var mins=duration/60;
-            if(upload_type=='audio'){
-              showToast('error', "Only maximum 2 minutes of audio is allowed. This audio has duration "+getDurationTIme(duration));
-            }else if(upload_type=='video'){
-              showToast('error', "Only maximum 1 minute of video is allowed. This video has duration "+getDurationTIme(duration));
-            }
-            
-          }else{
-            handleFileUpload(this.files,upload_type,$fileWrapperElem);
-          }
-        });
 
-      }else{
-        handleFileUpload(this.files,upload_type,$fileWrapperElem);
-      }
-      
-      
-    });
-  });
-  
-  function checkAddAssociate(){
-    alert('checkAddAssociate');
-  }
   $('#saveBtn').click(function() {
     UpdateData();
   });
@@ -2001,9 +1396,5 @@ function paramsBuilder(uploaderFile,upload_type) {
 
       });
   });
-</script>
-<script src="<?=SITE_URL; ?>/users/dist/audio-recorder.js"></script>
-<script type="application/javascript">
-  
 </script>
 <?php require_once "inc/footer.php"; ?>

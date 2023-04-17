@@ -15,25 +15,30 @@ $common = new Common();
 
 $user_infos = null;
 $rememberCookieData = RememberCookie::getRememberCookieData();
-if ($rememberCookieData) {
-    if ($rememberCookieData[RememberCookie::PASSWORD]) {
-        $passwordComparator = "=";
-    } else {
-        $passwordComparator = "IS";
-    }
-    $user_infos = $common->first(
-        "`users`",
-        "`id` = :id AND password {$passwordComparator} :password AND remember_token = :remember_token",
-        ['id' => $rememberCookieData[RememberCookie::ID], 'remember_token' => $rememberCookieData[RememberCookie::REMEMBER_TOKEN], 'password' => $rememberCookieData[RememberCookie::PASSWORD]]
-    );
-}
-$userFolders=[];
+
+
 $user_id = Session::get('user_id');
-if (!$user_infos && Session::get('user_id') !== NULL) {
+if (Session::get('user_id') !== NULL) {
     $user_id = Session::get('user_id');
     $user_infos = $common->first("`users`", "`id` = :id", ['id' => $user_id]);
     
+}else{
+    if ($rememberCookieData) {
+        if ($rememberCookieData[RememberCookie::PASSWORD]) {
+            $passwordComparator = "=";
+        } else {
+            $passwordComparator = "IS";
+        }
+        $user_infos = $common->first(
+            "`users`",
+            "`id` = :id AND password {$passwordComparator} :password AND remember_token = :remember_token",
+            ['id' => $rememberCookieData[RememberCookie::ID], 'remember_token' => $rememberCookieData[RememberCookie::REMEMBER_TOKEN], 'password' => $rememberCookieData[RememberCookie::PASSWORD]]
+        );
+    }
 }
+
+$userFolders=[];
+
 
 if (!Session::checkSession() && !$user_infos) {
     header("Location: " . SITE_URL);
@@ -112,7 +117,7 @@ if (Session::get('user_id') !== NULL) {
                 padding: 20px 0px;
         }
         @media screen and (max-width: 767px) {
-            .navbar-brand {
+            .navbar-brand 8
                 order: 2;
             }
 
@@ -193,7 +198,7 @@ if (Session::get('user_id') !== NULL) {
             }
         }
 
-        @media screen and (min-width: 600px) {
+        @media screen and (max-width: 786px) {
 
             .dropdown-item:focus,
             .dropdown-item:hover {
@@ -296,7 +301,7 @@ if (Session::get('user_id') !== NULL) {
             }
 
             .migualtitle {
-                font-size: 22px;
+                font-size: 20px;
                 color: #ffffff;
                 margin-right: 1rem !important;
             }
@@ -335,7 +340,7 @@ if (Session::get('user_id') !== NULL) {
             }
 
             .migualtitle {
-                font-size: 22px;
+                font-size: 20px;
                 color: #ffffff;
                 margin-right: 1rem !important;
             }
@@ -497,6 +502,15 @@ if (Session::get('user_id') !== NULL) {
             font-size:16px; 
             margin-top:4px;
         }
+        @media screen and (min-width: 768px) {
+            nav.sidebar.desktop-left-sidebar{
+                width:286px;
+            }
+            .container-fluid main{
+                width:calc(100% - 286px);
+            }
+        }
+        .ck.ck-editor{color:#000!important;}
     </style>
 </head>
 
@@ -549,7 +563,7 @@ if (Session::get('user_id') !== NULL) {
             <div class="brand-info-bar">
                 <h1 class="heading1 d-block d-md-none">Making Every Day a Masterpiece</h1>
                 <h1 class="migualtitle">By Miguel De La Fuente
-                    <p class="d-none d-md-block d-lg-block">+507 6445-1418</p>
+                    <p class="d-none d-md-block d-lg-block text-center">+507 6445-1418</p>
                 </h1>
 
 
@@ -632,7 +646,7 @@ if (Session::get('user_id') !== NULL) {
                                     <li class="nav-item"><a class="nav-link <?= $goalType == 'monthly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=monthly">Mensual</a></li>
                                     <li class="nav-item"><a class="nav-link <?= $goalType == 'quarterly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=quarterly">Trimestral</a></li>
                                     <li class="nav-item"><a class="nav-link <?= $goalType == 'yearly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=yearly">Anual</a></li>
-                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=lifetime">De por Vida</a></li>
+                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=lifetime">100Dreams</a></li>
                                     <!-- New Pages -->
                                     <br />
                                     <li class="nav-item">
@@ -676,6 +690,10 @@ if (Session::get('user_id') !== NULL) {
                                     <li class="nav-item"><a class="nav-link" href="https://mejorcadadia.com/users/notebook.php">Escribe Carta</a></li>
                                 </ul>
                             </li>
+                            <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-images.php">Imagenes</a></li>
+                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=audio">Audios</a></li>
+                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=video">Videos</a></li>
+                                    
                             <li class="nav-item">
                        <a class="nav-link" aria-current="page" href="mynotes.php">MejorNotes</a>
                     </li>
@@ -782,7 +800,7 @@ if (Session::get('user_id') !== NULL) {
                                                 <a class="nav-link <?= $goalType == 'yearly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=yearly">Anual</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=lifetime">De por Vida</a>
+                                                <a class="nav-link <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=lifetime">100Dreams</a>
                                             </li>
                                             <!-- New Pages -->
                                             <br />
@@ -827,9 +845,12 @@ if (Session::get('user_id') !== NULL) {
                                             <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/notebook.php">Escribe Carta</a></li>
                                         </ul>
                                     </li>
+                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-images.php">Imagenes</a></li>
+                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=audio">Audios</a></li>
+                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=video">Videos</a></li>
                                     <li class="nav-item">
                                     <a class="nav-link" aria-current="page" href="mynotes.php">MejorNotes</a>
-                                </li>
+                                    </li>
                                 </ul>
                             </li>
                             <li class="nav-item">
