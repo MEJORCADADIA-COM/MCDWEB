@@ -1,6 +1,7 @@
 <?php
 /*Just for your server-side code*/
 // header('Content-Type: text/html; charset=ISO-8859-1');
+
 ?>
 <?php require_once "inc/header.php"; ?>
 <?php
@@ -66,7 +67,11 @@ $isPastDate=false;
   var SITE_URL = '<?= SITE_URL; ?>';
   var currentDate = '<?= $currentDate; ?>';
 </script>
+<link rel="stylesheet" href="<?=SITE_URL; ?>/users/assets/uikit-lightbox.css" />
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit-icons.min.js"></script>
 
 <style>
   .modal-header .modal-title{
@@ -111,7 +116,7 @@ $isPastDate=false;
            
             <div class="media-date-item mb-3 media-gallery-row">
                 
-                <div class="d-flex flex-wrap bd-highlight mb-3">
+                <div class="d-flex flex-wrap bd-highlight mb-3" uk-lightbox="animation: slide">
                     
                     <?php foreach ($dailyV7Files as $key => $file): ?>
                       <?php setlocale(LC_ALL, "es_ES");
@@ -120,7 +125,7 @@ $isPastDate=false;
         ?>
                     <div class="p-1 bd-highlight v7-media-box"  data-file="<?=$file['id'];?>" style="position:relative;">
                             <?php if($file['type']=='image'): ?>
-                                <a href="<?=$file['url'];?>" data-date="<?= utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp())); ?>" data-bs-toggle="modal" data-bs-target="#mediaLightBoxModal"> 
+                                <a href="<?=$file['url'];?>" data-index="<?=$key;?>" id="lightbox-thumb-item-<?=$key;?>" data-caption="<?= utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp())); ?>" > 
                                 <img class="img-fluid rounded-3 w-100 shadow-1-strong"  src="<?=$file['thumb'];?>">
                               </a>
                               <div class="file-actions">
@@ -131,7 +136,7 @@ $isPastDate=false;
 </svg>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item file_delete" href="#">Delete</a></li>
+                              <li><div class="dropdown-item file_delete" href="#">Delete</div></li>
                             </ul>
                           </div>
                           
@@ -155,16 +160,23 @@ $isPastDate=false;
 
 <!-- Lightbox (made with Bootstrap modal and carousel) -->
 <!-- Modal -->
-<div class="modal fade p-0" id="mediaLightBoxModal" tabindex="-1" aria-labelledby="mediaLightBoxModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-fullscreen-md-down modal-xl modal-dialog-centered modal-dialog-scrollable ">
-    <div class="modal-content bg-dark">
+<div class="modal fade p-0 bg-dark " id="mediaLightBoxModal" tabindex="-1" aria-labelledby="mediaLightBoxModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen-md-down">
+    <div class="modal-content bg-dark border-0">
       <div class="modal-header border-0"> 
        <h5 class="modal-title" id="exampleModalLabel"></h5>      
         <button type="button" class="btn-close bg-white border border-warning" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" style="text-align:center;">       
-        <img src="" class="img-fluid">
-       
+        <img src="" data-index="0" class="img-fluid">
+        <button class="carousel-control-prev" type="button" data-bs-target="#mediaLightBoxModal" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#mediaLightBoxModal" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
       </div>
     </div>
   </div>
@@ -181,18 +193,10 @@ $isPastDate=false;
   </div>
 </div>
 <script>
-var mediaLightBoxModal = document.getElementById('mediaLightBoxModal')
-  mediaLightBoxModal.addEventListener('show.bs.modal', function (event) {
-  // Button that triggered the modal
-  var button = event.relatedTarget
-  var imgsrc=button.getAttribute('href');
-  var imgDate=button.getAttribute('data-date');
-  console.log('imgsrc',imgsrc,imgDate);
-  var modalBodyInput = mediaLightBoxModal.querySelector('.modal-body img');
-  var modalCaptionInput = mediaLightBoxModal.querySelector('.modal-header .modal-title');
-  modalBodyInput.src = imgsrc;
-  modalCaptionInput.innerHTML=imgDate;
-});
+ 
+
+
+
 $(document).on('click','.file-actions .file_delete',function(e){
     console.log('de;ete');
     e.preventDefault();

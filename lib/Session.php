@@ -4,12 +4,14 @@ use JetBrains\PhpStorm\Pure;
 
 class Session
 {
+	
 	public static function init()
 	{
+		$lifetime=3600*24*30;
 		if (session_status() == PHP_SESSION_NONE) {
-			$lifetime = 3600*24*30;
 			session_set_cookie_params($lifetime);
 			session_start();
+			setcookie(session_name(),session_id(),time()+$lifetime);
 		}
 	}
 

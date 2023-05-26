@@ -1,6 +1,7 @@
 <?php
 /*Just for your server-side code*/
 // header('Content-Type: text/html; charset=ISO-8859-1');
+//$preHead='<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/css/uikit.min.css" />';
 ?>
 <?php require_once "inc/header.php"; ?>
 <?php
@@ -163,8 +164,12 @@ if ($dailyLifeGoals) {
   var remainingTopGoals = 7 - topGoalsCounts;
   var remainingLifeGoals = 7 - lifeGoalsCounts;
 </script>
+<link rel="stylesheet" href="<?=SITE_URL; ?>/users/assets/uikit-lightbox.css" />
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
 <script src="<?=SITE_URL; ?>/users/dist/recorder.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit-icons.min.js"></script>
 
 <style>
   @media screen and (max-width: 480px) {
@@ -504,7 +509,7 @@ if ($dailyLifeGoals) {
     border-radius: 10px;
   }
   .v7-media-box video{max-width:100%; width:180px; height:150px;}
-#mediaLightBoxModal .modal-body img{width:100%;}
+
 .v7-media-box audio, .v7-media-box video{max-width:100%; max-height:180px;}
 .file-actions{
   position:absolute; top:0; right:0;
@@ -719,7 +724,10 @@ if ($dailyLifeGoals) {
               </div>
             </div>
             <div class="cardd mb-5" id="section-2" style="padding:0 5px;">
+            <div class="d-flex justify-content-between my-1">
               <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Mini Resumen de Hoy:</h5>
+              <a href="<?= SITE_URL; ?>/users/evolutions.php" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none">Más <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+              </div>
               <div class="card-body">
                 <div class="form-group">
                   <div class="description-area">
@@ -783,8 +791,12 @@ if ($dailyLifeGoals) {
             </div>
 
             <div class="cardd mb-5" id="section-3" style="padding:0 5px;">
+             
+              <div class="d-flex justify-content-between my-1">
               <h5 class="card-header" style="color:#FFF; margin:5px 0; font-size: 1rem;">¿Cómo Puedo Mejorar?: </h5>
+                <a href="<?= SITE_URL; ?>/users/improvements.php" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none">Más <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
 
+              </div>
               <div class="card-body">
                 <div class="form-group">
                   <div class="description-area">
@@ -797,13 +809,24 @@ if ($dailyLifeGoals) {
             
             <div class="cardd mb-5" id="media-section" style="padding:0 5px; margin-left:5px; margin-right:5px;">
               <div class="card-body">
-        
-              <div class="d-flex bd-highlight mb-3">
-                <div class="p-1 bd-highlight" >
-                  <div class="v7-media-box <?=count($dailyV7Images)>0? 'file-added':''; ?>" id="mediabox1" >
-                      <?php if(!empty($dailyV7Images) && count($dailyV7Images)>0):  ?>                      
-                        <div class="media-thumb-wrapper" data-file="<?=$dailyV7Images[0]['id'];?>" id="fileid-<?=$dailyV7Images[0]['id'];?>">
-                          <a href="<?=$dailyV7Images[0]['url'];?>" data-bs-toggle="modal" data-bs-target="#mediaLightBoxModal"> <img class="rounded-3"  src="<?=$dailyV7Images[0]['thumb'];?>"></a>
+                
+           
+              
+              <div class="d-flex justify-content-end my-1">              
+                <a class="btn btn-sm button btn-info pull-right" href="<?= SITE_URL; ?>/users/victory-images.php?date=<?=$currentDate;?>">Más<i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+
+              </div>
+              <div class="d-flex flex-wrap bd-highlight mb-3" uk-lightbox="animation: slide">
+                <?php for($i=0; $i<7;$i++): $loopImage=null;
+                if(!empty($dailyV7Images) && isset($dailyV7Images[$i])){
+                  $loopImage=$dailyV7Images[$i];
+                }
+                ?>
+                  
+                  <div class="p-1 bd-highlight v7-media-box <?=$loopImage!=null? 'file-added':''; ?>" id="mediabox<?=$i+1;?>" >
+                      <?php if($loopImage!=null):  ?>                      
+                        <div class="media-thumb-wrapper" data-file="<?=$loopImage['id'];?>" id="fileid-<?=$loopImage['id'];?>">
+                          <a href="<?=$loopImage['url'];?>" id="lightbox-thumb-item-<?=$i;?>" data-index="<?=$i;?>" > <img class="rounded-3"  src="<?=$loopImage['thumb'];?>"></a>
                           <div class="file-actions">
                           <div class="dropdown">
                             <button class="btn btn-light btn-sm p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -812,7 +835,7 @@ if ($dailyLifeGoals) {
 </svg>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item file_delete" href="#">Delete</a></li>
+                              <li><div class="dropdown-item file_delete">Delete</div></li>
                             </ul>
                           </div>
                           
@@ -820,37 +843,15 @@ if ($dailyLifeGoals) {
                         </div>                      
                       <?php endif; ?>
                       <div class="upload-box-image upload-file-box" data-type="image">                        
-                        <input type="file" name="image1File" id="image1File" class="inputfile" accept="image/png, image/gif, image/jpeg"  />
-                        <label for="image1File"><i class="fa fa-camera"></i></label>
+                        <input type="file" name="image<?=$i+1;?>File" id="image<?=$i+1;?>File" class="inputfile" accept="image/png, image/gif, image/jpeg"  />
+                        <label for="image<?=$i+1;?>File"><i class="fa fa-camera"></i></label>
                       </div>
-                    </div>  
+                     
                 </div>
-                <div class="p-1 bd-highlight" >
-                <div class="v7-media-box <?=count($dailyV7Images)>1? 'file-added':''; ?>" id="mediabox2">
-                      <?php if(!empty($dailyV7Images) && count($dailyV7Images)>1):  ?>                      
-                        <div class="media-thumb-wrapper" data-file="<?=$dailyV7Images[1]['id'];?>" id="fileid-<?=$dailyV7Images[1]['id'];?>">
-                          <a href="<?=$dailyV7Images[1]['url'];?>" data-bs-toggle="modal" data-bs-target="#mediaLightBoxModal"> <img class="rounded-3" src="<?=$dailyV7Images[1]['thumb'];?>"></a>
-                          <div class="file-actions">
-                          <div class="dropdown">
-                            <button class="btn btn-light btn-sm p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-</svg>
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item file_delete" href="#">Delete</a></li>
-                            </ul>
-                          </div>
-                        </div>
-                        </div>                      
-                      <?php endif; ?>
-                      <div class="upload-box-image upload-file-box" data-type="image">
-                        <input type="file" name="image2File" id="image2File" class="inputfile" accept="image/png, image/gif, image/jpeg" />
-                        <label for="image2File"><i class="fa fa-camera"></i></label>
-                      </div>
-                    </div> 
-                </div>
-                <div class="ms-auto p-1 bd-highlight"><a class="btn btn-sm button btn-info pull-right" href="<?= SITE_URL; ?>/users/victory-images.php?date=<?=$currentDate;?>">Más<i class="fa fa-angle-double-right" aria-hidden="true"></i></a></div>
+                <?php endfor; ?>
+                
+                
+               
               </div>
               <hr>
               <div class="d-flex bd-highlight mb-3">
@@ -1106,20 +1107,7 @@ if ($dailyLifeGoals) {
     </div>
   </div>
 </div>
-<!-- Lightbox (made with Bootstrap modal and carousel) -->
-<!-- Modal -->
-<div class="modal fade p-0" id="mediaLightBoxModal" tabindex="-1" aria-labelledby="mediaLightBoxModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-fullscreen-md-down modal-xl modal-dialog-centered modal-dialog-scrollable ">
-    <div class="modal-content bg-dark">
-      <div class="modal-header border-0">        
-        <button type="button" class="btn-close bg-white border border-warning" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">       
-        <img src="" class="img-fluid">
-      </div>
-    </div>
-  </div>
-</div>
+
 
 
 <div class="modal fade p-0" id="audioRecorderModal" tabindex="-1" aria-labelledby="audioRecorderModalLabel" aria-hidden="true">
@@ -1165,15 +1153,10 @@ if ($dailyLifeGoals) {
 </div>
 <script>
   $('#show').css('display', 'none');
+
+
+
  
-  var mediaLightBoxModal = document.getElementById('mediaLightBoxModal');
-  mediaLightBoxModal.addEventListener('show.bs.modal', function (event) {
-  // Button that triggered the modal
-  var button = event.relatedTarget
-  var imgsrc=button.getAttribute('href');
-  var modalBodyInput = mediaLightBoxModal.querySelector('.modal-body img');
-  modalBodyInput.src = imgsrc;
-});
   document.querySelectorAll( '.LetterApplication' ).forEach( ( node, index ) => {  
 	ClassicEditor
 		.create( node, {} )
@@ -1831,7 +1814,7 @@ function paramsBuilder(uploaderFile,upload_type) {
                 }else{
                  // $fileWrapperElem.find('img').attr('src',response.url);
                  $fileWrapperElem.find('img').remove();
-                  let $audioElm=$(`<a href="${response.file_url}" data-bs-toggle="modal" data-bs-target="#mediaLightBoxModal"> <img class="rounded-3"  src="${response.url}"></a>`);
+                  let $audioElm=$(`<a href="${response.file_url}" > <img class="rounded-3"  src="${response.url}"></a>`);
                   $fileWrapperElem.find('.media-thumb-wrapper').prepend($audioElm);
                 }
                 

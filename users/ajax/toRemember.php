@@ -29,10 +29,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['to_remember']) && $_GET[
         if ($tags['data']) {
             $toRememberIds = array_column($tags['data'], 'to_remember_id');
             $inPlaceHolders = count($toRememberIds) >= 1 ? str_repeat('?,', count($toRememberIds)-1) . '?' : '?';
-            $toRemember = $common->get(table: 'to_remember', cond: 'id IN (' . $inPlaceHolders . ')', params: $toRememberIds, orderBy: 'id', order: 'desc');
+            $toRemember = $common->get(table: 'to_remember', cond: 'id IN (' . $inPlaceHolders . ')', params: $toRememberIds, orderBy: 'date', order: 'desc');
         }
     } else {
-        $toRemember = $common->paginate(table: 'to_remember', cond: 'user_id = :user_id', params: ['user_id' => $userInfos['id']], orderBy: 'id', order: 'desc');
+        $toRemember = $common->paginate(table: 'to_remember', cond: 'user_id = :user_id', params: ['user_id' => $userInfos['id']], orderBy: 'date', order: 'desc');
         $totalPage = $common->pageCount(table: 'to_remember', cond: 'user_id = :user_id', params: ['user_id' => $userInfos['id']]);
     }
 

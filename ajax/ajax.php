@@ -98,7 +98,7 @@ if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'fa
                 if($google_checks['status'] == '1') {
                     Session::set('login', true);
                     Session::set('user_id', $google_checks['id']);
-                    (new RememberCookie())->setRememberCookie($google_checks);
+                    //(new RememberCookie())->setRememberCookie($google_checks);
                     echo 'logged_in';
                 } else {
                     echo 'Your account has been blocked!';
@@ -109,7 +109,7 @@ if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'fa
                     $user_infos = $common->first("`users`", "`gmail` = :email", ['email' => $gmail]);
                   	Session::set('login', true);
                     Session::set('user_id', $user_infos['id']);
-                    (new RememberCookie())->setRememberCookie($user_infos);
+                   // (new RememberCookie())->setRememberCookie($user_infos);
                     echo 'logged_in';
                 }
             }
@@ -130,7 +130,7 @@ if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'fa
                 if($facebook_checks['status'] == '1') {
                    Session::set('login', true);
                     	Session::set('user_id', $facebook_checks['id']);
-                        (new RememberCookie())->setRememberCookie($facebook_checks);
+                       // (new RememberCookie())->setRememberCookie($facebook_checks);
                     echo 'logged_in';
                 } else {
                     echo 'Your account has been blocked!';
@@ -148,7 +148,7 @@ if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'fa
                     $user_infos = $common->first("`users`", "`facebook_id` = :facebook_id", ['facebook_id' => $facebook_id]);
                     Session::set('login', true);
                     Session::set('user_id', $user_infos['id']);
-                    (new RememberCookie())->setRememberCookie($user_infos);
+                   // (new RememberCookie())->setRememberCookie($user_infos);
                     echo 'logged_in';
                 }
             }
@@ -163,7 +163,7 @@ if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'fa
                         if($email_checks['status'] == '1') {
                             Session::set('login', true);
                     		Session::set('user_id', $email_checks['id']);
-                            (new RememberCookie())->setRememberCookie($email_checks);
+                            //(new RememberCookie())->setRememberCookie($email_checks);
                             echo 'logged_in';
                         } else {
                             echo 'Your account has been blocked!';

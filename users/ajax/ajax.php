@@ -88,6 +88,54 @@ if (!empty($_POST) && !empty($_POST['saveDinstyLetter'])) {
     }
 
 }
+
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['get_supergoals_summary']) && $_GET['get_supergoals_summary'] === 'get_supergoals_summary') {
+     $user_id = Session::get('user_id');
+    
+       $type=isset($_GET['type'])? $_GET['type']:'weekly'; 
+
+      if (isset($_GET['tag']) && !empty($_GET['tag'])) {
+        $tag=$_GET['tag'];        
+        $totalPage=1;
+        $evolutions = $common->db->query("SELECT * FROM supergoals_evaluation WHERE user_id='".$user_id."' AND type='".$type."' AND description LIKE '%".$tag."%'")->fetchAll();;
+        
+    } else {
+        
+        $evolutions = $common->paginate(table: 'supergoals_evaluation', cond: 'type=:type AND description!="" AND user_id = :user_id', params: ['user_id' => $user_id,'type'=>$type], orderBy: 'start_date', order: 'desc');
+       
+        $totalPage = $common->pageCount(table: 'supergoals_evaluation', cond: 'type=:type AND description!="" AND user_id = :user_id', params: ['user_id' => $user_id,'type'=>$type]);
+    }
+    return response(['success' => true, 'data' => ['evolutions' => $evolutions, 'total_page' => $totalPage, 'current_page' => !empty($_GET['page']) ? (int)$_GET['page'] : 1]]);
+
+}
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['get_improvements']) && $_GET['get_improvements'] === 'get_improvements') {
+    $UserId = $user_id = Session::get('user_id');
+    if (isset($_GET['tag']) && !empty($_GET['tag'])) {
+        $tag=$_GET['tag'];        
+        $totalPage=1;
+        $improvements = $common->db->query("SELECT * FROM dailygaols WHERE user_id='".$user_id."' AND improvements LIKE '%".$tag."%'")->fetchAll();;
+        
+    } else {
+        $improvements = $common->paginate(table: 'dailygaols', cond: 'improvements!="" AND user_id = :user_id', params: ['user_id' => $user_id], columns:['improvements','id','created_at','modified'], orderBy: 'created_at', order: 'desc');
+        $totalPage = $common->pageCount(table: 'dailygaols', cond: 'improvements!="" AND user_id = :user_id', params: ['user_id' => $user_id]);
+    }
+    return response(['success' => true, 'data' => ['improvements' => $improvements, 'total_page' => $totalPage, 'current_page' => !empty($_GET['page']) ? (int)$_GET['page'] : 1]]);
+
+}
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['get_evolutions']) && $_GET['get_evolutions'] === 'get_evolutions') {
+    $UserId = $user_id = Session::get('user_id');
+    if (isset($_GET['tag']) && !empty($_GET['tag'])) {
+        $tag=$_GET['tag'];        
+        $totalPage=1;
+        $evolutions = $common->db->query("SELECT * FROM dailygaols WHERE user_id='".$user_id."' AND evolution LIKE '%".$tag."%'")->fetchAll();;
+        
+    } else {
+        $evolutions = $common->paginate(table: 'dailygaols', cond: 'evolution!="" AND user_id = :user_id', params: ['user_id' => $user_id], columns:['evolution','id','created_at','modified'], orderBy: 'created_at', order: 'desc');
+        $totalPage = $common->pageCount(table: 'dailygaols', cond: 'evolution!="" AND user_id = :user_id', params: ['user_id' => $user_id]);
+    }
+    return response(['success' => true, 'data' => ['evolutions' => $evolutions, 'total_page' => $totalPage, 'current_page' => !empty($_GET['page']) ? (int)$_GET['page'] : 1]]);
+
+}
 if (isset($_POST['LetterApplicationCheck']) && ($_POST['LetterApplicationCheck'] == 'LetterApplicationCheck')) {
     $LetterApplication = $format->validation($_POST['LetterApplication']);
     if (isset($LetterApplication)) {
@@ -1627,7 +1675,7 @@ if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'UploadV7File')) {
     $type = $format->validation($_POST['type']);
     $maxAllowed=1;
     if($type=='image')
-        $maxAllowed=2;
+        $maxAllowed=7;
     $selectedDate=$today;
     if(!empty($date))
     $selectedDate=$date;

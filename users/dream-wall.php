@@ -41,7 +41,6 @@ $selectedMonth = !empty($_REQUEST['month']) ? (int)$_REQUEST['month'] : $current
 
 $user_id = Session::get('user_id');
 
-
 $dreamWallImages = $common->get('dreamwall_images', 'user_id = :user_id', ['user_id' => $user_id],[],'created_at','DESC');
 
 
@@ -67,7 +66,11 @@ $isPastDate=false;
   var SITE_URL = '<?= SITE_URL; ?>';
   var currentDate = '<?= $currentDate; ?>';
 </script>
+<link rel="stylesheet" href="<?=SITE_URL; ?>/users/assets/uikit-lightbox.css" />
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit-icons.min.js"></script>
 
 <style>
   .modal-header .modal-title{
@@ -167,7 +170,7 @@ $isPastDate=false;
            
           
                 
-                <div class="d-flex flex-wrap bd-highlight mb-3" id="gallary-items">
+                <div class="d-flex flex-wrap bd-highlight mb-3" id="gallary-items" uk-lightbox="animation: slide">
                     
                     <?php  $i=0; foreach ($dreamWallImages as $key => $file):  ?>
                       <?php setlocale(LC_ALL, "es_ES");
@@ -176,7 +179,7 @@ $isPastDate=false;
         ?>
                     <div class="p-1 bd-highlight v7-media-box" data-index="<?=$key;?>"  data-file="<?=$file['id'];?>" style="order:1; position:relative;">
                             
-                                <a href="<?=$file['url'];?>" data-index="<?=$key;?>"  data-file="<?=$file['id'];?>" data-date="<?= utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp())); ?>" data-bs-toggle="modal" data-bs-target="#mediaLightBoxModal"> 
+                                <a href="<?=$file['url'];?>" data-index="<?=$key;?>"  data-file="<?=$file['id'];?>" data-caption="<?= utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp())); ?>" > 
                                 <img data-bs-target="#carouselExampleIndicators" data-bs-slide-to="<?=$key;?>" class="img-fluid rounded-3 w-100 shadow-1-strong"  src="<?=$file['thumb'];?>">
                               </a>
                               <div class="file-actions">
@@ -187,7 +190,7 @@ $isPastDate=false;
 </svg>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item file_delete" href="#">Delete</a></li>
+                              <li><div class="dropdown-item file_delete" href="#">Delete</div></li>
                             </ul>
                           </div>
                           
@@ -215,48 +218,7 @@ $isPastDate=false;
 </main>
 <!-- Modal -->
 
-<!-- Lightbox (made with Bootstrap modal and carousel) -->
-<!-- Modal -->
-<div class="modal fade p-0" id="mediaLightBoxModal" tabindex="-1" aria-labelledby="mediaLightBoxModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-fullscreen-md-down modal-xl modal-dialog-centered ">
-    <div class="modal-content bg-dark">
-      <div class="modal-header border-0"> 
-       <h5 class="modal-title" id="exampleModalLabel"></h5>      
-        <button type="button" class="btn-close bg-white border border-warning" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" style="text-align:center;">       
-        
-        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-          <?php  $i=0; foreach ($dreamWallImages as $key => $file):  ?>
-            <?php setlocale(LC_ALL, "es_ES");
-        $string = date('d/m/Y', strtotime($file['created_at']));
-        $dateObj = DateTime::createFromFormat("d/m/Y", $string);
-        ?>
-            <div class="carousel-item <?=$key==0? 'active':'';?>">
-              <img id="carousel-item-image-<?=$key;?>" src="<?=$file['url']; ?>" class="img-fluid" alt="...">
-              <div class="carousel-caption">
-                <p class="text-white"><?= utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp())); ?></p>
-              </div>
-            </div>
-            <?php endforeach; ?>
-           
-          
-           
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 
 
@@ -269,19 +231,7 @@ $isPastDate=false;
   </div>
 </div>
 <script>
-var mediaLightBoxModal = document.getElementById('mediaLightBoxModal')
-  mediaLightBoxModal.addEventListener('show.bs.modal', function (event) {
-  // Button that triggered the modal
-  var button = event.relatedTarget
-  var imgsrc=button.getAttribute('href');
-  var imgDate=button.getAttribute('data-date');
-  var index=button.getAttribute('data-index');
-  
-  var modalBodyInput = mediaLightBoxModal.querySelector('.modal-body img');
-  var modalCaptionInput = mediaLightBoxModal.querySelector('.modal-header .modal-title');
-  //modalBodyInput.src = imgsrc;
-  //modalCaptionInput.innerHTML=imgDate;
-});
+
 $(document).on('click','.file-actions .file_delete',function(e){
     console.log('de;ete');
     e.preventDefault();
@@ -343,7 +293,7 @@ function showToast(type = 'success', message = '') {
 </svg>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item file_delete" href="#">Delete</a></li>
+                              <li><div class="dropdown-item file_delete" href="#">Delete</div></li>
                             </ul>
                           </div>
                         </div>
@@ -437,7 +387,7 @@ function showToast(type = 'success', message = '') {
                 
                  // $fileWrapperElem.find('img').attr('src',response.url);
                  $uploadFileWrapper.find('img').remove();
-                  let $audioElm=$(`<a href="${response.file_url}" data-bs-toggle="modal" data-bs-target="#mediaLightBoxModal"> <img class="img-fluid rounded-3 w-100 shadow-1-strong"  src="${response.thumb_url}"></a>`);
+                  let $audioElm=$(`<a href="${response.file_url}"> <img class="img-fluid rounded-3 w-100 shadow-1-strong"  src="${response.thumb_url}"></a>`);
                   $uploadFileWrapper.prepend($audioElm);
                 
                 

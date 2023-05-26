@@ -29,10 +29,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['get_victories']) && $_GE
         if ($tags['data']) {
             $dailyVictoryIds = array_column($tags['data'], 'daily_victory_id');
             $inPlaceHolders = count($dailyVictoryIds) >= 1 ? str_repeat('?,', count($dailyVictoryIds)-1) . '?' : '?';
-            $victories = $common->get(table: 'daily_victories', cond: 'id IN (' . $inPlaceHolders . ')', params: $dailyVictoryIds, orderBy: 'id', order: 'desc');
+            $victories = $common->get(table: 'daily_victories', cond: 'id IN (' . $inPlaceHolders . ')', params: $dailyVictoryIds, orderBy: 'date', order: 'DESC');
         }
     } else {
-        $victories = $common->paginate(table: 'daily_victories', cond: 'user_id = :user_id', params: ['user_id' => $userInfos['id']], orderBy: 'id', order: 'desc');
+        $victories = $common->paginate(table: 'daily_victories', cond: 'user_id = :user_id', params: ['user_id' => $userInfos['id']], orderBy: 'date', order: 'desc');
         $totalPage = $common->pageCount(table: 'daily_victories', cond: 'user_id = :user_id', params: ['user_id' => $userInfos['id']]);
     }
 

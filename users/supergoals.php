@@ -1,6 +1,7 @@
 <?php
 /*Just for your server-side code*/
 //header('Content-Type: text/html; charset=ISO-8859-1');
+
 ?>
 <?php require_once "inc/header.php"; ?>
 <?php
@@ -204,8 +205,10 @@ if ($row) {
   var startDate = '<?= $start_date; ?>';
   var endDate = '<?= $end_date; ?>';
 </script>
+<link rel="stylesheet" href="<?=SITE_URL; ?>/users/assets/uikit-lightbox.css" />
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit-icons.min.js"></script>
 <style>
   @media screen and (max-width: 480px) {
     .tox-notifications-container {
@@ -635,7 +638,12 @@ if ($row) {
           <div class="form-group mx-1">
             <div class="description-area">
 
-              <label style="color:#FFF; font-size:1.1rem; margin:5px 0;"><?= $evaluation_heading ?></label>
+              
+              <div class="d-flex justify-content-between my-2">
+              <label style="color:#FFF; font-size:1.1rem;"><?= $evaluation_heading ?></label>
+                <a href="<?= SITE_URL; ?>/users/supergoalsSummary.php?type=<?=$type;?>" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none">Más <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+
+              </div>
               <div class="print-description" id="print-evaluation"><?= $evaluation; ?></div>
               <textarea id="LetterApplication" class="LetterApplication" name="LetterApplication"><?= $evaluation; ?></textarea>
             </div>
@@ -669,12 +677,12 @@ if ($row) {
           <div class="cardd mb-5" id="media-section" style="padding:0 5px; margin-left:5px; margin-right:5px;">
           <label style="color:#FFF; font-size:1.1rem; margin:5px 0;">DreamWall</label>
             <div class="card-body">
-              <div class="d-flex flex-wrap bd-highlight mb-3">
+              <div class="d-flex flex-wrap bd-highlight mb-3 " uk-lightbox="animation: slide">
                 <?php for($i=0; $i<10; $i++): ?>
                   <div class="p-1 bd-highlight v7-media-box <?=(count($dreamWallImages)>0 && isset($dreamWallImages[$i]))? 'file-added':''; ?>" id="mediabox<?=$i;?>">
                         <?php if(count($dreamWallImages)>0 && isset($dreamWallImages[$i])): ?>
                           <div class="media-thumb-wrapper" data-file="<?=$dreamWallImages[$i]['id'];?>" id="fileid-<?=$dreamWallImages[$i]['id'];?>">
-                          <a href="<?=$dreamWallImages[$i]['url'];?>" data-bs-toggle="modal" data-bs-target="#mediaLightBoxModal"> <img class="rounded-3"  src="<?=$dreamWallImages[$i]['thumb'];?>"></a>
+                          <a href="<?=$dreamWallImages[$i]['url'];?>" id="lightbox-thumb-item-<?=$i;?>" data-index="<?=$i;?>"> <img class="rounded-3"  src="<?=$dreamWallImages[$i]['thumb'];?>"></a>
                           <div class="file-actions">
                           <div class="dropdown">
                             <button class="btn btn-light btn-sm p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -683,7 +691,7 @@ if ($row) {
 </svg>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item file_delete" href="#">Delete</a></li>
+                              <li><div class="dropdown-item file_delete" href="#">Delete</div></li>
                             </ul>
                           </div>
                          </div>
@@ -724,21 +732,7 @@ if ($row) {
     </div>
   </div>
 </div>
-<!-- Modal Ends -->
-<div class="modal fade p-0" id="mediaLightBoxModal" tabindex="-1" aria-labelledby="mediaLightBoxModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-fullscreen-md-down modal-xl modal-dialog-centered modal-dialog-scrollable ">
-    <div class="modal-content bg-dark">
-      <div class="modal-header border-0"> 
-       <h5 class="modal-title" id="exampleModalLabel"></h5>      
-        <button type="button" class="btn-close bg-white border border-warning" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" style="text-align:center;">       
-        <img src="" class="img-fluid">
-       
-      </div>
-    </div>
-  </div>
-</div>
+
 <div class="toast-container position-absolute top-0 end-0 p-3">
   <div class="toast" id="toast">
 
@@ -760,18 +754,15 @@ if ($row) {
       }			
 	});
 });
-var mediaLightBoxModal = document.getElementById('mediaLightBoxModal')
-  mediaLightBoxModal.addEventListener('show.bs.modal', function (event) {
-  // Button that triggered the modal
-  var button = event.relatedTarget
-  var imgsrc=button.getAttribute('href');
-  var imgDate=button.getAttribute('data-date');
-  console.log('imgsrc',imgsrc,imgDate);
-  var modalBodyInput = mediaLightBoxModal.querySelector('.modal-body img');
-  var modalCaptionInput = mediaLightBoxModal.querySelector('.modal-header .modal-title');
-  modalBodyInput.src = imgsrc;
-  modalCaptionInput.innerHTML=imgDate;
-});
+
+
+
+
+
+  
+
+
+
   var goalstobeadded = 0;
   var newgoalsInput = [];
 
@@ -1268,7 +1259,7 @@ toastList.forEach(toast => toast.show()); // This show them
                 
                  // $fileWrapperElem.find('img').attr('src',response.url);
                  $fileWrapperElem.find('img').remove();
-                  let $audioElm=$(`<a href="${response.file_url}" data-bs-toggle="modal" data-bs-target="#mediaLightBoxModal"> <img class="rounded-3"  src="${response.thumb_url}"></a>`);
+                  let $audioElm=$(`<a href="${response.file_url}" > <img class="rounded-3"  src="${response.thumb_url}"></a>`);
                   $fileWrapperElem.find('.media-thumb-wrapper').prepend($audioElm);
               }else{
                 console.log(response);
