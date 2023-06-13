@@ -35,8 +35,16 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['get_victories']) && $_GE
         $victories = $common->paginate(table: 'daily_victories', cond: 'user_id = :user_id', params: ['user_id' => $userInfos['id']], orderBy: 'date', order: 'desc');
         $totalPage = $common->pageCount(table: 'daily_victories', cond: 'user_id = :user_id', params: ['user_id' => $userInfos['id']]);
     }
+    setlocale(LC_ALL, "es_ES");
+    foreach($victories as $k=>$row){
+        $string = date('d/m/Y', strtotime($row['date']));
+        $dateObj = DateTime::createFromFormat("d/m/Y", $string);
+        $row['local_date']=utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp()));
+        $victories[$k]=$row;
+    }
 
     $results = addTagsToVictories($victories);
+
 
     return response(['success' => true, 'data' => ['victories' => $results, 'total_page' => $totalPage, 'current_page' => !empty($_GET['page']) ? (int)$_GET['page'] : 1]]);
 }

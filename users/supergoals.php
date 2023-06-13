@@ -80,7 +80,6 @@ $prevQuarterYear = '';
 $goals_heading = '';
 $evaluation_heading = '';
 if ($type == 'weekly') {
-
   $start_date = $week_array['week_start'];
   $end_date = $week_array['week_end'];
 
@@ -388,7 +387,9 @@ if ($row) {
   .datestr {
     text-transform: capitalize;
   }
-
+  #goals-area {
+      padding: 20px 0px;
+    }
   @media screen and (max-width: 767px) {
     h2.maintitle {
       font-size: 1rem;
@@ -403,9 +404,7 @@ if ($row) {
       min-height: 56px;
     }
 
-    #goals-area {
-      padding: 20px 0px;
-    }
+    
 
     .chart-btn {
       right: 0;

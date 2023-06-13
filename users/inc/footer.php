@@ -139,6 +139,7 @@ require_once "../inc/inspirationQuote.php";
 </style>
 <div class="clearfix" style="float:none; clear:both;"></div>
 <footer class="page-footer bg-primary d-block d-md-none g-4 px-3 py-1 pb-2">
+
     <div class="container">
         <div class="row">
             <div class="col-5">
@@ -171,6 +172,29 @@ require_once "../inc/inspirationQuote.php";
                     <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/biggestVictories.php">Mis Mayores Victorias</a></li>
                     <li> <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/inspirations.php">MejorInspiration</a></li>
                     <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/capsules.php">MejorCapsule</a></li>
+                   
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+
+</footer>
+<footer class="bottom-footer page-footer d-block d-md-none g-4 px-3 py-3 pb-2" style="background-color: #57b1ed;">
+    <div class="container">
+    <div class="row">
+            <div class="col-5">
+                <ul class="list-unstyled">
+                    <li><a class="text-decoration-none text-white py-1" href="dailygoals.php">MejorBlog</a></li>
+                    <li> <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/inspirations.php">MejorInspiration</a></li>
+                   
+                </ul>
+            </div>
+            <div class="col-7">
+                <ul class="list-unstyled">
+                    <li> <a class="text-decoration-none text-white py-1" href="#">MejorCadaDía Chef</a></li>
+                    <li><a class="text-decoration-none text-white py-1" href="#">MejorCadaDía Hotel</a></li>
+                    <li> <a class="text-decoration-none text-white py-1" href="#">MejorFest</a></li>
                    
                 </ul>
             </div>
@@ -247,9 +271,67 @@ if (!$user_infos) :
 <?php
 endif;
 ?>
-<script>
-    	  
+<script>  	  
+  window.addEventListener('load', () => {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js', {
+      scope: '/',
+    });
+  }
+});  
 
+addToHomeScreen();
+function addToHomeScreen() {
+    console.log('addToHomeScreen');
+  if ('addEventListener' in document && 'localStorage' in window && 'serviceWorker' in navigator) {
+    console.log('addEventListener',window);
+    window.addEventListener('load', function () {
+      var appInstalled = localStorage.getItem('appInstalled');
+      var addIconElement = document.getElementById('install-button');
+      console.log('appInstalled',appInstalled);
+      if (!appInstalled) {
+        var beforeInstallPromptFired = false;
+        console.log('appInstalled not installed');
+        window.addEventListener('beforeinstallprompt', function (e) {
+          e.preventDefault();
+          console.log('beforeinstallprompt',e);
+         
+          beforeInstallPromptFired = true;
+          
+         
+          addIconElement.style.display = 'block';
+          
+          addIconElement.addEventListener('click', function () {
+            console.log('btnclick');
+            addIconElement.style.display = 'none';
+            
+            e.prompt();
+            
+            e.userChoice.then(function (choiceResult) {
+              if (choiceResult.outcome === 'accepted') {
+                localStorage.setItem('appInstalled', true);
+              }
+            });
+          });
+        });
+        
+        window.addEventListener('appinstalled', function (e) {
+          beforeInstallPromptFired = false;
+        });
+        
+        setTimeout(function () {
+          if (!beforeInstallPromptFired) {
+            var addIconElement = document.getElementById('install-button');
+           
+           // addIconElement.style.display = 'none';
+          }
+        }, 10000);
+      }else{
+        addIconElement.style.display = 'none';
+      }
+    });
+  }
+}
 		
     const alerts = document.querySelectorAll('.alert-timeout')
     if (alerts.length > 0) {

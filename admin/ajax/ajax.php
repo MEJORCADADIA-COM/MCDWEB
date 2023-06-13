@@ -64,7 +64,7 @@ if(isset($_POST['EmailSendCheck']) && ($_POST['EmailSendCheck'] == 'EmailSendChe
                 $mail->SMTPSecure = 'tls';
                 $mail->Port = 587;
                 $mail->Username = "verify@mejorcadadia.com";
-                $mail->Password = "Ta$77!/8H7u/SX?";
+                $mail->Password = "hQjg-D?x9Pr+Knvb@rexU)4J%9E?fVD,dzK";
                 $mail->Subject = $Title;
                 $mail->setFrom($email);
                 $mail->addReplyTo('verify@mejorcadadia.com');

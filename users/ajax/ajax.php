@@ -89,49 +89,132 @@ if (!empty($_POST) && !empty($_POST['saveDinstyLetter'])) {
 
 }
 
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['daily_inspirations']) && $_GET['daily_inspirations'] === 'daily_inspirations') {
+    $user_id = Session::get('user_id');
+    echo $selectedDate=isset($_GET['date'])? $_GET['date']:'';
+   
+    $inspirations = $common->paginate(table: 'daily_inspirations', limit: 50, orderBy: 'date', order: 'desc');
+    $totalPage = $common->pageCount(table: 'daily_inspirations', limit: 50);
+    
+   setlocale(LC_ALL, "es_ES");
+   foreach($inspirations as $k=>$row){
+       $string = date('d/m/Y', strtotime($row['date']));
+       $dateObj = DateTime::createFromFormat("d/m/Y", $string);
+       $row['local_date']=utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp()));
+       $inspirations[$k]=$row;
+   }
+   return response(['success' => true, 'data' => ['inspirations' => $inspirations, 'total_page' => $totalPage, 'current_page' => !empty($_GET['page']) ? (int)$_GET['page'] : 1]]);
+
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['get_supergoals_summary']) && $_GET['get_supergoals_summary'] === 'get_supergoals_summary') {
      $user_id = Session::get('user_id');
-    
+     $selectedDate=isset($_GET['date'])? $_GET['date']:'';
+     $startDate=isset($_GET['startDate'])? $_GET['startDate']:'';
+     $endDate=isset($_GET['endDate'])? $_GET['endDate']:'';
        $type=isset($_GET['type'])? $_GET['type']:'weekly'; 
 
-      if (isset($_GET['tag']) && !empty($_GET['tag'])) {
+    if (isset($_GET['tag']) && !empty($_GET['tag'])) {
         $tag=$_GET['tag'];        
         $totalPage=1;
-        $evolutions = $common->db->query("SELECT * FROM supergoals_evaluation WHERE user_id='".$user_id."' AND type='".$type."' AND description LIKE '%".$tag."%'")->fetchAll();;
+        if(empty($startDate) && !empty($endDate)){
+            $evolutions = $common->db->query("SELECT * FROM supergoals_evaluation WHERE user_id='".$user_id."' AND type='".$type."' AND description LIKE '%".$tag."%'")->fetchAll();;
+        }else{
+            $evolutions = $common->db->query("SELECT * FROM supergoals_evaluation WHERE user_id='".$user_id."' AND type='".$type."' AND description LIKE '%".$tag."%' AND DATE(start_date)='".$selectedDate."'")->fetchAll();;
+        }
+       
         
     } else {
-        
-        $evolutions = $common->paginate(table: 'supergoals_evaluation', cond: 'type=:type AND description!="" AND user_id = :user_id', params: ['user_id' => $user_id,'type'=>$type], orderBy: 'start_date', order: 'desc');
+      
+        if(!empty($startDate) && !empty($endDate)){          
+          
+            $evolutions = $common->paginate(table: 'supergoals_evaluation', cond: 'type=:type AND description!="" AND user_id = :user_id AND DATE(start_date)>="'.$startDate.'" AND DATE(start_date)<="'.$endDate.'"', params: ['user_id' => $user_id,'type'=>$type], orderBy: 'start_date', order: 'desc');
+         
+            $totalPage = $common->pageCount(table: 'supergoals_evaluation', cond: 'type=:type AND description!="" AND user_id = :user_id AND DATE(start_date)>="'.$startDate.'" AND DATE(start_date)<="'.$endDate.'"', params: ['user_id' => $user_id,'type'=>$type]);
        
-        $totalPage = $common->pageCount(table: 'supergoals_evaluation', cond: 'type=:type AND description!="" AND user_id = :user_id', params: ['user_id' => $user_id,'type'=>$type]);
+        }else{
+            $evolutions = $common->paginate(table: 'supergoals_evaluation', cond: 'type=:type AND description!="" AND user_id = :user_id', params: ['user_id' => $user_id,'type'=>$type], orderBy: 'start_date', order: 'desc');
+            $totalPage = $common->pageCount(table: 'supergoals_evaluation', cond: 'type=:type AND description!="" AND user_id = :user_id', params: ['user_id' => $user_id,'type'=>$type]);
+           
+        }
+       
+        
+        
+        
+    }
+    setlocale(LC_ALL, "es_ES");
+    foreach($evolutions as $k=>$row){
+        $string = date('d/m/Y', strtotime($row['start_date']));
+        $dateObj = DateTime::createFromFormat("d/m/Y", $string);
+        $row['local_date']=utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp()));
+        $evolutions[$k]=$row;
     }
     return response(['success' => true, 'data' => ['evolutions' => $evolutions, 'total_page' => $totalPage, 'current_page' => !empty($_GET['page']) ? (int)$_GET['page'] : 1]]);
 
 }
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['get_improvements']) && $_GET['get_improvements'] === 'get_improvements') {
     $UserId = $user_id = Session::get('user_id');
+    $selectedDate=isset($_GET['date'])? $_GET['date']:'';
     if (isset($_GET['tag']) && !empty($_GET['tag'])) {
         $tag=$_GET['tag'];        
         $totalPage=1;
-        $improvements = $common->db->query("SELECT * FROM dailygaols WHERE user_id='".$user_id."' AND improvements LIKE '%".$tag."%'")->fetchAll();;
+        if(!empty($selectedDate)){
+            $improvements = $common->db->query("SELECT * FROM dailygaols WHERE user_id='".$user_id."' AND improvements LIKE '%".$tag."%' AND DATE(created_at)='".$selectedDate."'")->fetchAll();;
+        }else{
+            $improvements = $common->db->query("SELECT * FROM dailygaols WHERE user_id='".$user_id."' AND improvements LIKE '%".$tag."%'")->fetchAll();;
+        }
+        
         
     } else {
-        $improvements = $common->paginate(table: 'dailygaols', cond: 'improvements!="" AND user_id = :user_id', params: ['user_id' => $user_id], columns:['improvements','id','created_at','modified'], orderBy: 'created_at', order: 'desc');
-        $totalPage = $common->pageCount(table: 'dailygaols', cond: 'improvements!="" AND user_id = :user_id', params: ['user_id' => $user_id]);
+        if(!empty($selectedDate)){
+            $improvements = $common->paginate(table: 'dailygaols', cond: 'improvements!="" AND user_id = :user_id AND DATE(created_at)=:selectedDate', params: ['user_id' => $user_id,'selectedDate'=>$selectedDate], columns:['improvements','id','created_at','modified'], orderBy: 'created_at', order: 'desc');
+            $totalPage = $common->pageCount(table: 'dailygaols', cond: 'improvements!="" AND user_id = :user_id AND DATE(created_at)=:selectedDate', params: ['user_id' => $user_id,'selectedDate'=>$selectedDate]);
+        }else{
+           
+            $improvements = $common->paginate(table: 'dailygaols', cond: 'improvements!="" AND user_id = :user_id', params: ['user_id' => $user_id], columns:['improvements','id','created_at','modified'], orderBy: 'created_at', order: 'desc');
+            $totalPage = $common->pageCount(table: 'dailygaols', cond: 'improvements!="" AND user_id = :user_id', params: ['user_id' => $user_id]);
+        }
+       
+    }
+    setlocale(LC_ALL, "es_ES");
+    foreach($improvements as $k=>$row){
+        $string = date('d/m/Y', strtotime($row['created_at']));
+        $dateObj = DateTime::createFromFormat("d/m/Y", $string);
+        $row['local_date']=utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp()));
+        $improvements[$k]=$row;
     }
     return response(['success' => true, 'data' => ['improvements' => $improvements, 'total_page' => $totalPage, 'current_page' => !empty($_GET['page']) ? (int)$_GET['page'] : 1]]);
 
 }
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['get_evolutions']) && $_GET['get_evolutions'] === 'get_evolutions') {
     $UserId = $user_id = Session::get('user_id');
+    $selectedDate=isset($_GET['date'])? $_GET['date']:'';
     if (isset($_GET['tag']) && !empty($_GET['tag'])) {
         $tag=$_GET['tag'];        
         $totalPage=1;
-        $evolutions = $common->db->query("SELECT * FROM dailygaols WHERE user_id='".$user_id."' AND evolution LIKE '%".$tag."%'")->fetchAll();;
+        if(!empty($selectedDate)){
+            $evolutions = $common->db->query("SELECT * FROM dailygaols WHERE user_id='".$user_id."' AND evolution LIKE '%".$tag."%' AND DATE(created_at)='".$selectedDate."'")->fetchAll();
+        }else{
+            $evolutions = $common->db->query("SELECT * FROM dailygaols WHERE user_id='".$user_id."' AND evolution LIKE '%".$tag."%'")->fetchAll();;
+        }       
         
     } else {
-        $evolutions = $common->paginate(table: 'dailygaols', cond: 'evolution!="" AND user_id = :user_id', params: ['user_id' => $user_id], columns:['evolution','id','created_at','modified'], orderBy: 'created_at', order: 'desc');
-        $totalPage = $common->pageCount(table: 'dailygaols', cond: 'evolution!="" AND user_id = :user_id', params: ['user_id' => $user_id]);
+        if(!empty($selectedDate)){
+         
+            $evolutions = $common->paginate(table: 'dailygaols', cond: 'evolution!="" AND user_id = :user_id AND DATE(created_at)=:selectedDate', params: ['user_id' => $user_id,'selectedDate'=>$selectedDate], columns:['evolution','id','created_at','modified'], orderBy: 'created_at', order: 'desc');
+            $totalPage = $common->pageCount(table: 'dailygaols', cond: 'evolution!="" AND user_id = :user_id AND DATE(created_at)=:selectedDate', params: ['user_id' => $user_id,'selectedDate'=>$selectedDate]);
+        }else{
+            
+            $evolutions = $common->paginate(table: 'dailygaols', cond: 'evolution!="" AND user_id = :user_id', params: ['user_id' => $user_id], columns:['evolution','id','created_at','modified'], orderBy: 'created_at', order: 'desc');
+            $totalPage = $common->pageCount(table: 'dailygaols', cond: 'evolution!="" AND user_id = :user_id', params: ['user_id' => $user_id]);
+        }
+    }
+    setlocale(LC_ALL, "es_ES");
+    foreach($evolutions as $k=>$row){
+        $string = date('d/m/Y', strtotime($row['created_at']));
+        $dateObj = DateTime::createFromFormat("d/m/Y", $string);
+        $row['local_date']=utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp()));
+        $evolutions[$k]=$row;
     }
     return response(['success' => true, 'data' => ['evolutions' => $evolutions, 'total_page' => $totalPage, 'current_page' => !empty($_GET['page']) ? (int)$_GET['page'] : 1]]);
 
@@ -455,6 +538,77 @@ if (isset($_POST['UpdateDailyGoal']) && ($_POST['UpdateDailyGoal'] == 'UpdateDai
 
 }
 
+if (isset($_POST['UpdateDailyBiggestVictories']) && ($_POST['UpdateDailyBiggestVictories'] == 'UpdateDailyBiggestVictories')) {
+
+
+    $user_id = Session::get('user_id');
+    
+    $achieved = isset($_POST['achieved']) ? $_POST['achieved'] : 0;
+    $goalText = empty($_POST['goalText']) ? '' : $_POST['goalText'];
+    $currentDate = isset($_POST['currentDate']) ? $_POST['currentDate'] : date('Y-m-d');
+    $currentDateTime = isset($_POST['currentDateTime']) ? $_POST['currentDateTime'] : date('Y-m-d H:i:s');
+    $goalId = isset($_POST['goalId']) ? (int)$_POST['goalId'] : 0;
+
+    if (!empty($goalId)) {
+        $common->update('daily_biggest_victories', ['goal' => $goalText, 'achieved' => $achieved], 'id = :id', ['id' => $goalId]);
+        echo 'Updated';
+    } else {
+        if (!empty($goalText)) {
+
+            //pullPreviousGoals($user_id,$type,$startDate,$endDate);    
+            $row = $common->first('daily_biggest_victories', 'goal = :goal_text AND user_id = :user_id AND created_at = :created_at', [
+                'goal_text' => $goalText,
+                'user_id' => $user_id,
+                'created_at' => $currentDate
+            ]);
+
+            if ($row) {
+                $common->update('daily_biggest_victories', ['achieved' => $achieved], 'id = :id', ['id' => $row['id']]);
+            } else {
+                $common->insert('daily_biggest_victories', ['user_id' => $user_id, 'goal' => $goalText, 'created_at' => $currentDate]);
+            }
+        }
+        echo 'Update';
+    }
+
+
+}
+
+if (isset($_POST['UpdateDailySuperDias']) && ($_POST['UpdateDailySuperDias'] == 'UpdateDailySuperDias')) {
+
+
+    $user_id = Session::get('user_id');
+    
+    $achieved = isset($_POST['achieved']) ? $_POST['achieved'] : 0;
+    $goalText = empty($_POST['goalText']) ? '' : $_POST['goalText'];
+    $currentDate = isset($_POST['currentDate']) ? $_POST['currentDate'] : date('Y-m-d');
+    $currentDateTime = isset($_POST['currentDateTime']) ? $_POST['currentDateTime'] : date('Y-m-d H:i:s');
+    $goalId = isset($_POST['goalId']) ? (int)$_POST['goalId'] : 0;
+
+    if (!empty($goalId)) {
+        $common->update('daily_superdias', ['goal' => $goalText, 'achieved' => $achieved], 'id = :id', ['id' => $goalId]);
+        echo 'Updated';
+    } else {
+        if (!empty($goalText)) {
+
+            //pullPreviousGoals($user_id,$type,$startDate,$endDate);    
+            $row = $common->first('daily_superdias', 'goal = :goal_text AND user_id = :user_id AND created_at = :created_at', [
+                'goal_text' => $goalText,
+                'user_id' => $user_id,
+                'created_at' => $currentDate
+            ]);
+
+            if ($row) {
+                $common->update('daily_superdias', ['achieved' => $achieved], 'id = :id', ['id' => $row['id']]);
+            } else {
+                $common->insert('daily_superdias', ['user_id' => $user_id, 'goal' => $goalText, 'created_at' => $currentDate]);
+            }
+        }
+        echo 'Update';
+    }
+
+
+}
 
 if (isset($_POST['UpdateDailyGoal']) && ($_POST['UpdateDailyGoal'] == 'UpdateDailyTopGoal')) {
 
@@ -685,6 +839,34 @@ if (isset($_POST['DeleteGoals']) && ($_POST['DeleteGoals'] == 'DeleteGoals')) {
     }
     echo 'Deleted';
 }
+
+if (isset($_POST['DeleteDailySuperDias']) && ($_POST['DeleteDailySuperDias'] == 'DeleteDailySuperDias')) {
+    $user_id = Session::get('user_id');
+    
+    $goalIds = isset($_POST['goalIds']) ? $_POST['goalIds'] : [];
+  
+    $currentDate = isset($_POST['currentDate']) ? $_POST['currentDate'] : date('Y-m-d h:i:s');
+    if (!empty($goalIds)) {
+        $placeholders = array_fill(0, count($goalIds), '?');
+        $common->delete("daily_superdias", "id IN(" . implode(",", $placeholders) . ")", $goalIds);
+        
+    }
+    echo 'Deleted';
+}
+if (isset($_POST['DeleteDailyBiggestVictories']) && ($_POST['DeleteDailyBiggestVictories'] == 'DeleteDailyBiggestVictories')) {
+    $user_id = Session::get('user_id');
+    
+    $goalIds = isset($_POST['goalIds']) ? $_POST['goalIds'] : [];
+  
+    $currentDate = isset($_POST['currentDate']) ? $_POST['currentDate'] : date('Y-m-d h:i:s');
+    if (!empty($goalIds)) {
+        $placeholders = array_fill(0, count($goalIds), '?');
+        $common->delete("daily_biggest_victories", "id IN(" . implode(",", $placeholders) . ")", $goalIds);
+        
+    }
+    echo 'Deleted';
+}
+
 if (isset($_POST['DeleteDailyGoals']) && ($_POST['DeleteDailyGoals'] == 'DeleteDailyGoals')) {
     $user_id = Session::get('user_id');
     if (!$user_id) {
@@ -1115,6 +1297,50 @@ if (isset($_POST['action']) && ($_POST['action'] == 'UpdateDailyCommitments')) {
 
     echo 'Updated';
 
+}
+if (isset($_POST['SaveNewDailyBiggestVictories']) && ($_POST['SaveNewDailyBiggestVictories'] == 'SaveNewDailyBiggestVictories')) {
+    $user_id = Session::get('user_id');    
+    $goals = isset($_POST['goals']) ? $_POST['goals'] : [];
+    $currentDateTime = isset($_POST['currentDateTime']) ? $_POST['currentDateTime'] : date('Y-m-d H:i:s');
+    $currentDate = isset($_POST['currentDate']) ? $_POST['currentDate'] : date('Y-m-d');
+    $table_name = 'daily_biggest_victories';
+    $addedGoals = [];
+    
+    foreach ($goals as $key => $goal) {
+        if (!empty($goal)) {
+            $common->insert($table_name, ['user_id' => $user_id, 'goal' => $goal, 'created_at' => $currentDateTime]);
+            $id = $common->insertId();
+            $addedGoals[$id] = $goal;
+        }
+    }
+    setlocale(LC_ALL, "es_ES");
+    $string = date('d/m/Y', strtotime($currentDateTime));
+    $dateObj = DateTime::createFromFormat("d/m/Y", $string);
+    echo json_encode(['success' => true, 'goals' => $addedGoals,
+    'date'=>utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp()))]
+    );
+}
+if (isset($_POST['SaveNewDailySuperDias']) && ($_POST['SaveNewDailySuperDias'] == 'SaveNewDailySuperDias')) {
+    $user_id = Session::get('user_id');    
+    $goals = isset($_POST['goals']) ? $_POST['goals'] : [];
+    $currentDateTime = isset($_POST['currentDateTime']) ? $_POST['currentDateTime'] : date('Y-m-d H:i:s');
+    $currentDate = isset($_POST['currentDate']) ? $_POST['currentDate'] : date('Y-m-d');
+    $table_name = 'daily_superdias';
+    $addedGoals = [];
+    
+    foreach ($goals as $key => $goal) {
+        if (!empty($goal)) {
+            $common->insert($table_name, ['user_id' => $user_id, 'goal' => $goal, 'created_at' => $currentDateTime]);
+            $id = $common->insertId();
+            $addedGoals[$id] = $goal;
+        }
+    }
+    setlocale(LC_ALL, "es_ES");
+    $string = date('d/m/Y', strtotime($currentDateTime));
+    $dateObj = DateTime::createFromFormat("d/m/Y", $string);
+    echo json_encode(['success' => true, 'goals' => $addedGoals,
+    'date'=>utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp()))]
+    );
 }
 
 if (isset($_POST['SaveNewDailyTopGoals']) && ($_POST['SaveNewDailyTopGoals'] == 'SaveNewDailyTopGoals')) {

@@ -35,6 +35,13 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['to_remember']) && $_GET[
         $toRemember = $common->paginate(table: 'to_remember', cond: 'user_id = :user_id', params: ['user_id' => $userInfos['id']], orderBy: 'date', order: 'desc');
         $totalPage = $common->pageCount(table: 'to_remember', cond: 'user_id = :user_id', params: ['user_id' => $userInfos['id']]);
     }
+    setlocale(LC_ALL, "es_ES");
+    foreach($toRemember as $k=>$row){
+        $string = date('d/m/Y', strtotime($row['date']));
+        $dateObj = DateTime::createFromFormat("d/m/Y", $string);
+        $row['local_date']=utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp()));
+        $toRemember[$k]=$row;
+    }
 
     $results = addTagsToRemember($toRemember);
 

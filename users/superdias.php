@@ -51,7 +51,7 @@ $selectedMonth = !empty($_REQUEST['month']) ? (int)$_REQUEST['month'] : $current
   <script>
     var browserTime = new Date();
     var timezoneOffset = browserTime.getTimezoneOffset();
-    window.location.href = "biggestVictories.php?timezoneoffset=" + timezoneOffset;
+    window.location.href = "superdias.php?timezoneoffset=" + timezoneOffset;
   </script>
 <?php endif; ?>
 <?php
@@ -60,7 +60,7 @@ $user_id = Session::get('user_id');
 $dailyTopGoals = [];
 
 
-$dailyTopGoals = $common->get('daily_biggest_victories', "user_id = :user_id", ['user_id' => $user_id], orderBy: 'created_at',order: 'DESC');
+$dailyTopGoals = $common->get('daily_superdias', "user_id = :user_id", ['user_id' => $user_id], orderBy: 'created_at',order: 'DESC');
 
 $selectedDate = $currentDate;
 
@@ -94,7 +94,7 @@ $isPastDate=false;
 
 
 <style>
-    .text-white-80 {
+  .text-white-80 {
       --bs-text-opacity: 1;
       color: rgba(255,255,255,.8)!important;
   }
@@ -397,7 +397,7 @@ $isPastDate=false;
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 mb-3">
 
    <!-- Secondary Nav -->
-   <?php require_once 'inc/secondaryNav.php'; ?>
+    <?php require_once 'inc/secondaryNav.php'; ?>
     <!-- Secondary Nav -->
 
   <div class="projects my-5" style="background-color: #ed008c;">
@@ -426,11 +426,11 @@ $isPastDate=false;
         $dateObj = DateTime::createFromFormat("d/m/Y", $string);
         ?>
         <div class="row">
-          <div class="col-sm-2 col-2" style="text-align:left;"><a class="prev-arrow" href="<?= SITE_URL; ?>/users/biggestVictories.php?date=<?= date('Y-m-d', strtotime('-1 day', strtotime($currentDate))); ?>" ;><i class="fa fa-arrow-left"></i></a></div>
+          <div class="col-sm-2 col-2" style="text-align:left;"><a class="prev-arrow" href="<?= SITE_URL; ?>/users/superdias.php?date=<?= date('Y-m-d', strtotime('-1 day', strtotime($currentDate))); ?>" ;><i class="fa fa-arrow-left"></i></a></div>
           <div class="col-sm-8 col-8" style="text-align:center;">
             <h2 style="text-transform: capitalize;"><?= utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp())); ?></h2>
           </div>
-          <div class="col-sm-2 col-2" style="text-align:right;"><a class="next-arrow" href="<?= SITE_URL; ?>/users/biggestVictories.php?date=<?= date('Y-m-d', strtotime('+1 day', strtotime($currentDate))); ?>"><i class="fa fa-arrow-right"></i></a></div>
+          <div class="col-sm-2 col-2" style="text-align:right;"><a class="next-arrow" href="<?= SITE_URL; ?>/users/superdias.php?date=<?= date('Y-m-d', strtotime('+1 day', strtotime($currentDate))); ?>"><i class="fa fa-arrow-right"></i></a></div>
         </div>
 
       </header>
@@ -443,7 +443,7 @@ $isPastDate=false;
         <div class="pt-5" id="slide-1">
           <form class="form" id="goalsFrom">
             <div class="mt-5" style="background-color: #fef200; padding: 10px">
-              <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; ">Mis Mayores Victorias:
+              <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; ">SuperDias:
                 <?php if ($isPastDate == false) : ?>
                   <button type="button" class="btn btn-info btn-sm screenonly pull-right" id="editBtn1">Editar</button>
                 <?php endif; ?>
@@ -453,8 +453,8 @@ $isPastDate=false;
               <div class="goals-area" id="top-goals-area" style="display:block; ">
                   <?php if($selectedDate<=$today): ?>
                   <div class="form-group screenonly" style="padding:20px; text-align:right;" id="create-top-goal-btn-wrapper">
-                    <button type="button" id="save-new-top-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewGoals()"><i class="fa fa-save"></i> Guarda Nuevo Victoria</button>
-                    <button type="button" class="button btn btn-info" onClick="CreateDailyTopGoal()"><i class="fa fa-book"></i> Agrega Victoria</button>
+                    <button type="button" id="save-new-top-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewGoals()"><i class="fa fa-save"></i> Guarda Nuevo Objetivo</button>
+                    <button type="button" class="button btn btn-info" onClick="CreateDailyTopGoal()"><i class="fa fa-book"></i> Agrega Objetivo</button>
                   </div>
                   <div class="form-group" id="new-top-goal-creation-container"></div>
                   <?php endif; ?>
@@ -465,9 +465,8 @@ $isPastDate=false;
                     <li class="border-bottom py-2" id="top-goal-list-item-<?= $item['id']; ?>" style="font-size: 1rem;">
                       <label id="top-list-label-<?= $item['id']; ?>">
 
-                       
-                        <span style="font-size: 1rem;" id="topGoalText-<?= $item['id']; ?>"><?= $item['goal']; ?> </span>
                         <p class="text-white-80" style="text-transform: capitalize;"><?= utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp())); ?></p>
+                        <span style="font-size: 1rem;" id="topGoalText-<?= $item['id']; ?>"><?= $item['goal']; ?> </span>
                         
                         <a class="edit-actions edit-goal-btn" data-type="top" data-id="<?= $item['id']; ?>" href="#"><i class="fa fa-pencil"></i></a>
                         <a class="edit-actions delete-goal-btn" data-type="top" data-id="<?= $item['id']; ?>" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
@@ -532,7 +531,7 @@ $isPastDate=false;
         url: SITE_URL + "/users/ajax/ajax.php",
         type: "POST",
         data: {
-            SaveNewDailyBiggestVictories: 'SaveNewDailyBiggestVictories',
+          SaveNewDailySuperDias: 'SaveNewDailySuperDias',
           currentDate: currentDate,
           currentDateTime: currentDateTime,
           goals: newgoalsInput
@@ -549,7 +548,7 @@ $isPastDate=false;
               console.log(prop, jsonObj.goals[prop]);
 
 
-              $("#daily-top-goal-list").prepend('<li class="" id="top-goal-list-item-' + prop + '"><label class="form-label" id="top-list-label-' + prop + '"><span id="topGoalText-' + prop + '">' + jsonObj.goals[prop] + '</span> <p class="text-white-80" style="text-transform: capitalize;">'+jsonObj.date+'</p><a class="edit-actions edit-goal-btn" data-type="top" data-id="' + prop + '" href="#"><i class="fa fa-pencil"></i></a>                 <a class="edit-actions delete-goal-btn" data-id="' + prop + '" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></label></li>');
+              $("#daily-top-goal-list").prepend('<li class="" id="top-goal-list-item-' + prop + '"><p class="text-white-80" style="text-transform: capitalize;">'+jsonObj.date+'</p><label class="form-label" id="top-list-label-' + prop + '"><span id="topGoalText-' + prop + '">' + jsonObj.goals[prop] + '</span> <a class="edit-actions edit-goal-btn" data-type="top" data-id="' + prop + '" href="#"><i class="fa fa-pencil"></i></a>                 <a class="edit-actions delete-goal-btn" data-id="' + prop + '" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></label></li>');
             }
             $('#save-new-top-goals-btn').hide();
           }
@@ -580,7 +579,7 @@ $isPastDate=false;
     console.log('validated', validated);
     $newgoalsinput = document.querySelectorAll("textarea.newtopgoals");
     if (validated) {
-      $wrapper.append("<div class='form-group'><textarea placeholder='Escribe detalles' class='form-input form-control newtopgoals' name='newtopgoals[]'/></textarea></div>");
+      $wrapper.append("<div class='form-group'><textarea placeholder='Write goal details' class='form-input form-control newtopgoals' name='newtopgoals[]'/></textarea></div>");
      
       $('#save-new-top-goals-btn').show();
 
@@ -663,7 +662,7 @@ $isPastDate=false;
     var goalTextElem;
     var actionName = '';
     var goalTextElem = $('#topGoalText-' + goalId);
-    actionName = 'UpdateDailyBiggestVictories';    
+    actionName = 'UpdateDailySuperDias';    
     $(this).addClass(sectionType);
     goalText = goalTextElem.text();
     console.log('goalText', goalText);
@@ -696,7 +695,7 @@ $isPastDate=false;
         url: SITE_URL + "/users/ajax/ajax.php",
         type: "POST",
         data: {
-            UpdateDailyBiggestVictories: 'UpdateDailyBiggestVictories',
+          UpdateDailySuperDias: 'UpdateDailySuperDias',
           currentDate: currentDate,
           currentDateTime: currentDateTime,
           goalText: goalText,
@@ -726,7 +725,7 @@ $isPastDate=false;
     var result = confirm("Está Seguro que quiere Eliminar?");
     if (result) {
       var goalId = $(this).data('id');
-      var sectionType = 'top';
+      var sectionType = $(this).data('type');
       console.log('goalId', goalId, sectionType);
       var goalIds = [];
       goalIds.push(goalId);
@@ -734,7 +733,7 @@ $isPastDate=false;
         url: SITE_URL + "/users/ajax/ajax.php",
         type: "POST",
         data: {
-        DeleteDailyBiggestVictories: 'DeleteDailyBiggestVictories',
+          DeleteDailySuperDias: 'DeleteDailySuperDias',
           type: sectionType,
           currentDate: currentDate,
           goalIds: goalIds,
@@ -744,10 +743,11 @@ $isPastDate=false;
           for (let index = 0; index < goalIds.length; index++) {
             var gid = goalIds[index];
             var goalList = '#' + sectionType + '-goal-list-item-' + gid;
-            
             console.log(goalList, 'goalList');
             $(goalList).remove();
-            
+            if (sectionType == 'life') {
+              remainingLifeGoals++;
+            }
           }
 
           if (data == 'Deleted') {
@@ -802,9 +802,8 @@ $isPastDate=false;
       url: SITE_URL + "/users/ajax/ajax.php",
       type: "POST",
       data: {
-        UpdateDailyBiggestVictories: 'UpdateDailyBiggestVictories',
+        UpdateDailySuperDias: 'UpdateDailySuperDias',
         currentDate: currentDate,
-        currentDateTime: currentDateTime,
         goalText: goalText,
         achieved: achieved,
         goalId: goalId,
@@ -955,7 +954,10 @@ $isPastDate=false;
       })
       .on('changeDate', function(e) {
         console.log('changeDate', e.date, e.format('yyyy-mm-dd'));
-        window.location.href = SITE_URL + "/users/biggestVictories.php?date=" + e.format('yyyy-mm-dd');
+        window.location.href = SITE_URL + "/users/superdias.php?date=" + e.format('yyyy-mm-dd');
+
+
+
       });
   });
 </script>

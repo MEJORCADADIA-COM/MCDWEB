@@ -30,6 +30,7 @@ require_once '../vendor/autoload.php';
 
 if(isset($_POST['email_registration']) && ($_POST['email_registration'] == 'email_registration')) {
 	$gmail = $format->validation($_POST['email']);
+ 
     $email_check = $common->first("users", "gmail = :email", ['email' => $gmail]);
     if ($email_check) {
       echo 'You have already account with this email!';
@@ -56,7 +57,7 @@ if(isset($_POST['email_registration']) && ($_POST['email_registration'] == 'emai
       $mail->SMTPSecure = 'tls';
       $mail->Port = 587;
       $mail->Username = "verify@mejorcadadia.com"; //enter you email address
-      $mail->Password = "Ta$77!/8H7u/SX?"; //enter you email password
+      $mail->Password = ""; //enter you email password
       $mail->Subject = "Bienvenido a MejorCadaDÃa.com";
       $mail->setFrom('verify@mejorcadadia.com');
       $mail->addReplyTo('verify@mejorcadadia.com');
@@ -155,10 +156,8 @@ if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'fa
         } elseif ($type == 'email') {
             $gmail = $format->validation($_POST['gmail']);
             $password = $format->validation($_POST['password']);
-
             $email_checks = $common->first("`users`", "`gmail` = :email", ['email' => $gmail]);
-            if ($email_checks) {
-                if($email_checks['type'] == 'email') {
+            if ($email_checks) {                
                     if(password_verify($password, $email_checks['password'])) {
                         if($email_checks['status'] == '1') {
                             Session::set('login', true);
@@ -171,9 +170,7 @@ if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'fa
                     } else {
                         echo 'Password does not match!';
                     }
-                } else {
-                    echo 'You have another account with this email!';
-                }
+                
             } else {
                 echo 'No account found!';
             }
@@ -181,10 +178,59 @@ if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'fa
     }
 }
 
+if(isset($_POST['forgot_password']) && ($_POST['forgot_password'] == 'forgot_password')) {
+	$gmail = $format->validation($_POST['email']); 
+    $email_check = $common->first("users", "gmail = :email", ['email' => $gmail]);
+    if($email_check){
+        $code_rand = time();
+        $key = "mejorcadadia.com";
+        $time = time();
+        $hash = hash_hmac('sha256', $time, $key);
+        $code_newhashpass = $hash;
+        Session::set($code_newhashpass, $gmail);
+        
+        $mail_body = "Has olvidado tu contraseña MejorCadaDía, <br><br>
+                        Ha solicitado restablecer su contraseña.<br>
+                        Haga clic en el enlace a continuación para restablecer su contraseña.<br>  <br>   
+                        ".$reset_link." <br><br>
+
+                        Bienvenido, <br>
+                        Miguel De La Fuente <br>";
+        $mail = new PHPMailer();
+        $mail->isSMTP();
+        $mail->Host = "smtp.ionos.es";
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = 587;
+        $mail->Username = "info@mejorcadadia.com"; //enter you email address
+        $mail->Password = "hQjg-D?x9Pr+Knvb@rexU)4J%9E?fVD,dzK";
+        $mail->Subject = "Has olvidado tu contraseña MejorCadaDÃa.com";
+        $mail->setFrom('info@mejorcadadia.com');
+        $mail->addReplyTo('info@mejorcadadia.com');
+        $mail->isHTML(true);
+        $mail->Body = $mail_body;
+        $mail->addAddress($gmail); //enter receiver email address
+        if($mail->send()) {
+            echo 'Se ha enviado un correo electrónico a su dirección de correo electrónico con instrucciones para restablecer la contraseña.';
+          } else {
+            echo 'Failed to send mail!';
+          }
+          $mail->smtpClose();
+
+    }else{
+        echo 'No account is registered with this email.';
+    }
+    
+}
 
 // email verification and login
 if(isset($_POST['email_verification_login'])) {
-    $age = $format->validation($_POST['age']);
+    $dob = $format->validation($_POST['dob']);
+    if(!empty($dob)){
+        $dob=date('Y-m-d',strtotime($dob));
+    }else{
+        $dob='';
+    }
     $gmail = $format->validation($_POST['email']);
     $password = password_hash($format->validation($_POST['password']), PASSWORD_DEFAULT);
     $code = $format->validation($_POST['code']);
@@ -192,7 +238,7 @@ if(isset($_POST['email_verification_login'])) {
       if ($code == Session::get($gmail)) {
         $full_name_exp = explode("@", $gmail);
         $full_name = $full_name_exp[0];
-        $email_insert = $common->insert("users", ['full_name' => $full_name, 'type' => 'email', 'gmail' => $gmail, 'password' => $password]);
+        $email_insert = $common->insert("users", ['full_name' => $full_name, 'type' => 'email', 'gmail' => $gmail, 'password' => $password,'dob'=>$dob]);
         if ($email_insert) {
           $user_infos = $common->first("`users`", "gmail = :email", ['email' => $gmail]);
           Session::set('login', true);

@@ -114,7 +114,7 @@
     $('#email_registration').click(function() {
         var email = $('#reg_email').val();
         var password = $('#reg_password').val();
-        var age = $('#reg_age').val();
+        var dob = $('#reg_age').val();
         let errors = 0;
         var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (email.match(mailformat)) {
@@ -131,8 +131,8 @@
         } else {
             $("#error_success_msg_reg_password").hide();
         }
-        if (age.length == 0) {
-            $("#error_success_msg_reg_age").text('Age is required!');
+        if (dob.length == 0) {
+            $("#error_success_msg_").text('DOB is required!');
             $("#error_success_msg_reg_age").removeAttr('class').addClass("msg msg_error w-100");
             $("#error_success_msg_reg_age").show();
             errors++;
@@ -145,7 +145,9 @@
                 type: "POST",
                 data: {
                     email_registration: 'email_registration',
-                    email: email
+                    email: email,
+                    password:password,
+                    dob:dob
                 },
                 success: function(data) {
                     if (data == 'sent') {
@@ -161,7 +163,40 @@
         }
     });
     // email registration end
-
+    $('#forgot_panel').click(function() {
+                $('#login_email_check_part').hide();
+                $('#forgot-form').show();
+        });
+        $('#login_panel').click(function() {
+              $('#forgot-form').hide();
+              $('#login_email_check_part').show();
+        });
+        $('#forgot_password').click(function() {
+            console.log('clicked');
+            var email = $('#forgot_email').val();
+            let login_errors = 0;
+            var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            if (email.match(mailformat)) {
+                $("#forgot_error_success_msg_email").hide();
+            } else {
+                $("#forgot_error_success_msg_email").text('Email is invalid!');
+                $("#forgot_error_success_msg_email").removeAttr('class').addClass("msg msg_error w-100");
+                $("#forgot_error_success_msg_email").show();
+                
+                login_errors++;
+            }
+            if (login_errors == 0) {
+                $('#forgot_email').val('');
+                $.ajax({
+                    url: SITE_URL + "/ajax/ajax.php",
+                    type: "POST",
+                    data: {email:email,'forgot_password':'forgot_password'},
+                    success: function(data) {
+                        $("#res-msgs").html(data);
+                    }
+                });
+            }
+        });
     // email login start
     $('#email_login').click(function() {
         var email = $('#login-email').val();
@@ -267,7 +302,7 @@
     $('#email_verification_login').click(function() {
         var email = $('#reg_email').val();
         var password = $('#reg_password').val();
-        var age = $('#reg_age').val();
+        var dob = $('#reg_age').val();
         var code = $('#code').val();
         if (email.length !== 0) {
             if (code.length !== 0) {
@@ -278,7 +313,7 @@
                         email_verification_login: 'email_verification_login',
                         email: email,
                         password: password,
-                        age: age,
+                        dob: dob,
                         code: code
                     },
                     success: function(data) {

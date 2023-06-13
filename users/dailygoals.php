@@ -908,7 +908,7 @@ if ($dailyLifeGoals) {
                <div class="d-flex bd-highlight mb-3">
                   <div class="p-1 bd-highlight">
 
-                  <div class="v7-media-box <?=count($dailyV7Videos)>0? 'file-added':''; ?>" id="mediabox4">
+                  <div class="v7-media-box <?=count($dailyV7Videos)>0? 'file-added':''; ?>" id="videoMediabox4">
                       <?php if(!empty($dailyV7Videos) && count($dailyV7Videos)>0):  ?>                      
                         <div class="media-thumb-wrapper" data-file="<?=$dailyV7Videos[0]['id'];?>" id="fileid-<?=$dailyV7Videos[0]['id'];?>">
                         <video controls preload="auto">

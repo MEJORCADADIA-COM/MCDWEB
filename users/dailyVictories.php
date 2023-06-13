@@ -62,11 +62,11 @@
                   const item = document.createElement("li")
                   item.innerHTML =
                      `<div>
-                        <p class="my-2"><a class="list-text" href="<?= SITE_URL; ?>/users/dailyVictoriesCalendar.php?month_year=${formatMonth(new Date(dailyVictory.date))}&date=${formatday(new Date(dailyVictory.date))}">${dailyVictory.daily_victory}</a></p>
-                        <div class="d-flex justify-content-between">
-                           <p class="text-muted date-font mt-2"> 
-                           <small><strong>Date: </strong>${formatDate(new Date(dailyVictory.date))}</small>
+                        <p class="text-muted date-font mt-2"> 
+                           <small>${dailyVictory.local_date}</small>
                            </P>
+                        <p class="my-2"><a class="list-text" href="<?= SITE_URL; ?>/users/dailyVictoriesCalendar.php?month_year=${formatMonth(new Date(dailyVictory.date))}&date=${formatday(new Date(dailyVictory.date))}">${dailyVictory.daily_victory}</a></p>
+                        <div class="d-flex justify-content-between">                           
                            <div class="d-flex">
                               <p class="text-muted date-font mt-2">
                                  <small><strong>${dailyVictory.tags.length>1?"Tags: ":"Tag: "}</strong>${dailyVictory.tags[0]?`${dailyVictory.tags[0].tag}`:""}${dailyVictory.tags[1]?`, ${dailyVictory.tags[1].tag}`:""}${dailyVictory.tags[2]?`, ${dailyVictory.tags[2].tag}`:""}</small>

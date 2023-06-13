@@ -75,6 +75,15 @@ if (Session::get('user_id') !== NULL) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="https://blog.mejorcadadia.com/wp-content/uploads/2022/04/mcdf-01.png" type="image/x-icon">
     <title>Mejorcadadia</title>
+    <link rel="manifest" href="<?= SITE_URL; ?>/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="green">
+    <meta name="apple-mobile-web-app-title" content="Mejor Cada Dia">
+    <link rel="apple-touch-icon" href="/assets/images/major-192x192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/assets/images/major-512x512.png" sizes="512x512">
+    <meta name="msapplication-TileImage" content="/assets/images/major-192x192.png">
+    <meta name="msapplication-TileColor" content="green">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -86,10 +95,10 @@ if (Session::get('user_id') !== NULL) {
        
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css'>
+
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v14.0&appId=1108588056758284&autoLogAppEvents=1" nonce="JQBAhE2Y"></script>
     <link rel="stylesheet" href="<?= SITE_URL; ?>/users/assets/bootstrap-datepicker.min.css">
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
 
     <link rel="stylesheet" href="./assets/style.css">
     <link rel="stylesheet" href="<?= SITE_URL; ?>/users/assets/button.css">
@@ -519,6 +528,95 @@ if (Session::get('user_id') !== NULL) {
         .sticky-top{
             z-index: 999;
         }
+        .btn-social-icon{
+            position: relative;
+            height: 34px;
+            width: 34px;
+        }
+        .btn-social-icon>:first-child {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 32px;
+            line-height: 34px;
+            font-size: 1.6em;
+            text-align: center;
+            border-right: 1px solid rgba(0,0,0,0.2);
+        }
+        .btn-social-icon>:first-child {
+            border: none;
+            text-align: center;
+            width: 100% !important;
+        }
+        .btn-facebook {
+    color: #fff;
+    background-color: #3b5998;
+    border-color: rgba(0,0,0,0.2)
+}
+
+.btn-facebook:focus,.btn-facebook.focus {
+    color: #fff;
+    background-color: #2d4373;
+    border-color: rgba(0,0,0,0.2)
+}
+
+.btn-facebook:hover {
+    color: #fff;
+    background-color: #2d4373;
+    border-color: rgba(0,0,0,0.2)
+}
+
+.btn-facebook:active,.btn-facebook.active,.open>.dropdown-toggle.btn-facebook {
+    color: #fff;
+    background-color: #2d4373;
+    border-color: rgba(0,0,0,0.2)
+}
+.btn-twitter {
+    color: #fff;
+    background-color: #55acee;
+    border-color: rgba(0,0,0,0.2)
+}
+
+.btn-twitter:focus,.btn-twitter.focus {
+    color: #fff;
+    background-color: #2795e9;
+    border-color: rgba(0,0,0,0.2)
+}
+
+.btn-twitter:hover {
+    color: #fff;
+    background-color: #2795e9;
+    border-color: rgba(0,0,0,0.2)
+}
+
+.btn-twitter:active,.btn-twitter.active,.open>.dropdown-toggle.btn-twitter {
+    color: #fff;
+    background-color: #2795e9;
+    border-color: rgba(0,0,0,0.2)
+}
+.btn-whatsapp {
+    color: #fff;
+    background-color: #74BE41;
+    border-color: rgba(0,0,0,0.2)
+}
+.btn-whatsapp:hover {
+    color: #fff;
+    background-color: #569a27;
+    border-color: rgba(0,0,0,0.2)
+}
+.btn-email {
+    color: #fff;
+    background-color: #cc3783;
+    border-color: rgba(0,0,0,0.2);
+}
+.btn-email:hover {
+    color: #fff;
+    background-color: #e064a4;
+    border-color: rgba(0,0,0,0.2)
+}
+
+
     </style>
 </head>
 
@@ -629,8 +727,8 @@ if (Session::get('user_id') !== NULL) {
                     </li>
                     
                     <li class="nav-item dropdown">
-                        <a class="nav-link" href="#" role="button">MejorJournal</a>
-                        <ul class="submenu">
+                        <a class="nav-link dropdown-toggle" href="#menuMejorjournal" id="mejorjournalLinkItem" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="menuMejorjournal">MejorJournal</a>
+                        <ul class="submenu list-unstyled fw-normal pb-1 small collapse hide pb-1 ms-3" id="menuMejorjournal" aria-labelledby="mejorjournalLinkItem">
                         <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button">Victoria7</a> </li>
                             
                             <li class="nav-item">
@@ -680,12 +778,13 @@ if (Session::get('user_id') !== NULL) {
 
                             <li>
                                 <a class="nav-link dropdown-toggle" href="#superMemorias" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
-                                    SuperMemorias
+                                SuperVictorias
                                 </a>
                                 <ul id="superMemorias" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
                                     <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/dailyVictories.php">Mi Victoria Diaria</a></li>
                                     <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/toRemember.php">Eventos para Recordar</a></li>
                                     <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/biggestVictories.php">Mis Mayores Victorias</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/superdias.php">SuperDias</a></li>
                                 </ul>
                             </li>
 
@@ -715,12 +814,38 @@ if (Session::get('user_id') !== NULL) {
                         <a class="nav-link" href=" <?= SITE_URL; ?>/users/inspirations.php">MejorInspiration</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="#">MejorCadaDía Chef</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">MejorCadaDía Hotel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">MejorFest</a>
+                    </li>
+                    
+
+                    <li class="nav-item">
                         <a class="nav-link" href="<?= SITE_URL; ?>/users/profile.php">Perfil</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= SITE_URL; ?>/users/logout.php" onclick="return confirm('Are you sure to logout?');">Salir</a>
                     </li>
                     <?php endif; ?>  
+                    <li class="text-center mt-3">           
+                            <h6 class="text-light">Comparte MCD con tus amigos</h6>                     
+                                <div class="text-center">
+                                    <a target="_blank" href="http://www.facebook.com/sharer.php?u=mejorcadadia.com" class="btn-facebook btn btn-social-icon"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                    <a target="_blank" href="http://twitter.com/share?text=Este Mundo Necesita tu Mejor Versión y por eso te invitamos a que formes parte de la familia de mejorcadadia.com" class="btn btn-social-icon btn-twitter"><i class="fa fa-twitter " aria-hidden="true"></i></a>
+                                    <a target="_blank" href="https://wa.me/?text=Este Mundo Necesita tu Mejor Versión y por eso te invitamos a que formes parte de la familia de mejorcadadia.com" class="btn btn-social-icon btn-whatsapp"><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
+                                    <a target="_blank" href="mailto:?subject=Este Mundo Necesita tu Mejor Versión y por eso te invitamos a que formes parte de la familia de mejorcadadia.com&body=Este Mundo Necesita tu Mejor Versión y por eso te invitamos a que formes parte de la familia de mejorcadadia.com" class="btn btn-social-icon btn-email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>
+                                    
+                                </div>
+                            </li>
+                    <li class="text-center">
+                        <div class="text-center mt-3 mb-3">
+                            <button id="install-button" class="btn btn-warning mx-auto">Add To HomeScreen</button>
+                        </div>
+                    </li>
                     <li class="nav-item lastfooteritem">
                     <h1 class="migualtitle">By Miguel De La Fuente
                         <br>
@@ -774,8 +899,10 @@ if (Session::get('user_id') !== NULL) {
                                 </li>
                                 
                                 <li class="nav-item dropdown">
-                                <a class="nav-link" href="#" role="button">MejorJournal</a>
-                                <ul class="submenu">
+                                <a class="nav-link dropdown-toggle" href="#menuMejorjournal" id="mejorjournalLinkItem" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="menuMejorjournal">MejorJournal</a>
+                                <ul class="submenu list-unstyled fw-normal pb-1 small collapse hide pb-1 ms-3" id="menuMejorjournal" aria-labelledby="mejorjournalLinkItem">
+                        
+                                
                                 <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button">Victoria7</a> </li>
                                     
                                     <li class="nav-item">
@@ -835,12 +962,13 @@ if (Session::get('user_id') !== NULL) {
 
                                     <li>
                                         <a class="nav-link dropdown-toggle" href="#superMemorias" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
-                                            SuperMemorias
+                                        SuperVictorias
                                         </a>
                                         <ul id="superMemorias" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
                                             <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/dailyVictories.php">Mi Victoria Diaria</a></li>
                                             <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/toRemember.php">Eventos para Recordar</a></li>
                                             <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/biggestVictories.php">Mis Mayores Victorias</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/superdias.php">SuperDias</a></li>
                                         </ul>
                                     </li>
 
@@ -868,6 +996,15 @@ if (Session::get('user_id') !== NULL) {
                                 <a class="nav-link" href="<?= SITE_URL; ?>/users/inspirations.php">MejorInspiration</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="#">MejorCadaDía Chef</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">MejorCadaDía Hotel</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">MejorFest</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="<?= SITE_URL; ?>/users/profile.php">Perfil</a>
                             </li>
                             <li class="nav-item">
@@ -875,9 +1012,21 @@ if (Session::get('user_id') !== NULL) {
                             </li>  
                             <?php endif; ?>
                              
-                            
-                           
-                            
+                            <li class="text-center mt-3">    
+                            <h6 class="text-light">Comparte MCD con tus amigos</h6>                                  
+                                <div class="text-center">
+                                    <a target="_blank" href="http://www.facebook.com/sharer.php?u=mejorcadadia.com" class="btn-facebook btn btn-social-icon"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                    <a target="_blank" href="http://twitter.com/share?text=Este Mundo Necesita tu Mejor Versión y por eso te invitamos a que formes parte de la familia de mejorcadadia.com" class="btn btn-social-icon btn-twitter"><i class="fa fa-twitter " aria-hidden="true"></i></a>
+                                    <a target="_blank" href="https://wa.me/?text=Este Mundo Necesita tu Mejor Versión y por eso te invitamos a que formes parte de la familia de mejorcadadia.com" class="btn btn-social-icon btn-whatsapp"><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
+                                    <a target="_blank" href="mailto:?subject=Este Mundo Necesita tu Mejor Versión y por eso te invitamos a que formes parte de la familia de mejorcadadia.com&body=Este Mundo Necesita tu Mejor Versión y por eso te invitamos a que formes parte de la familia de mejorcadadia.com" class="btn btn-social-icon btn-email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>
+                                    
+                                </div>
+                            </li>
+                            <li class="text-center">
+                                <div class="text-center mt-3 mb-3">
+                                    <button id="install-button" class="btn btn-warning mx-auto">Add To HomeScreen</button>
+                                </div>
+                            </li>
 
 
                         </ul>

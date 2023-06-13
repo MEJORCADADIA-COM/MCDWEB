@@ -1,4 +1,5 @@
-<?php require_once "inc/header.php"; ?>
+<?php $selectedDate=isset($_GET['date'])? $_GET['date']:'';
+require_once "inc/header.php"; ?>
 <style>
    .list-text {
       text-decoration: none;
@@ -9,7 +10,7 @@
       color: gainsboro;
    }
 </style>
-
+<script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 mb-3 text-white min-vh-100">
    <?php require_once 'inc/thirdNav.php'; ?>
    <div class="px-3-sm px-5-lg mt-4 mt-lg-5 pt-0 pt-lg-3">
@@ -20,7 +21,17 @@
             <button class="px-2 py-1 rounded bg-primary"><i class="fa fa-search text-white" aria-hidden="true"></i></button>
          </div>
          <!--  -->
-         
+         <div class="cal-input-wrapper">
+            <div class="input-group date datepicker" id="datepicker">
+                
+                <input type="text" class="form-control" value="<?=empty($selectedDate)? '':date('d-m-Y', strtotime($selectedDate)); ?>" id="date" readonly />
+                <span class="input-group-append">
+                  <span class="input-group-text bg-light d-block">
+                    <i class="fa fa-calendar"></i>
+                  </span>
+                </span>
+              </div>
+         </div>
       </div>
       <div class="p-2-sm p-5-lg py-4">
          <h3 class="text-center">¿Cómo Puedo Mejorar?:</h3>
@@ -37,6 +48,28 @@
 
 
 <script>
+   let selectedDate='<?php echo $selectedDate;?>';
+   $(function() {
+      var calOptions = {
+        format: 'dd-mm-yyyy',
+        autoclose: true,
+        calendarWeeks: true,
+        todayHighlight: true,
+        weekStart: 1,
+        todayBtn:true,
+        clearBtn:true
+      };
+     
+      $('#datepicker').datepicker(calOptions).on('changeDate', function(e) {
+         console.log('changeDate', e.date, e.format('yyyy-mm-dd'));
+         if(e.date){
+            window.location.href = SITE_URL + "/users/improvements.php?date=" + e.format('yyyy-mm-dd');
+         }else{
+            window.location.href = SITE_URL + "/users/improvements.php";
+         }
+        });
+    
+  });
    let tag;
    let pageNumber = 0;
    let totalPage = 0;
@@ -50,7 +83,7 @@
 
    function loadMoreItems(pageNumber, tag) {
       console.log(pageNumber, "46");
-      const url = `<?= SITE_URL; ?>/users/ajax/ajax.php?get_improvements=get_improvements&page=${pageNumber}${tag? `&tag=${tag}`:""}`;
+      const url = `<?= SITE_URL; ?>/users/ajax/ajax.php?get_improvements=get_improvements&date=${selectedDate}&page=${pageNumber}${tag? `&tag=${tag}`:""}`;
       fetch(url)
          .then(res => res.json())
          .then(data => {
@@ -62,13 +95,10 @@
                   const item = document.createElement("li")
                   item.innerHTML =
                      `<div>
-                        <p class="my-2">${dailyVictory.improvements}</p>
-                        <div class="d-flex justify-content-between">
-                           <p class="text-muted date-font mt-2"> 
-                           <small><strong>Date: </strong>${formatDate(new Date(dailyVictory.created_at))}</small>
+                     <p class="text-muted date-font mt-2"> 
+                           <small>${dailyVictory.local_date}</small>
                            </P>
-                           
-                        </div>
+                        <div class="my-2">${dailyVictory.improvements}</div>
                      </div>`
                   item.classList.add(...classesToAdd)
                   itemContainer.appendChild(item)

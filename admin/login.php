@@ -79,7 +79,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['admin_forgot_password']
           $mail->SMTPSecure = 'tls';
           $mail->Port = 587;
           $mail->Username = "verify@mejorcadadia.com"; //enter you email address
-          $mail->Password = "Ta$77!/8H7u/SX?"; //enter you email password
+          $mail->Password = "hQjg-D?x9Pr+Knvb@rexU)4J%9E?fVD,dzK"; //enter you email password
           $mail->Subject = "Bienvenido a MejorCadaDÃa.com";
           $mail->setFrom('verify@mejorcadadia.com');
           $mail->addReplyTo('verify@mejorcadadia.com');

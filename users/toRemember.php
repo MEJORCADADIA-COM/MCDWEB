@@ -65,11 +65,12 @@
                   const item = document.createElement("li")
                   item.innerHTML =
                      `<div>
+                     <p class="text-muted date-font mt-2"> 
+                           <small>${memory.local_date}</small>
+                           </P>
                         <p class="my-2"><a class="list-text" href="<?= SITE_URL; ?>/users/toRememberCalendar.php?month_year=${formatMonth(new Date(memory.date))}&date=${formatday(new Date(memory.date))}">${memory.to_remember}</a></p>
                         <div class="d-flex justify-content-between">
-                           <p class="text-muted date-font mt-2"> 
-                           <small><strong>Date: </strong>${formatDate(new Date(memory.date))}</small>
-                           </P>
+                           
                            <div class="d-flex">
                               <p class="text-muted date-font mt-2">
                                  <small><strong>${memory.tags.length>1?"Tags: ":"Tag: "}</strong>${memory.tags[0]?`${memory.tags[0].tag}`:""}${memory.tags[1]?`, ${memory.tags[1].tag}`:""}${memory.tags[2]?`, ${memory.tags[2].tag}`:""}</small>

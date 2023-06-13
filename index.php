@@ -78,8 +78,8 @@ require_once "inc/inspirationQuote.php";
                             <div id="error_success_msg_reg_password" class="msg d-none"></div>
                         </div>
                         <div class="form-group mt-3">
-                            <label class="fw-bold">Age</label>
-                            <input type="number" id="reg_age" placeholder="Enter age">
+                            <label class="fw-bold">Date of Birth</label>
+                            <input type="date" id="reg_age" placeholder="Enter age">
                             <div id="error_success_msg_reg_age" class="msg d-none"></div>
                         </div>
                         <div class="form-group mt-3">
@@ -142,7 +142,27 @@ require_once "inc/inspirationQuote.php";
                         <div class="form-group mt-3">
                             <input class="mb-3" id="email_login" type="button" value="Continue">
                         </div>
+                        <div class="form-group">
+                            <a href="javascript:void(0);" id="forgot_panel">Forget Password?</a>
+                        </div>
                     </form>
+                    <div class="forgot-form" id="forgot-form" style="display: <?= isset($forgot_error_msg) ? 'block' : 'none'; ?>;">
+                    <h2>Forgot password</h2>
+                    <div id="res-msgs" class="mx-2 my-2"></div>
+                    <form action="" method="POST">
+                        <div class="form-group">
+                            <label class="fw-bold">Email address<span>*</span></label>
+                            <input type="email" id="forgot_email" name="forgot_email" placeholder="Enter Email">
+                            <div id="forgot_error_success_msg_email" class="msg d-none"></div>
+                        </div>
+                        <div class="form-group mt-3">
+                            <input class="mb-3" id="forgot_password" type="button" value="Send">
+                        </div>
+                        <div class="form-group">
+                        <a href="javascript:void(0);" id="login_panel">Login</a>
+                        </div>
+                    </form>
+                    </div>
                     <h6>or</h6>
                     <div onclick="fbLogin();">
                         <img src="./assets/images/facebook-login.png" style="width: 270px; cursor: pointer; height: 40px; border-radius: 20px;">
@@ -192,6 +212,7 @@ require_once "inc/inspirationQuote.php";
 
 
 <script>
+    
     function getScrollMaxY() {
         "use strict";
         var innerh = window.innerHeight || ebody.clientHeight,

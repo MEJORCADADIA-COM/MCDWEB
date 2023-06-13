@@ -62,7 +62,7 @@ class Common
         $offset = !empty($_GET['page']) && is_numeric($_GET['page']) ? ((int)$_GET['page'] - 1) * $limit : 0;
 
         $query = "SELECT " . $this->formatColumns($columns) . " FROM $table" . $this->getConditionString($cond) . ($orderBy ? " ORDER BY {$orderBy} {$order}" : "") . " LIMIT {$offset}, {$limit}";
-
+     
         return $this->db->query($query, $params)->fetchAll();
     }
 
