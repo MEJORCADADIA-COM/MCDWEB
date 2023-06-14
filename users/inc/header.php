@@ -524,7 +524,10 @@ if (Session::get('user_id') !== NULL) {
                 width:calc(100% - 286px);
             }
         }
-        .ck.ck-editor{color:#000!important;}
+        .ck.ck-editor,.ck.ck-editor *{
+            color:#000!important;
+            font-size:1rem;
+        }
         .sticky-top{
             z-index: 999;
         }
