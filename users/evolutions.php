@@ -24,7 +24,7 @@ require_once "inc/header.php"; ?>
          </div>
          <!--  -->
          <div class="cal-input-wrapper">
-            <div class="input-group date datepicker" id="datepicker">
+         <div class="input-group date datepicker" id="datepicker">
                 
                 <input type="text" class="form-control" value="<?=empty($selectedDate)? '':date('d-m-Y', strtotime($selectedDate)); ?>" id="date" readonly />
                 <span class="input-group-append">

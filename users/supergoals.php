@@ -80,6 +80,7 @@ $prevQuarterYear = '';
 $goals_heading = '';
 $evaluation_heading = '';
 if ($type == 'weekly') {
+
   $start_date = $week_array['week_start'];
   $end_date = $week_array['week_end'];
 
