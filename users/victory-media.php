@@ -84,9 +84,9 @@ $isPastDate=false;
 
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10">
 
- 
+<?php require_once 'inc/secondaryNav.php'; ?>
 
-  <div class="projects" style="background-color: #ed008c;">
+  <div class="projects my-5" style="background-color: #ed008c;">
     <div class="projects-inner">
       <header class="projects-header">
         

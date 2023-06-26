@@ -55,6 +55,7 @@ $dailyImprovements = '';
 
 $dailyTopGoals = [];
 $dailyLifeGoals = [];
+$dailyImportantGoals = [];
 
 $dailyV7Files=[];
 
@@ -119,6 +120,7 @@ if ($toRemember) {
     'to_remember_user_tag.id'
   );
 }
+$dailyImportantGoals = $common->get('daily_important_goals', "user_id = :user_id AND created_at = :created_at", ['user_id' => $user_id, 'created_at' => $currentDate]);
 
 $dailyTopGoals = $common->get('daily_top_goals', "user_id = :user_id AND created_at = :created_at", ['user_id' => $user_id, 'created_at' => $currentDate]);
 
@@ -160,9 +162,11 @@ if ($dailyLifeGoals) {
   var SITE_URL = '<?= SITE_URL; ?>';
   var topGoalsCounts = '<?= count($dailyTopGoals); ?>';
   var lifeGoalsCounts = '<?= count($dailyLifeGoals); ?>';
+  var importantGoalsCount='<?=count($dailyImportantGoals);?>';
   var currentDate = '<?= $currentDate; ?>';
   var remainingTopGoals = 7 - topGoalsCounts;
   var remainingLifeGoals = 7 - lifeGoalsCounts;
+  var remainingImportantGoals=1-importantGoalsCount;
 </script>
 <link rel="stylesheet" href="<?=SITE_URL; ?>/users/assets/uikit-lightbox.css" />
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
@@ -723,6 +727,42 @@ if ($dailyLifeGoals) {
                 <?php endif; ?>
               </div>
             </div>
+            <div class="mt-5" style="background-color: #fef200; padding: 10px">
+              <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; ">La Acción o Resultado Más Importante Hoy:
+                <?php if ($isPastDate == false) : ?>
+                  <button type="button" class="btn btn-info btn-sm screenonly pull-right" id="impEditBtn">Editar</button>
+                <?php endif; ?>
+              </h2>
+            </div>
+            <div class="cardd mb-4" id="section-1">
+
+            <div class="goals-area" id="important-goals-area" style="display:block; ">
+              <ol id="daily-important-goal-list" class="goal-list">
+                <?php foreach ($dailyImportantGoals as $key => $item) :  ?>
+                  <li class="<?= ($key > 9) ? 'hidden more' : ''; ?>" id="important-goal-list-item-<?= $item['id']; ?>" style="font-size: 1rem;">
+                    <label id="important-list-label-<?= $item['id']; ?>">
+
+                      <span style="font-size: 1rem;" id="importantGoalText-<?= $item['id']; ?>"><?= $item['goal']; ?> </span>
+                      <input <?= ($isPastDate == true) ? 'disabled' : ''; ?> data-id="<?= $item['id']; ?>" value="<?= $item['id']; ?>" class="input-importantgoals" name="importantAchieved[<?= $item['id']; ?>]" type="checkbox" <?php if ($item['achieved'] == 1) echo 'checked'; ?>>
+                      <a class="edit-actions edit-goal-btn" data-type="important" data-id="<?= $item['id']; ?>" href="#"><i class="fa fa-pencil"></i></a>
+                      <a class="edit-actions delete-goal-btn" data-type="important" data-id="<?= $item['id']; ?>" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                    </label>
+                  </li>
+                <?php endforeach; ?>
+              </ol>
+
+              <div class="form-group" id="new-important-goal-creation-container"></div>
+              <?php if (count($dailyImportantGoals) < 1) : ?>
+                <div class="form-group screenonly" style="padding:20px; text-align:right;" id="create-top-goal-btn-wrapper">
+
+                  <button type="button" id="save-new-important-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewImpGoals()"><i class="fa fa-save"></i> Guarda Resultado</button>
+
+                  <button type="button" class="button btn btn-info" onClick="CreateDailyImportantGoal()"><i class="fa fa-book"></i> Resultado</button>
+
+                </div>
+              <?php endif; ?>
+            </div>
+            </div>
             <div class="cardd mb-5" id="section-2" style="padding:0 5px;">
             <div class="d-flex justify-content-between my-1">
               <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Mini Resumen de Hoy:</h5>
@@ -1117,7 +1157,7 @@ if ($dailyLifeGoals) {
         <button type="button" class="btn-close bg-white border border-warning" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" style="min-height:350px;">  
-      <di class="d-flex align-items-center justify-content-center"  style=" height:100%; ">
+      <div class="d-flex align-items-center justify-content-center"  style=" height:100%; ">
       <div class="audio-recording-container text-white text-center" id="audio-recorder">
           <div class="recording-info-wrapper" id="recording-info"> 
             <div class="recording-elapsed-time">
@@ -1253,7 +1293,40 @@ if ($dailyLifeGoals) {
       });
     }
   }
+  
+  function SaveNewImpGoals() {
+    var newgoalsinput = document.querySelectorAll("textarea.newimpgoals");
+    var validated = hasFilledNewGoals('newimpgoals');
+    if (newgoalsInput.length > 0) {
 
+      $.ajax({
+        url: SITE_URL + "/users/ajax/ajax.php",
+        type: "POST",
+        data: {
+          SaveNewDailyImportantGoals: 'SaveNewDailyImportantGoals',
+          currentDate: currentDate,
+          goals: newgoalsInput
+        },
+        success: function(data) {
+          var jsonObj = JSON.parse(data);
+          console.log('data', data, jsonObj);
+          if (jsonObj.success) {
+            goalstobeadded = 0;
+            newgoalsInput = [];
+            $('#new-important-goal-creation-container').html('');
+            for (const prop in jsonObj.goals) {
+              console.log(`obj.${prop} = ${jsonObj.goals[prop]}`);
+              console.log(prop, jsonObj.goals[prop]);
+
+
+              $("#daily-important-goal-list").append('<li class="" id="important-goal-list-item-' + prop + '"><label class="form-label" id="important-list-label-' + prop + '"><span id="importantGoalText-' + prop + '">' + jsonObj.goals[prop] + '</span> <input name="achieved[' + prop + ']" class="input-importantgoals" type="checkbox" data-id="' + prop + '" value="' + prop + '"><a class="edit-actions edit-goal-btn" data-type="important" data-id="' + prop + '" href="#"><i class="fa fa-pencil"></i></a>                 <a class="edit-actions delete-goal-btn" data-id="' + prop + '" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></label></li>');
+            }
+            $('#save-new-important-goals-btn').hide();
+          }
+        }
+      });
+    }
+  }
   function SaveNewTopGoals() {
     var newgoalsinput = document.querySelectorAll("textarea.newtopgoals");
     var validated = hasFilledNewGoals('newtopgoals');
@@ -1303,7 +1376,20 @@ if ($dailyLifeGoals) {
     }
     return filled;
   }
+  function CreateDailyImportantGoal() {
+    $wrapper = $('#new-important-goal-creation-container');
+    var validated = hasFilledNewGoals('newimpgoals');
+    console.log('validated', validated);
+    $newgoalsinput = document.querySelectorAll("textarea.newimpgoals");
+    if (validated && remainingImportantGoals > 0) {
+      $wrapper.append("<div class='form-group'><textarea placeholder='Write goal details' class='form-input form-control newimpgoals' name='newimpgoals[]'/></textarea></div>");
+      remainingImportantGoals--;
+      $('#save-new-important-goals-btn').show();
 
+    } else {
+      showToast('error', 'You can only add maximum 1 goals.');
+    }
+  }
   function CreateDailyTopGoal() {
     $wrapper = $('#new-top-goal-creation-container');
     var validated = hasFilledNewGoals('newtopgoals');
@@ -1425,7 +1511,11 @@ if ($dailyLifeGoals) {
     console.log('goalId', goalId, sectionType);
     var goalTextElem;
     var actionName = '';
-    if (sectionType == 'top') {
+    if (sectionType == 'important') {
+      var goalTextElem = $('#importantGoalText-' + goalId);
+      actionName = 'UpdateDailyImportantGoal';
+    }
+    else if (sectionType == 'top') {
       var goalTextElem = $('#topGoalText-' + goalId);
       actionName = 'UpdateDailyTopGoal';
     } else {
@@ -1542,6 +1632,15 @@ if ($dailyLifeGoals) {
     }
     $('#top-goals-area').toggleClass('edit');
   });
+  $('#impEditBtn').click(function(e) {
+    if ($(this).text() == 'Editar') {
+      $(this).text('Cancelar');
+    } else {
+      $(this).text('Editar');
+    }
+    $('#important-goals-area').toggleClass('edit');
+  });
+  
   $('#editBtn2').click(function(e) {
     if ($(this).text() == 'Editar') {
       $(this).text('Cancelar');
@@ -1558,7 +1657,38 @@ if ($dailyLifeGoals) {
     $('#life-goals-area').toggleClass('edit');
 
   });
+  $(document).on('change', 'input.input-importantgoals', function() {
+    var checked = $(this).is(':checked');
+    var goalId = $(this).val();
+    var goalText = $("#importantGoalText-" + goalId).text();
+    console.log('goalId', goalId, checked, goalText);
+    var achieved = 0;
+    if (checked) achieved = 1;
+    $.ajax({
+      url: SITE_URL + "/users/ajax/ajax.php",
+      type: "POST",
+      data: {
+        UpdateDailyGoal: 'UpdateDailyImportantGoal',
+        currentDate: currentDate,
+        goalText: goalText,
+        achieved: achieved,
+        goalId: goalId,
+      },
+      success: function(data) {
+        console.log('data', data);
+        if (data == 'Update') {
+          $('#show').css('display', 'block');
+          $('#error_success_msg_verification').css('color', '#000000');
+          $('#error_success_msg_verification').css('background-color', '#ddffff');
+          $('#success_msg_verification_text').html('Update Successfully');
+          setTimeout(() => {
+            $('#show').css('display', 'none');
+          }, 3000);
 
+        }
+      }
+    });
+  });
   $(document).on('change', 'input.input-topgoals', function() {
     var checked = $(this).is(':checked');
     var goalId = $(this).val();

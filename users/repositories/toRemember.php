@@ -62,11 +62,15 @@ function updateToRemember($userId, $toRememberId, $toRemember)
     return $common->update('to_remember', ['to_remember' => $toRemember], 'id = :id AND user_id = :user_id', ['id' => $toRememberId, 'user_id' => $userId]);
 }
 
-function updateToRememberWithTags($toRememberId, $toRemember, $newToRememberTags, $userId)
+function updateToRememberWithTags($toRememberId, $toRemember, $newToRememberTags, $userId,$bgColor='')
 {
     global $common;
-
-    $common->update('to_remember', ['to_remember' => $toRemember], 'id = :id', ['id' => $toRememberId]);
+    if(!empty($bgColor)){
+        $common->update('to_remember', ['to_remember' => $toRemember,'color'=>$bgColor], 'id = :id', ['id' => $toRememberId]);
+    }else{
+        $common->update('to_remember', ['to_remember' => $toRemember], 'id = :id', ['id' => $toRememberId]);
+    }
+   
     syncToRememberTags($toRememberId, $userId, $newToRememberTags);
 }
 

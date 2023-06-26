@@ -18,6 +18,7 @@ if (isset($_POST['update_daily_victory'])) {
     }
 
     $dailyVictory = trim($_POST['daily_victory']);
+    $bgColor = trim($_POST['bg_color']);
     if (empty($dailyVictory)) {
         Session::set('error', 'Daily victory can not be empty.');
         header("Location: $currentUrl");
@@ -25,7 +26,7 @@ if (isset($_POST['update_daily_victory'])) {
     }
 
     try {
-        updateVictoryWithTags($_POST['victory_id'], $dailyVictory, $tags, $user_infos['id']);
+        updateVictoryWithTags($_POST['victory_id'], $dailyVictory, $tags, $user_infos['id'],$bgColor);
         setSuccess('Daily victory updated successfully');
     } catch (Exception $e) {
         setError();
@@ -76,6 +77,10 @@ function getTDClass($day, $monthlyDailyVictory): string
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
 
 <style>
+    .ck-editor .ck.ck-editor__main{
+            max-height:300px;
+            overflow: scroll;
+    }
     @media screen and (max-width: 480px) {
 
         .tag-text {
@@ -95,11 +100,15 @@ function getTDClass($day, $monthlyDailyVictory): string
         }
 
         .modal-content {
-            margin: 35% auto;
+            margin: 5% auto;
         }
 
         .table {
             width: 200%;
+        }
+        .ck-editor .ck.ck-editor__main{
+            max-height:200px;
+            overflow: scroll;
         }
     }
 
@@ -113,7 +122,7 @@ function getTDClass($day, $monthlyDailyVictory): string
         }
 
         .modal-content {
-            margin: 25% auto;
+            margin: 10% auto;
         }
 
         .table {
@@ -127,7 +136,7 @@ function getTDClass($day, $monthlyDailyVictory): string
         }
 
         .modal-content {
-            margin: 15% auto;
+            margin: 10% auto;
             width: 75%;
         }
 
@@ -289,8 +298,9 @@ function getTDClass($day, $monthlyDailyVictory): string
                         } else {
                             if ($day <= $numOfDays) {
                                 $monthlyDailyVictory = $monthlyDailyVictories[date('Y-m-d', strtotime("{$year}-{$month}-{$day}"))] ?? null;
+                                $bgColor=empty($monthlyDailyVictory['color'])? '#ffffff':trim($monthlyDailyVictory['color']);
                                 echo "<td 
-                                style='height: 80px; overflow:hidden;' class='" . getTDClass($day, $monthlyVictory) . "' " . ($monthlyDailyVictory ? "onClick='openModal(modal{$monthlyDailyVictory['id']}, event)'" : "") . ">
+                                style='height: 80px; overflow:hidden; background-color:".$bgColor."' class='" . getTDClass($day, $monthlyVictory) . "' " . ($monthlyDailyVictory ? "onClick='openModal(modal{$monthlyDailyVictory['id']}, event)'" : "") . ">
                                     <p class='text-end date-text'>{$day}</p>";
                                 if ($monthlyDailyVictory) {
                                     echo '<div>';
@@ -317,6 +327,10 @@ function getTDClass($day, $monthlyDailyVictory): string
                                         echo "<input class='form-control my-2 mx-0 mx-lg-2' type='text' name='tags[]'>";
                                     }
                                     echo '</div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <p class="ms-0 ms-lg-2">Color: </p>
+                                                        <input type="color" class="my-2 mx-0 mx-lg-2" name="bg_color" value="'.$bgColor.'">
                                                     </div>
                                                     <div class="d-flex justify-content-end">
                                                         <button name="update_daily_victory" type="submit" class="btn btn-primary mx-2 mt-3">Update</button>

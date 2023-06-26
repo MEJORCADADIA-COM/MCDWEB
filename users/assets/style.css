@@ -53,7 +53,7 @@ figure {
 
 .admin-dashbord .navbar {
   background-color: #1b2431;
-  border-bottom: 1px solid #2c394a;
+  border-bottom: none;
   padding-left: 10px;
 }
 
@@ -86,7 +86,7 @@ figure {
 
 .projects {
   background-color: #273142;
-  border: 1px solid #313d4f;
+  border: none;
   overflow-x: auto;
   width: 100%;
 }

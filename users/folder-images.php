@@ -43,7 +43,7 @@ $selectedMonth = !empty($_REQUEST['month']) ? (int)$_REQUEST['month'] : $current
 $user_id = Session::get('user_id');
 
 
-$dailyV7Files = $common->get('uploaded_files', 'user_id = :user_id AND type = :type', ['user_id' => $user_id, 'type' => $type],[],'created_at','DESC');
+$dailyV7Files = $common->get('user_folder_photos', 'user_id = :user_id', ['user_id' => $user_id],[],'created_at','DESC');
 
 $selectedDate = $currentDate;
 
@@ -94,16 +94,16 @@ $isPastDate=false;
 
 <?php require_once 'inc/secondaryNav.php'; ?>
 
-  <div class="projects" style="background-color: #ed008c;">
+  <div class="projects my-5" style="background-color: #ed008c;">
     <div class="projects-inner">
       <header class="projects-header">
         
         
         <div class="row">
           <div class="col-12" style="text-align:center;">
-          <a  class="btn btn-warning btn-sm pull-left" href="<?=SITE_URL;?>/users/dailygoals.php?date=<?=$currentDate;?>">Back</a>
+         
             <h2 style="text-transform: capitalize;">
-            Gallery/Images
+            Imagenes de Exito
             </h2>
           </div>
           
@@ -124,7 +124,7 @@ $isPastDate=false;
         $dateObj = DateTime::createFromFormat("d/m/Y", $string);
         ?>
                     <div class="p-1 bd-highlight v7-media-box"  data-file="<?=$file['id'];?>" style="position:relative;">
-                            <?php if($file['type']=='image'): ?>
+                            
                                 <a href="<?=$file['url'];?>" data-index="<?=$key;?>" id="lightbox-thumb-item-<?=$key;?>" data-caption="<?= utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp())); ?>" > 
                                 <img class="img-fluid rounded-3 w-100 shadow-1-strong"  src="<?=$file['thumb'];?>">
                               </a>
@@ -141,7 +141,7 @@ $isPastDate=false;
                           </div>
                           
                         </div>
-                             <?php endif; ?>
+                             
                     </div>
                     <?php endforeach;?>
                 </div>
@@ -206,7 +206,7 @@ $(document).on('click','.file-actions .file_delete',function(e){
         url: SITE_URL + "/users/ajax/ajax.php",
         type: "POST",
         data: {
-          action: 'DeleteV7MediaFile',
+          action: 'DeleteUserFolderImage',
           currentDate: currentDate,
           id: fileId,
         },

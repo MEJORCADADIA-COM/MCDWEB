@@ -359,6 +359,7 @@ for ($day = 1; $day <= $day_count; $day++, $str++) {
 
 ?>
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 my-3 ">
+<?php require_once 'inc/secondaryNav.php'; ?>
   <div class="projects mb-4" style="background-color: #ed008c;">
     <div class="projects-inner" style="padding:10px 20px;">
       <header class="projects-header">

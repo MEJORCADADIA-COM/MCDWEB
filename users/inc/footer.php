@@ -172,7 +172,7 @@ require_once "../inc/inspirationQuote.php";
                     <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/biggestVictories.php">Mis Mayores Victorias</a></li>
                     <li> <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/inspirations.php">MejorInspiration</a></li>
                     <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/capsules.php">MejorCapsule</a></li>
-                   
+                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/folder-images.php">Imagenes de Exito</a></li>
                 </ul>
             </div>
         </div>

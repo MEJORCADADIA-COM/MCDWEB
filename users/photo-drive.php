@@ -1,10 +1,10 @@
 <?php
 /*Just for your server-side code*/
 // header('Content-Type: text/html; charset=ISO-8859-1');
+$folder_id = isset($_GET['folder_id'])? intval($_GET['folder_id']):0;
 ?>
 <?php require_once "inc/header.php"; ?>
 <?php
-
 $timezoneOffset = empty($_SESSION['timezoneOffset']) ? '' : $_SESSION['timezoneOffset'];
 $time = time();
 if (!empty($timezoneOffset)) {
@@ -22,7 +22,7 @@ if (!empty($timezoneOffset)) {
 
 
 $today = date("Y-m-d", $time);
-$type = isset($_GET['type'])? trim($_GET['type']):'image';
+
 
 $date = !empty($_REQUEST['date']) ? $_REQUEST['date'] : '';
 $currentDate = empty($date) ? $today : $date;
@@ -33,16 +33,22 @@ $currentWeekNumber = date('W', strtotime($currentDate));
 $selectedYear = !empty($_REQUEST['year']) ? (int)$_REQUEST['year'] : $currentYear;
 $selectedWeekNumber = !empty($_REQUEST['week']) ? (int)$_REQUEST['week'] : $currentWeekNumber;
 $selectedMonth = !empty($_REQUEST['month']) ? (int)$_REQUEST['month'] : $currentMonth;
-
-
 ?>
-
 <?php
 
 $user_id = Session::get('user_id');
-
-$dreamWallImages = $common->get('dreamwall_images', 'user_id = :user_id', ['user_id' => $user_id],[],'created_at','DESC');
-
+$folderImages=[];
+$userFolders=[];
+$selectedFolder=[];
+if(!empty($folder_id)){
+  $folderImages = $common->get('user_folder_photos', 'user_id = :user_id AND folder_id=:folder_id', ['user_id' => $user_id,'folder_id'=>$folder_id],[],'created_at','DESC');
+  $userFolders = $common->get('user_photo_folders', 'user_id = :user_id AND id=:folder_id', ['user_id' => $user_id,'folder_id'=>$folder_id],[],'created_at','DESC');
+  if(!empty($userFolders)){
+    $selectedFolder=$userFolders[0];
+  }
+}else{
+  $userFolders = $common->get('user_photo_folders', 'user_id = :user_id', ['user_id' => $user_id],[],'created_at','DESC');
+}
 
 $selectedDate = $currentDate;
 
@@ -65,6 +71,8 @@ $isPastDate=false;
 <script>
   var SITE_URL = '<?= SITE_URL; ?>';
   var currentDate = '<?= $currentDate; ?>';
+  var folderId = '<?= $folder_id; ?>';
+  
 </script>
 <link rel="stylesheet" href="<?=SITE_URL; ?>/users/assets/uikit-lightbox.css" />
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
@@ -76,10 +84,26 @@ $isPastDate=false;
   .modal-header .modal-title{
     color:#FFF;
   }
+  .v7-media-box-folder{
+    width:160px;
+    position: relative;
+    background:#FFF;
+    margin-right:5px;
+    border-radius:10px;
+    text-align:center;
+    margin-bottom:15px;
+  }
   .v7-media-box{
     width:114px;
     position: relative;
   }
+  .v7-media-box-folder img{
+    max-height:48px;
+  }
+  .v7-media-box-folder a{
+    color:#000; text-decoration:none;
+  }
+
   .file-actions{
     position:absolute;
     top:10px; right:10px;
@@ -147,7 +171,6 @@ $isPastDate=false;
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10">
 
 <?php require_once 'inc/secondaryNav.php'; ?>
-
   <div class="projects my-5" style="background-color: #ed008c;">
     <div class="projects-inner">
       <header class="projects-header">
@@ -155,9 +178,13 @@ $isPastDate=false;
         
         <div class="row">
           <div class="col-12" style="text-align:center;">
+          <?php  if(!empty($selectedFolder)): ?>
+            <a class="btn btn-warning btn-sm pull-left" href="<?=SITE_URL;?>/users/photo-drive.php">Back</a>
+          <?php endif; ?>
+         
             <h2 style="text-transform: capitalize;">
-            My DreamWall
             
+            <?=empty($selectedFolder)? 'Imagenes de Exito':$selectedFolder['name']; ?>
             </h2>
           </div>
           
@@ -168,11 +195,10 @@ $isPastDate=false;
        
        
            
-          
-                
+              <?php if(!empty($folder_id)): ?>
                 <div class="d-flex flex-wrap bd-highlight mb-3" id="gallary-items" uk-lightbox="animation: slide">
                     
-                    <?php  $i=0; foreach ($dreamWallImages as $key => $file):  ?>
+                    <?php  $i=0; foreach ($folderImages as $key => $file):  ?>
                       <?php setlocale(LC_ALL, "es_ES");
         $string = date('d/m/Y', strtotime($file['created_at']));
         $dateObj = DateTime::createFromFormat("d/m/Y", $string);
@@ -202,9 +228,25 @@ $isPastDate=false;
                         <div class="upload-box-image upload-file-box" data-type="image">                        
                           <input type="file" name="newfileAdd" id="newfileAdd" class="inputfile" multiple="true" accept="image/png, image/gif, image/jpeg"  />
                           <label for="newfileAdd"><i class="fa fa-camera"></i></label>
+
                         </div>
                     </div>
                 </div>
+              <?php else: ?>
+                <div class="observe-container" id="observe-container"></div>
+                <div class="d-flex flex-wrap bd-highlight mb-3 item-container">
+                    <div class="v7-media-box-folder" style="order:0; background:#b5e4bf;">                        
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#FolderModal">                        
+                         <div class="my-2"><img src="<?= SITE_URL; ?>/assets/images/create-folder-48.png"></div>
+                         <div class="my-2">Create New</div>
+                        </a>
+                    </div>
+                    
+                </div>
+
+              <?php endif; ?>
+                
+                
             
         
        </div>
@@ -218,7 +260,27 @@ $isPastDate=false;
 </main>
 <!-- Modal -->
 
-
+<div class="modal fade p-0" id="FolderModal" tabindex="-1" aria-labelledby="FolderModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen-md-down modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content bg-dark">
+      <div class="modal-header border-0">
+        <h3 class="text-white">Crea Carpeta  </h3>      
+        <button type="button" class="btn-close bg-white border border-warning" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="min-height:350px;">  
+           <form method="">
+              <div class="form-group">
+                <input type="text" id="form_folder_name" class="form-control folder_name" placeholder="Nombre de la Carpeta">
+                <input type="hidden" id="form_folder_id" class="form-control folder_id" value="0">
+              </div>
+              <div class="form-group mt-3">
+                <button type="button" id="createFolderBtn" class="btn btn-info">Subir</button>
+              </div>
+           </form>           
+        
+      </div>
+    </div>
+  </div>
 
 
 
@@ -231,7 +293,85 @@ $isPastDate=false;
   </div>
 </div>
 <script>
+   const itemContainer = document.querySelector(".item-container");
+  
+   
+   function createElmFolder(folder){
+    
+    const classesToAdd = ['v7-media-box-folder'];
+                  const item = document.createElement("div");
+                  item.dataset.file = folder.id;
+                  folder_name=folder.name;
+                  if(folder_name.length>11){
+                    folder_name=folder_name.substring(0,11)+"...";
+                  }
+                  item.innerHTML =
+                     `<a href="${SITE_URL}/users/photo-drive.php?folder_id=${folder.id}">
+                        <div class="my-3"><img src="${folder.icon}"></div>
+                        <div class="my-2">${folder_name}(${folder.count})</div>
+                     </a>
+                     <div class="file-actions">
+                          <div class="dropdown">
+                            <button class="btn btn-light btn-sm p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+</svg>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><div class="dropdown-item folder_delete" href="#">Delete</div></li>
+                            </ul>
+                          </div>
+                          
+                        </div>`
+                  item.classList.add(...classesToAdd);
+                  if(itemContainer){
+                    itemContainer.appendChild(item);
+                  }
+                  
+   }
+   function loadDriveFolders() {
+    const url = `<?= SITE_URL; ?>/users/ajax/ajax.php?action=get_user_photo_folders`;
+      fetch(url)
+         .then(res => res.json())
+         .then(data => {
+            const folders = data.data.folders;
+            folders.forEach(folder => {
+               
+              createElmFolder(folder);
+               
+            })
+         })
+   }
 
+   
+
+const foldersModal = document.getElementById('FolderModal');
+foldersModal.addEventListener('show.bs.modal', event => {
+  var button = event.relatedTarget
+  //var imgsrc=button.getAttribute('href');
+  console.log('imgsrc',button);
+  var modalBodyInput = foldersModal.querySelector('.modal-body input');
+
+});
+$(document).on('click','.file-actions .folder_delete',function(e){
+    console.log('de;ete');
+    e.preventDefault();
+    $parentElem=$(this).parents('.v7-media-box-folder');
+    let fileId=$parentElem.data('file');
+    $.ajax({
+        url: SITE_URL + "/users/ajax/ajax.php",
+        type: "POST",
+        data: {
+          action: 'DeleteUserFolder',
+          id: fileId,
+        },
+        success: function(data) {
+          console.log('data', data);
+          $parentElem.remove();
+        }
+      });
+    
+  });
 $(document).on('click','.file-actions .file_delete',function(e){
     console.log('de;ete');
     e.preventDefault();
@@ -241,7 +381,7 @@ $(document).on('click','.file-actions .file_delete',function(e){
         url: SITE_URL + "/users/ajax/ajax.php",
         type: "POST",
         data: {
-          action: 'DeleteDreamWallImage',
+          action: 'DeleteUserFolderImage',
           currentDate: currentDate,
           id: fileId,
         },
@@ -346,8 +486,9 @@ function showToast(type = 'success', message = '') {
   function paramsBuilder(uploaderFile) {
         let form = new FormData();
         form.append("file", uploaderFile.file);
-        form.append("action", 'UploadDreamWallImage');
+        form.append("action", 'UploadFolderImage');
         form.append("hash", uploaderFile.id);
+        form.append("folder_id", folderId);
        //form.append("date", currentDate);        
         return form;
   }
@@ -420,16 +561,51 @@ function showToast(type = 'success', message = '') {
   
   var inputs = document.querySelectorAll( '.inputfile' );
   Array.prototype.forEach.call( inputs, function( input )  {
-    input.addEventListener( 'change', function( e ){    
-     
-      handleFileUpload(this.files)
+    input.addEventListener( 'change', function( e ){
+      var alreadyUploadedFiles=$('.v7-media-box').length;
+      var filesCount=alreadyUploadedFiles+this.files.length;        
+      if(filesCount<22){
+        handleFileUpload(this.files)
+      }else{
+        alert('You can upload maximun 20 images.');
+      }
+      
       
     });
   });
-
+  
 
   $(function() {
-   
+    loadDriveFolders();
+    $(document).on('click','#createFolderBtn',function(e){
+      console.log('created');
+      var folderName= foldersModal.querySelector('.modal-body input.folder_name').value;
+      var folderId= foldersModal.querySelector('.modal-body input.folder_id').value;
+      if(folderName!=''){
+        $.ajax({
+          url: SITE_URL + "/users/ajax/ajax.php",
+          type: "POST",
+          data: {
+            action: 'CreatePhotoFolder',
+            folder_name: folderName,
+            folder_id: folderId,
+          },
+          success: function(data) {
+            console.log('data', data);
+            var obj=JSON.parse(data);
+            $('#FolderModal').modal('hide');
+            if(obj.new){
+              createElmFolder(obj.folder);
+              
+            }
+            
+          }
+        });
+      }else{
+
+      }
+      
+    });
   });
 </script>
 <script type="application/javascript">

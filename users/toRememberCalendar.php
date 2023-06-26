@@ -18,6 +18,7 @@ if (isset($_POST['update_daily_to_remember'])) {
     }
 
     $dailyToRemember = trim($_POST['daily_to_remember']);
+    $bgColor = trim($_POST['bg_color']);
     if (empty($dailyToRemember)) {
         Session::set('error', 'To remember can not be empty.');
         header("Location: $currentUrl");
@@ -25,7 +26,8 @@ if (isset($_POST['update_daily_to_remember'])) {
     }
 
     try {
-        updateToRememberWithTags($_POST['to_remember_id'], $dailyToRemember, $tags, $user_infos['id']);
+        updateToRememberWithTags($_POST['to_remember_id'], $dailyToRemember, $tags, $user_infos['id'],$bgColor);
+
         setSuccess('To remember updated successfully');
     } catch (Exception $e) {
         setError();
@@ -78,6 +80,10 @@ function getTDClass($day, $monthlyDailyToRemember): string
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
 
 <style>
+    .ck-editor .ck.ck-editor__main{
+            max-height:300px;
+            overflow: scroll;
+    }
     @media screen and (max-width: 480px) {
 
         .tag-text {
@@ -97,11 +103,15 @@ function getTDClass($day, $monthlyDailyToRemember): string
         }
 
         .modal-content {
-            margin: 35% auto;
+            margin: 5% auto;
         }
 
         .table {
             width: 200%;
+        }
+        .ck-editor .ck.ck-editor__main{
+            max-height:200px;
+            overflow: scroll;
         }
     }
 
@@ -115,7 +125,7 @@ function getTDClass($day, $monthlyDailyToRemember): string
         }
 
         .modal-content {
-            margin: 25% auto;
+            margin: 5% auto;
         }
 
         .table {
@@ -129,7 +139,7 @@ function getTDClass($day, $monthlyDailyToRemember): string
         }
 
         .modal-content {
-            margin: 15% auto;
+            margin: 5% auto;
             width: 75%;
         }
 
@@ -251,6 +261,9 @@ function getTDClass($day, $monthlyDailyToRemember): string
     .target-date {
         outline: 2px solid #0D6EFD;
     }
+    .modal-form .editor-textarea{
+        max-height:200px;
+    }
 </style>
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 text-white">
     <div class="projects min-vh-100 px-0 px-lg-3 pb-3" style="background-color: #ed008c;">
@@ -290,8 +303,9 @@ function getTDClass($day, $monthlyDailyToRemember): string
                         } else {
                             if ($day <= $numOfDays) {
                                 $monthlyDailyToRemember = $monthlyDailyToRemembers[date('Y-m-d', strtotime("{$year}-{$month}-{$day}"))] ?? null;
+                                $bgColor=empty($monthlyDailyToRemember['color'])? '#ffffff':trim($monthlyDailyToRemember['color']);
                                 echo "<td  
-                                style='height: 80px;overflow:hidden;' class='" . getTDClass($day, $monthlyDailyToRemember) . "' " .
+                                style='height: 80px;overflow:hidden; background-color:".$bgColor."' class='" . getTDClass($day, $monthlyDailyToRemember) . "' " .
                                     ($monthlyDailyToRemember ? "onClick='openModal(modal{$monthlyDailyToRemember['id']}, event)'" : "") . ">
                                     <p class='text-end date-text'>{$day}</p>";
                                 if ($monthlyDailyToRemember) {
@@ -300,11 +314,11 @@ function getTDClass($day, $monthlyDailyToRemember): string
                                         echo "<p class='text-start tag-text'>{$tag['tag']}</p>";
                                     }
                                     echo '<div id="modal' . $monthlyDailyToRemember['id'] . '" class="modal close" onClick="closeModal(modal' . $monthlyDailyToRemember['id'] . ')">
-                                            <div class="modal-content">
+                                            <div class="modal-content" style="overflow-y: auto;">
                                                 <a onclick="closeModal(modal' . $monthlyDailyToRemember['id'] . ')" class="close mb-2">
                                                     <i class="fa fa-times close"></i>
                                                 </a>
-                                                <form action="" method="post">
+                                                <form action="" class="modal-form" method="post">
                                                     <input type="hidden" name="to_remember_id" value="' . $monthlyDailyToRemember['id'] . '" >
                                                     <textarea class="editor-textarea" name="daily_to_remember">' . $monthlyDailyToRemember["to_remember"] . '</textarea>
                                                     <div class="mt-3">
@@ -319,6 +333,10 @@ function getTDClass($day, $monthlyDailyToRemember): string
                                         echo "<input class='form-control my-2 mx-0 mx-lg-2' type='text' type='text' name='tags[]'>";
                                     }
                                     echo '</div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <p class="ms-0 ms-lg-2">Color: </p>
+                                                        <input type="color" class="my-2 mx-0 mx-lg-2" name="bg_color" value="'.$bgColor.'">
                                                     </div>
                                                     <div class="d-flex justify-content-end">
                                                         <button name="update_daily_to_remember" type="submit" class="btn btn-primary mx-2 mt-3">Update</button>
@@ -358,6 +376,7 @@ function getTDClass($day, $monthlyDailyToRemember): string
 
 </main>
 
+  </div>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script>
     document.addEventListener('alpine:init', () => {

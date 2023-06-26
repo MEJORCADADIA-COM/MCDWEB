@@ -219,6 +219,23 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['get_evolutions']) && $_G
     return response(['success' => true, 'data' => ['evolutions' => $evolutions, 'total_page' => $totalPage, 'current_page' => !empty($_GET['page']) ? (int)$_GET['page'] : 1]]);
 
 }
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['action']) && $_GET['action'] === 'get_user_photo_folders') {
+    $UserId = $user_id = Session::get('user_id');
+   
+    $userFolders = $common->get('user_photo_folders', 'user_id = :user_id', ['user_id' => $user_id],[],'created_at','DESC'); 
+    foreach($userFolders as $k=>$folder) {
+        $folder_photo = $common->get('user_folder_photos', 'user_id = :user_id AND folder_id=:folder_id', ['user_id' => $user_id,'folder_id'=>$folder['id']],[],'created_at','DESC'); 
+        $userFolders[$k]['count']=count($folder_photo);
+        if(!empty($folder_photo)){
+            $userFolders[$k]['icon']=$folder_photo[0]['thumb'];
+        }else{
+            $userFolders[$k]['icon']=SITE_URL.'/assets/images/icons8-folder-48.svg';
+        }
+    }
+   
+    return response(['success' => true, 'data' => ['folders' => $userFolders]]);
+
+}
 if (isset($_POST['LetterApplicationCheck']) && ($_POST['LetterApplicationCheck'] == 'LetterApplicationCheck')) {
     $LetterApplication = $format->validation($_POST['LetterApplication']);
     if (isset($LetterApplication)) {
@@ -517,12 +534,7 @@ if (isset($_POST['UpdateDailyLifeGoalChecked']) && ($_POST['UpdateDailyLifeGoalC
 if (isset($_POST['UpdateDailyGoal']) && ($_POST['UpdateDailyGoal'] == 'UpdateDailyLifeGoal')) {
 
     $user_id = Session::get('user_id');
-    if (!$user_id) {
-        $rememberCookieData = RememberCookie::getRememberCookieData();
-        if ($rememberCookieData) {
-            $user_id = $rememberCookieData[RememberCookie::ID];
-        }
-    }
+    
     $achieved = isset($_POST['achieved']) ? $_POST['achieved'] : 0;
     $edit = isset($_POST['edit']) ? $_POST['edit'] : 0;
     $goalText = empty($_POST['goalText']) ? '' : $_POST['goalText'];
@@ -609,17 +621,45 @@ if (isset($_POST['UpdateDailySuperDias']) && ($_POST['UpdateDailySuperDias'] == 
 
 
 }
+if (isset($_POST['UpdateDailyGoal']) && ($_POST['UpdateDailyGoal'] == 'UpdateDailyImportantGoal')) {
 
+
+    $user_id = Session::get('user_id');
+    
+    $achieved = isset($_POST['achieved']) ? $_POST['achieved'] : 0;
+    $goalText = empty($_POST['goalText']) ? '' : $_POST['goalText'];
+    $currentDate = isset($_POST['currentDate']) ? $_POST['currentDate'] : date('Y-m-d');
+    $goalId = isset($_POST['goalId']) ? (int)$_POST['goalId'] : 0;
+
+    if (!empty($goalId)) {
+        $common->update('daily_important_goals', ['goal' => $goalText, 'achieved' => $achieved], 'id = :id', ['id' => $goalId]);
+        echo 'Updated';
+    } else {
+        if (!empty($goalText)) {
+
+            //pullPreviousGoals($user_id,$type,$startDate,$endDate);    
+            $row = $common->first('daily_important_goals', 'goal = :goal_text AND user_id = :user_id AND created_at = :created_at', [
+                'goal_text' => $goalText,
+                'user_id' => $user_id,
+                'created_at' => $currentDate
+            ]);
+
+            if ($row) {
+                $common->update('daily_important_goals', ['achieved' => $achieved], 'id = :id', ['id' => $row['id']]);
+            } else {
+                $common->insert('daily_important_goals', ['user_id' => $user_id, 'goal' => $goalText, 'created_at' => $currentDate]);
+            }
+        }
+        echo 'Update';
+    }
+
+
+}
 if (isset($_POST['UpdateDailyGoal']) && ($_POST['UpdateDailyGoal'] == 'UpdateDailyTopGoal')) {
 
 
     $user_id = Session::get('user_id');
-    if (!$user_id) {
-        $rememberCookieData = RememberCookie::getRememberCookieData();
-        if ($rememberCookieData) {
-            $user_id = $rememberCookieData[RememberCookie::ID];
-        }
-    }
+    
     $achieved = isset($_POST['achieved']) ? $_POST['achieved'] : 0;
     $goalText = empty($_POST['goalText']) ? '' : $_POST['goalText'];
     $currentDate = isset($_POST['currentDate']) ? $_POST['currentDate'] : date('Y-m-d');
@@ -869,12 +909,7 @@ if (isset($_POST['DeleteDailyBiggestVictories']) && ($_POST['DeleteDailyBiggestV
 
 if (isset($_POST['DeleteDailyGoals']) && ($_POST['DeleteDailyGoals'] == 'DeleteDailyGoals')) {
     $user_id = Session::get('user_id');
-    if (!$user_id) {
-        $rememberCookieData = RememberCookie::getRememberCookieData();
-        if ($rememberCookieData) {
-            $user_id = $rememberCookieData[RememberCookie::ID];
-        }
-    }
+    
     $goalIds = isset($_POST['goalIds']) ? $_POST['goalIds'] : [];
     $type = $_POST['type'];
     $currentDate = isset($_POST['currentDate']) ? $_POST['currentDate'] : date('Y-m-d h:i:s');
@@ -886,6 +921,9 @@ if (isset($_POST['DeleteDailyGoals']) && ($_POST['DeleteDailyGoals'] == 'DeleteD
             $placeholders = array_fill(0, count($goalIds), '?');
             $common->delete("dailylifegoals", "id IN(" . implode(",", $placeholders) . ")", $goalIds);
             $common->delete("dailylifegoals_marked", "goal_id IN(" . implode(",", $placeholders) . ")", $goalIds);
+        }elseif ($type == 'important') {
+            $placeholders = array_fill(0, count($goalIds), '?');
+            $common->delete("daily_important_goals", "id IN(" . implode(",", $placeholders) . ")", $goalIds);
         }
     }
     echo 'Deleted';
@@ -1066,6 +1104,42 @@ if (isset($_POST['action']) && ($_POST['action'] == 'createNotes')) {
         $resArr['new'] = false;
         $resArr['message'] = "updated successfully";
         $resArr['success'] = true;
+
+    }    
+    
+    echo json_encode($resArr);
+
+
+}
+
+if (isset($_POST['action']) && ($_POST['action'] == 'CreatePhotoFolder')) {
+    $user_id = Session::get('user_id');    
+    $folder_name = $format->validation($_POST['folder_name']);
+    $folder_id=isset($_POST['folder_id'])? $_POST['folder_id']:0;    
+    $resArr = ['success' => false, 'new'=>true, 'folder_id'=>$folder_id,'folder_name' => $folder_name, 'message' => ""];
+    if(empty($folder_id)){
+        $common->insert('user_photo_folders', [
+            'user_id' => $user_id,
+            'name' => $folder_name
+        ]);
+        $folder_id = $common->insertId();
+        $resArr['success'] = true;
+        $resArr['message'] = "created successfully";
+        $resArr['folder'] = ['id'=>$folder_id,'name'=>$folder_name,'icon'=>SITE_URL.'/assets/images/icons8-folder-48.svg','count'=>0];        
+        $resArr['new'] = true;
+    }else{
+        $common->update(
+            table: "user_photo_folders",
+            data: ['name' => $folder_name],
+            cond: 'WHERE user_id = :user_id AND id = :id',
+            params: ['user_id' => $user_id, 'id' => $folder_id]
+        );
+        $resArr['new'] = false;
+        $resArr['message'] = "updated successfully";
+        $resArr['success'] = true;
+        $folder_photo = $common->get('user_folder_photos', 'user_id = :user_id AND folder_id=:folder_id', ['user_id' => $user_id,'folder_id'=>$folder_id],[],'created_at','DESC'); 
+  
+        $resArr['folder'] = ['id'=>$folder_id,'name'=>$folder_name,'icon'=>SITE_URL.'/assets/images/icons8-folder-48.svg','count'=>count($folder_photo)];  
 
     }    
     
@@ -1342,7 +1416,24 @@ if (isset($_POST['SaveNewDailySuperDias']) && ($_POST['SaveNewDailySuperDias'] =
     'date'=>utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp()))]
     );
 }
+if (isset($_POST['SaveNewDailyImportantGoals']) && ($_POST['SaveNewDailyImportantGoals'] == 'SaveNewDailyImportantGoals')) {
+    $user_id = Session::get('user_id');
+    
+    $goals = isset($_POST['goals']) ? $_POST['goals'] : [];
+    $currentDate = isset($_POST['currentDate']) ? $_POST['currentDate'] : date('Y-m-d');
+    $table_name = 'daily_important_goals';
+    $addedGoals = [];
+    //pullPreviousGoals($user_id,$type,$startDate,$endDate);
+    foreach ($goals as $key => $goal) {
 
+        if (!empty($goal)) {
+            $common->insert($table_name, ['user_id' => $user_id, 'goal' => $goal, 'created_at' => $currentDate]);
+            $id = $common->insertId();
+            $addedGoals[$id] = $goal;
+        }
+    }
+    echo json_encode(['success' => true, 'goals' => $addedGoals]);
+}
 if (isset($_POST['SaveNewDailyTopGoals']) && ($_POST['SaveNewDailyTopGoals'] == 'SaveNewDailyTopGoals')) {
     $user_id = Session::get('user_id');
     if (!$user_id) {
@@ -1691,6 +1782,27 @@ if (isset($_POST['action']) && ($_POST['action'] == 'DeleteV7MediaFile')) {
         echo 'Something is wrong!';
     }
 }
+
+if (isset($_POST['action']) && ($_POST['action'] == 'DeleteUserFolder')) {
+    if (isset($_POST['id'])) {
+        $id = $_POST['id'];
+        $app_delete = $common->delete("user_folder_photos", "folder_id = :id", ['id' => $id]);
+        $app_delete = $common->delete("user_photo_folders", "id = :id", ['id' => $id]);
+        echo 'Delete';
+    } else {
+        echo 'Something is wrong!';
+    }
+}
+
+if (isset($_POST['action']) && ($_POST['action'] == 'DeleteUserFolderImage')) {
+    if (isset($_POST['id'])) {
+        $id = $_POST['id'];
+        $app_delete = $common->delete("user_folder_photos", "id = :id", ['id' => $id]);
+        echo 'Delete';
+    } else {
+        echo 'Something is wrong!';
+    }
+}
 if (isset($_POST['action']) && ($_POST['action'] == 'DeleteDreamWallImage')) {
     if (isset($_POST['id'])) {
         $id = $_POST['id'];
@@ -1827,7 +1939,67 @@ function createThumbnail($src, $dest, $targetWidth, $targetHeight = null) {
    
     return $thumbImage;
 }
+if (isset($_POST['action']) && ($_POST['action'] == 'UploadFolderImage')) {
+    
+    $maxAllowed=20;
+    $hash = $format->validation($_POST['hash']);
+    $folder_id=$format->validation($_POST['folder_id']);
+    $user_id = Session::get('user_id');
+   
+    $resAr=['url'=>"",'success'=>false,'msg'=>'','hash'=>$hash];
+    $fileCounts = $common->count(
+        "user_folder_photos",
+        'user_id = :user_id AND folder_id=:folder_id',
+        ['user_id' => $user_id,'folder_id'=>$folder_id]
+    );
+    if($fileCounts<$maxAllowed){
+        $file_name=strtolower(basename($_FILES["file"]["name"])); 
+        $target_dir = "../uploads/photodrive/".$user_id."/";
+        if ( !is_dir( $target_dir ) ) {
+            mkdir( $target_dir,0777,true );       
+        }
+        $target_file = $target_dir . $file_name;
+        $target_thumb = $target_dir .$file_name.'_thumb.jpg';
+        $target_file_url=SITE_URL."/users/uploads/photodrive/".$user_id."/".$file_name;
+        $target_thumb_url=$target_file_url.'_thumb.jpg';
+        
+        $FileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        $resAr['file_type']=$FileType;
+        $check = getimagesize($_FILES["file"]["tmp_name"]);
+        $uploadOk=1;
+        if ($uploadOk == 0) {  
+         $resAr['msg']="Sorry, your file was not uploaded.";
+       } else {
+         if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) { 
+            $postData=[
+                'user_id' => $user_id,
+                'folder_id' => $folder_id,
+                'url' => $target_file_url,
+                'thumb' => $target_file_url
+            ];
+            try {
+                createThumbnail($target_file,$target_thumb, 300,300);
+                $postData['thumb']=$target_thumb_url;
 
+            }catch (ImagickException $e) {
+                $resAr['msg']=$e->getMessage();
+            }    
+            $file_insert = $common->insert("user_folder_photos", $postData);
+            $fileId = $common->insertId(); 
+            $resAr['thumb_url']=$target_thumb_url;           
+           $resAr['file_url']=$target_file_url;
+           $resAr['success']=true;
+           $resAr['id']=$fileId;
+         } else {
+             $resAr['msg']="Sorry, there was an error uploading your file.";
+           
+         }
+       }
+    }else{
+        $resAr['msg']="Maximum limit reached.";
+    }
+    echo  json_encode($resAr);
+}
 
 if (isset($_POST['action']) && ($_POST['action'] == 'UploadDreamWallImage')) {
     

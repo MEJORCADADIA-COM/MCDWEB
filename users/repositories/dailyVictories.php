@@ -65,11 +65,16 @@ function updateVictory($userId, $victoryId, $victory)
     return $common->update('daily_victories', ['daily_victory' => $victory], 'id = :id AND user_id = :user_id', ['id' => $victoryId, 'user_id' => $userId]);
 }
 
-function updateVictoryWithTags($victoryId, $dailyVictory, $newVictoryTags, $userId)
+function updateVictoryWithTags($victoryId, $dailyVictory, $newVictoryTags, $userId,$bgColor='')
 {
     global $common;
 
-    $common->update('daily_victories', ['daily_victory' => $dailyVictory], 'id = :id', ['id' => $victoryId]);
+    
+    if(!empty($bgColor)){
+        $common->update('daily_victories', ['daily_victory' => $dailyVictory,'color'=>$bgColor], 'id = :id', ['id' => $victoryId]);
+    }else{
+        $common->update('daily_victories', ['daily_victory' => $dailyVictory], 'id = :id', ['id' => $victoryId]);
+    }
     syncVictoryTags($victoryId, $userId, $newVictoryTags);
 }
 

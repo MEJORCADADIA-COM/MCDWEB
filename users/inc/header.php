@@ -524,7 +524,7 @@ if (Session::get('user_id') !== NULL) {
                 width:calc(100% - 286px);
             }
         }
-        .ck.ck-editor,.ck.ck-editor *{
+        .ck.ck-editor,. *{
             color:#000!important;
             font-size:1rem;
         }
@@ -619,6 +619,13 @@ if (Session::get('user_id') !== NULL) {
     border-color: rgba(0,0,0,0.2)
 }
 
+.secondray-navbar-menu .top-menu-items a{text-wrap:nowrap !important;}
+.secondray-navbar-menu .top-menu-items{
+    text-align:center;
+}
+.admin-dashbord {
+    background: #ed008c;
+}
 
     </style>
 </head>
@@ -645,6 +652,8 @@ if (Session::get('user_id') !== NULL) {
     </div>
   </div>
 </div>
+
+
     <!-- Alerts Start -->
     <?php if (Session::hasSuccess()) : ?>
         <div class="alert-timeout alert alert-success w-sm-100 w-md-50 mx-auto fixed-top" role="alert">
@@ -726,29 +735,29 @@ if (Session::get('user_id') !== NULL) {
                     <?php else: ?>  
                     
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?= SITE_URL; ?>">Home</a>
+                        <a class="nav-link active" aria-current="page" href="<?= SITE_URL; ?>"> <i class="fa fa-home" aria-hidden="true"></i> Home</a>
                     </li>
                     
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#menuMejorjournal" id="mejorjournalLinkItem" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="menuMejorjournal">MejorJournal</a>
+                        <a class="nav-link dropdown-toggle" href="#menuMejorjournal" id="mejorjournalLinkItem" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="menuMejorjournal"><i class="fa fa-tasks" aria-hidden="true"></i> ExitoTotal Journal</a>
                         <ul class="submenu list-unstyled fw-normal pb-1 small collapse hide pb-1 ms-3" id="menuMejorjournal" aria-labelledby="mejorjournalLinkItem">
-                        <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button">Victoria7</a> </li>
+                        <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button"> <i class="fa fa-diamond" aria-hidden="true"></i>  Victoria7</a> </li>
                             
                             <li class="nav-item">
                                 <a class="nav-link" href="cronovida.php" role="button">
-                                    CronoVida
+                                <i class="fa fa-clock-o" aria-hidden="true"></i> CronoVida
                                 </a>
                             </li>
-                            <li class="nav-item"><a class="nav-link" href="capsules.php" role="button">MejorCapsules</a> </li>
+                            <li class="nav-item"><a class="nav-link" href="capsules.php" role="button"><i class="fa fa-flask" aria-hidden="true"></i> MejorCapsules</a> </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="dailycommitments.php" role="button">
-                                    Guerrero Diario
+                                <i class="fa fa-hand-rock-o" aria-hidden="true"></i> Guerrero Diario
                                 </a>
                             </li>
 
                             <li class="nav-item">
                                 <a class="nav-link dropdown-toggle" href="#SuperObjetivos" id="navbarDropdownsupergoals" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="SuperObjetivos">
-                                    SuperObjetivos
+                                <i class="fa fa-bullseye" aria-hidden="true"></i> SuperObjetivos
                                 </a>
                                 <ul id="SuperObjetivos" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdownsupergoals" style="margin-left:1rem;">
                                     <li class="nav-item"><a class="nav-link <?= $goalType == 'weekly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php">Semanal</a></li>
@@ -781,57 +790,69 @@ if (Session::get('user_id') !== NULL) {
 
                             <li>
                                 <a class="nav-link dropdown-toggle" href="#superMemorias" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
-                                SuperVictorias
+                                <i class="fa fa-trophy" aria-hidden="true"></i> SuperVictorias
                                 </a>
                                 <ul id="superMemorias" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
                                     <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/dailyVictories.php">Mi Victoria Diaria</a></li>
                                     <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/toRemember.php">Eventos para Recordar</a></li>
                                     <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/biggestVictories.php">Mis Mayores Victorias</a></li>
                                     <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/superdias.php">SuperDias</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/photo-drive.php">Imagenes de Exito</a></li>
                                 </ul>
                             </li>
 
                             <li class="nav-item">
                                 <a class="nav-link dropdown-toggle" href="#dentletter" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
-                                    Cartas para la Eternidad
+                                <i class="fa fa-envelope-o" aria-hidden="true"></i> Cartas para la Eternidad
                                 </a>
                                 <ul id="dentletter" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
                                     <li class="nav-item"><a class="nav-link<?= $path == 'index.php' ? ' active' : ''; ?>" href="https://mejorcadadia.com/users/index.php" id="navbarDropdown">Cartas</a></li>
                                     <li class="nav-item"><a class="nav-link" href="https://mejorcadadia.com/users/notebook.php">Escribe Carta</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-images.php">Imagenes</a></li>
-                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=audio">Audios</a></li>
-                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=video">Videos</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link dropdown-toggle" href="#Imagenes" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
+                                <i class="fa fa-picture-o" aria-hidden="true"></i> Imagenes
+                                </a>
+                                <ul id="Imagenes" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/victory-images.php">Gallery</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/dream-wall.php">Dream wall</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/folder-images.php">Imagenes de Exito</a></li>
+                                </ul>
+                            </li>
+                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=audio">
+                                    <i class="fa fa-volume-up" aria-hidden="true"></i> Audios</a></li>
+                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=video">
+                                    <i class="fa fa-video-camera" aria-hidden="true"></i> Videos</a></li>
                                     
                             <li class="nav-item">
-                       <a class="nav-link" aria-current="page" href="mynotes.php">MejorNotes</a>
+                       <a class="nav-link" aria-current="page" href="mynotes.php"><i class="fa fa-sticky-note-o" aria-hidden="true"></i> MejorNotes</a>
                     </li>
                         </ul>
                     </li>
                     
                     <li class="nav-item">
-                        <a class="nav-link" href="https://blog.mejorcadadia.com">MejorBlog</a>
+                        <a class="nav-link" href="https://blog.mejorcadadia.com"><i class="fa fa-newspaper-o" aria-hidden="true"></i> MejorBlog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href=" <?= SITE_URL; ?>/users/inspirations.php">MejorInspiration</a>
+                        <a class="nav-link" href=" <?= SITE_URL; ?>/users/inspirations.php"><i class="fa fa-bar-chart" aria-hidden="true"></i> MejorInspiration</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">MejorCadaDía Chef</a>
+                        <a class="nav-link" href="#"><i class="fa fa-coffee" aria-hidden="true"></i> MejorCadaDía Chef</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">MejorCadaDía Hotel</a>
+                        <a class="nav-link" href="#"><i class="fa fa-bed" aria-hidden="true"></i> MejorCadaDía Hotel</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">MejorFest</a>
+                        <a class="nav-link" href="#"><i class="fa fa-fire" aria-hidden="true"></i> MejorFest</a>
                     </li>
                     
 
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= SITE_URL; ?>/users/profile.php">Perfil</a>
+                        <a class="nav-link" href="<?= SITE_URL; ?>/users/profile.php"><i class="fa fa-user-o" aria-hidden="true"></i> Perfil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= SITE_URL; ?>/users/logout.php" onclick="return confirm('Are you sure to logout?');">Salir</a>
+                        <a class="nav-link" href="<?= SITE_URL; ?>/users/logout.php" onclick="return confirm('Are you sure to logout?');"><i class="fa fa-power-off" aria-hidden="true"></i> Salir</a>
                     </li>
                     <?php endif; ?>  
                     <li class="text-center mt-3">           
@@ -898,31 +919,32 @@ if (Session::get('user_id') !== NULL) {
                             </li>  
                             <?php else: ?>
                                 <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="<?= SITE_URL; ?>">Home</a>
+                                <a class="nav-link active" aria-current="page" href="<?= SITE_URL; ?>"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
                                 </li>
                                 
                                 <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#menuMejorjournal" id="mejorjournalLinkItem" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="menuMejorjournal">MejorJournal</a>
+                                <a class="nav-link dropdown-toggle" href="#menuMejorjournal" id="mejorjournalLinkItem" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="menuMejorjournal"><i class="fa fa-tasks" aria-hidden="true"></i> ExitoTotal Journal</a>
                                 <ul class="submenu list-unstyled fw-normal pb-1 small collapse hide pb-1 ms-3" id="menuMejorjournal" aria-labelledby="mejorjournalLinkItem">
                         
                                 
-                                <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button">Victoria7</a> </li>
+                                <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button">
+                                <i class="fa fa-diamond" aria-hidden="true"></i> Victoria7</a> </li>
                                     
                                     <li class="nav-item">
                                         <a class="nav-link" href="cronovida.php" role="button">
-                                            CronoVida
+                                        <i class="fa fa-clock-o"></i> CronoVida
                                         </a>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" href="capsules.php" role="button">MejorCapsules</a> </li>
+                                    <li class="nav-item"><a class="nav-link" href="capsules.php" role="button"><i class="fa fa-flask"></i> MejorCapsules</a> </li>
                                     <li class="nav-item">
                                         <a class="nav-link" href="dailycommitments.php" role="button">
-                                            Guerrero Diario
+                                        <i class="fa fa-hand-rock-o"></i> Guerrero Diario
                                         </a>
                                     </li>
 
                                     <li class="nav-item">
                                         <a class="nav-link dropdown-toggle" href="#SuperObjetivos" id="navbarDropdownsupergoals" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="SuperObjetivos">
-                                            SuperObjetivos
+                                        <i class="fa fa-bullseye"></i> SuperObjetivos
                                         </a>
                                         <ul id="SuperObjetivos" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdownsupergoals" style="margin-left:1rem;">
                                             <li class="nav-item">
@@ -965,53 +987,63 @@ if (Session::get('user_id') !== NULL) {
 
                                     <li>
                                         <a class="nav-link dropdown-toggle" href="#superMemorias" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
-                                        SuperVictorias
+                                        <i class="fa fa-trophy"></i> SuperVictorias
                                         </a>
                                         <ul id="superMemorias" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
                                             <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/dailyVictories.php">Mi Victoria Diaria</a></li>
                                             <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/toRemember.php">Eventos para Recordar</a></li>
                                             <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/biggestVictories.php">Mis Mayores Victorias</a></li>
                                             <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/superdias.php">SuperDias</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/photo-drive.php">Imagenes de Exito</a></li>
                                         </ul>
                                     </li>
 
                                     <li class="nav-item">
                                         <a class="nav-link dropdown-toggle" href="#dentletter" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
-                                            Cartas para la Eternidad
+                                        <i class="fa fa-envelope-o"></i> Cartas para la Eternidad
                                         </a>
                                         <ul id="dentletter" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
                                             <li class="nav-item"><a class="nav-link <?= $path == 'index.php' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/index.php" id="navbarDropdown">Cartas</a></li>
                                             <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/notebook.php">Escribe Carta</a></li>
                                         </ul>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-images.php">Imagenes</a></li>
-                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=audio">Audios</a></li>
-                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=video">Videos</a></li>
                                     <li class="nav-item">
-                                    <a class="nav-link" aria-current="page" href="mynotes.php">MejorNotes</a>
+                                <a class="nav-link dropdown-toggle" href="#Imagenes" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
+                                <i class="fa fa-picture-o"></i> Imagenes
+                                </a>
+                                <ul id="Imagenes" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/victory-images.php">Gallery</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/dream-wall.php">Dream wall</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/folder-images.php">Imagenes de Exito</a></li>
+                                </ul>
+                            </li>
+                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=audio"><i class="fa fa-volume-up"></i> Audios</a></li>
+                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=video"><i class="fa fa-video-camera"></i> Videos</a></li>
+                                    <li class="nav-item">
+                                    <a class="nav-link" aria-current="page" href="mynotes.php"><i class="fa fa-sticky-note-o"></i> MejorNotes</a>
                                     </li>
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="https://blog.mejorcadadia.com">MejorBlog</a>
+                                <a class="nav-link" href="https://blog.mejorcadadia.com"><i class="fa fa-newspaper-o" aria-hidden="true"></i> MejorBlog</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= SITE_URL; ?>/users/inspirations.php">MejorInspiration</a>
+                                <a class="nav-link" href="<?= SITE_URL; ?>/users/inspirations.php"><i class="fa fa-bar-chart" aria-hidden="true"></i> MejorInspiration</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">MejorCadaDía Chef</a>
+                                <a class="nav-link" href="#"><i class="fa fa-coffee" aria-hidden="true"></i> MejorCadaDía Chef</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">MejorCadaDía Hotel</a>
+                                <a class="nav-link" href="#"><i class="fa fa-bed" aria-hidden="true"></i> MejorCadaDía Hotel</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">MejorFest</a>
+                                <a class="nav-link" href="#"><i class="fa fa-fire" aria-hidden="true"></i> MejorFest</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= SITE_URL; ?>/users/profile.php">Perfil</a>
+                                <a class="nav-link" href="<?= SITE_URL; ?>/users/profile.php"><i class="fa fa-user-o" aria-hidden="true"></i> Perfil</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= SITE_URL; ?>/users/logout.php" onclick="return confirm('Are you sure to logout?');">Salir</a>
+                                <a class="nav-link" href="<?= SITE_URL; ?>/users/logout.php" onclick="return confirm('Are you sure to logout?');"><i class="fa fa-power-off" aria-hidden="true"></i> Salir</a>
                             </li>  
                             <?php endif; ?>
                              
