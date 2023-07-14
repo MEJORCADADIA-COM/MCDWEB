@@ -79,6 +79,7 @@ $prevQuarterYear = '';
 
 $goals_heading = '';
 $evaluation_heading = '';
+$priority_heading='';
 if ($type == 'weekly') {
 
   $start_date = $week_array['week_start'];
@@ -86,22 +87,26 @@ if ($type == 'weekly') {
 
   $goals_heading = 'Objetivos y Prioridades esta Semana';
   $evaluation_heading = 'Evaluación/Progreso. Cosas para Mejorar';
+  $priority_heading='3-Acciones o Resultados Más Importantes esta Semana';
 } elseif ($type == 'monthly') {
   $start_date = $selectedYear . '-' . $selectedMonth . '-01';
   $end_date = date('Y-m-t', strtotime($start_date));
   $goals_heading = 'Objetivos y Prioridades ESTE Mes';
   $evaluation_heading = 'Evaluación/Progreso. Cosas para Mejorar';
+  $priority_heading='3-Acciones o Resultados Más Importantes este Mes:';
 } elseif ($type == 'yearly') {
   $start_date = $selectedYear . '-01-01';
   $end_date = $selectedYear . '-12-31';
   $goals_heading = 'Objetivos y Sueños este Año';
   $evaluation_heading = 'Evaluación/Progreso. Cosas para Mejorar';
+  $priority_heading='3-Acciones o Resultados Más Importantes este Año:';
 } elseif ($type == 'lifetime') {
   $start_date = '1900-01-01';
   $end_date = '2200-12-31';
   $goals_heading = 'Objetivos, Prioridades y Sueños para tu Vida';
   $evaluation_heading = 'Evaluación/Progreso. Cosas para Mejorar';
 } elseif ($type == 'quarterly') {
+  $priority_heading='3-Acciones o Resultados Más Importantes este Trimestre';
   $nextQuarterYear = $selectedYear;
   if ($selectedQuarter == 1) {
     $start_date = $selectedYear . '-01-01';
@@ -152,6 +157,11 @@ $goals = $common->get(
   'user_id = :user_id AND type = :type AND DATE(start_date) >= :start_date AND DATE(end_date) <= :end_date',
   ['user_id' => $user_id, 'type' => $type, 'start_date' => $start_date, 'end_date' => $end_date]
 );
+$priorityGoals = $common->get(
+  "supergoals_priorites",
+  'user_id = :user_id AND type = :type AND DATE(start_date) >= :start_date AND DATE(end_date) <= :end_date',
+  ['user_id' => $user_id, 'type' => $type, 'start_date' => $start_date, 'end_date' => $end_date]
+);
 $dreamWallImages = $common->get(
   "dreamwall_images",
   'user_id = :user_id',
@@ -187,6 +197,7 @@ $dreamWallImages = $common->get(
 //}
 
 $evaluation = '';
+$planning = '';
 $row = $common->first(
   "supergoals_evaluation",
   'user_id = :user_id AND type = :type AND start_date >= :start_date AND end_date <= :end_date',
@@ -194,6 +205,7 @@ $row = $common->first(
 );
 if ($row) {
   $evaluation = $row['description'];
+  $planning = $row['planning'];
 }
 
 ?>
@@ -201,9 +213,10 @@ if ($row) {
   var SITE_URL = '<?= SITE_URL; ?>';
   var goalType = '<?= $type; ?>';
   var goalCounts = '<?= count($goals); ?>';
-
+  var importantGoalsCount='<?=count($priorityGoals);?>';
   var startDate = '<?= $start_date; ?>';
   var endDate = '<?= $end_date; ?>';
+  var remainingImportantGoals=3-importantGoalsCount;
 </script>
 <link rel="stylesheet" href="<?=SITE_URL; ?>/users/assets/uikit-lightbox.css" />
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
@@ -321,7 +334,7 @@ if ($row) {
     border-radius: 35px 0px 0px 35px;
   }
 
-  .golas-area ol li {
+  .goals-area ol li {
     font-size: 1.4rem;
     color: #FFF;
     margin-bottom: 10px;
@@ -329,11 +342,11 @@ if ($row) {
     position: relative;
   }
 
-  .golas-area ol li label {
+  .goals-area ol li label {
     display: inline;
   }
 
-  .golas-area ol li input {
+  .goals-area ol li input {
     width: 1.5rem;
     height: 1.5rem;
     position: absolute;
@@ -341,7 +354,7 @@ if ($row) {
     top: 25%;
   }
 
-  .golas-area ol li.hidden {
+  .goals-area ol li.hidden {
     display: none;
   }
 
@@ -359,12 +372,12 @@ if ($row) {
     font-size: 1.1rem;
   }
 
-  #goal-list textarea {
+  .goal-list textarea {
     width: 100%;
   }
 
   @media print {
-    .golas-area ol li.hidden {
+    .goals-area ol li.hidden {
       display: list-item;
     }
   }
@@ -377,7 +390,7 @@ if ($row) {
     color: #fef200;
   }
 
-  #goals-area.edit .edit-actions {
+  .goals-area.edit .edit-actions {
     display: inline-block;
   }
 
@@ -388,7 +401,7 @@ if ($row) {
   .datestr {
     text-transform: capitalize;
   }
-  #goals-area {
+  #goals-area,.goals-area {
       padding: 20px 0px;
     }
   @media screen and (max-width: 767px) {
@@ -610,9 +623,9 @@ if ($row) {
       </div>
       <form class="form" id="goalsFrom">
 
-        <div class="golas-area" id="goals-area" style="display:block;">
+        <div class="goals-area" id="goals-area" style="display:block;">
 
-          <ol id="goal-list" class="">
+          <ol id="goal-list" class="goal-list">
             <?php foreach ($goals as $key => $item) :  ?>
               <li class="<?= ($key > 9) ? 'hidden more' : ''; ?>" id="goal-list-item-<?= $item['id']; ?>" style="font-size: 1rem;">
                 <label id="list-label-<?= $item['id']; ?>">
@@ -628,6 +641,7 @@ if ($row) {
           <?php if (count($goals) > 10) : ?>
             <div class="screenonly" style="text-align:center;"><button id="morelessToggleBtn" type="button" class="btn btn-primary">Mostrar más</button></div>
           <?php endif; ?>
+
           <div class="form-group" id="new-goal-creation-container"></div>
           <?php if ($today < $end_date) : ?>
             <div class="form-group screenonly" style="padding:20px; text-align:right;" id="create-goal-btn-wrapper">
@@ -635,6 +649,49 @@ if ($row) {
               <button type="button" class="button btn btn-info" onClick="CreateGoal('<?= $type; ?>')"><i class="fa fa-book"></i> Agrega Objetivo</button>
             </div>
           <?php endif; ?>
+          <?php if(!empty($priority_heading)): ?>
+             <div style="background-color: #fef200; padding: 10px">
+                <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; "><?= $priority_heading; ?>
+                  <button type="button" class="btn btn-info btn-sm screenonly pull-right" id="editBtn1">Editar</button>
+                </h2>
+            </div>
+            <div class="goals-area" id="priority-goals-area" style="display:block;">
+
+              <ol id="priority-goal-list" class="goal-list">
+                <?php foreach ($priorityGoals as $key => $item) :  ?>
+                  <li id="priority-goal-list-item-<?= $item['id']; ?>" style="font-size: 1rem;">
+                    <label id="list-label-<?= $item['id']; ?>">
+
+                      <span style="font-size: 1rem;" id="goalText-<?= $item['id']; ?>"><?= $item['goal']; ?> </span>
+                      <input class="me-1 input-goals priority" data-id="<?= $item['id']; ?>" value="<?= $item['id']; ?>" name="achieved[<?= $item['id']; ?>]" type="checkbox" <?php if ($item['achieved'] == 1) echo 'checked'; ?>>
+                      <a class="edit-actions edit-goal-btn priority" data-id="<?= $item['id']; ?>" href="#"><i class="fa fa-pencil"></i></a>
+                      <a class="edit-actions delete-goal-btn priority" data-id="<?= $item['id']; ?>" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                    </label>
+                  </li>
+                <?php endforeach; ?>
+              </ol>
+              <div class="form-group" id="new-priority-goal-creation-container"></div>
+              <?php if (count($priorityGoals) <3) : ?>
+                <div class="form-group screenonly" style="padding:20px; text-align:right;" id="create-goal-btn-wrapper">
+                  <button type="button" id="save-new-priority-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewPriorityGoals('<?= $type; ?>')"><i class="fa fa-save"></i> Guarda Resultado</button>
+                  <button type="button" class="button btn btn-info" onClick="CreatePriorityGoal('<?= $type; ?>')"><i class="fa fa-book"></i>Resultado</button>
+                </div>
+                <?php endif; ?>
+                
+              
+            </div>
+          <?php endif; ?>
+          <div class="form-group mx-1">
+            <div class="description-area">
+
+              
+              <div class="d-flex justify-content-between my-2">
+              <label style="color:#FFF; font-size:1.1rem;">Planificación Exitosa</label>
+              </div>
+              <textarea id="planning" class="LetterApplication" name="planning"><?= $planning; ?></textarea>
+            </div>
+          </div>
+
           <div class="form-group mx-1">
             <div class="description-area">
 
@@ -648,6 +705,7 @@ if ($row) {
               <textarea id="LetterApplication" class="LetterApplication" name="LetterApplication"><?= $evaluation; ?></textarea>
             </div>
           </div>
+         
           <div style="display: none;" id="show">
             <div style="padding: 15px; border-radius: 7px; margin-bottom: 15px;display: flex; align-content: center; justify-content: space-between;align-items: center;" id="error_success_msg_verification" class="msg">
               <p id="success_msg_verification_text" style="font-size: 14px; font-weight: 600;"></p><button style="border: 0px; background: transparent; font-size: 18px; font-weight: 800;align-items: center;" id="close">x</button>
@@ -764,6 +822,7 @@ if ($row) {
 
 
   var goalstobeadded = 0;
+  var prioritytobeadded = 0;
   var newgoalsInput = [];
 
   function SaveNewGoals(type) {
@@ -801,11 +860,46 @@ if ($row) {
       });
     }
   }
+  function SaveNewPriorityGoals(type) {
+    var newgoalsinput = document.querySelectorAll("textarea.newimpgoals");
+    var validated = hasFilledNewGoals('newimpgoals');
+    if (newgoalsInput.length > 0) {
 
-  function hasFilledNewGoals() {
+      $.ajax({
+        url: SITE_URL + "/users/ajax/ajax.php",
+        type: "POST",
+        data: {
+          saveNewGoals: 'SaveNewPriorityGoals',
+          type: type,
+          startDate: startDate,
+          endDate: endDate,
+          goals: newgoalsInput
+        },
+        success: function(data) {
+          var jsonObj = JSON.parse(data);
+          console.log('data', data, jsonObj);
+          if (jsonObj.success) {
+            goalstobeadded = 0;
+            newgoalsInput = [];
+            $('#new-priority-goal-creation-container').html('');
+            for (const prop in jsonObj.goals) {
+              console.log(`obj.${prop} = ${jsonObj.goals[prop]}`);
+              console.log(prop, jsonObj.goals[prop]);
+
+
+              $("#priority-goal-list").append('<li class="" style="font-size: 1rem;" id="priority-goal-list-item-' + prop + '"><label class="form-label" id="list-label-' + prop + '"><span id="goalText-' + prop + '">' + jsonObj.goals[prop] + '</span> <input name="achieved[' + prop + ']" class="input-goals me-1 priority" type="checkbox" data-id="' + prop + '" value="' + prop + '"><a class="edit-actions edit-goal-btn priority" data-id="' + prop + '" href="#"><i class="fa fa-pencil"></i></a>                 <a class="edit-actions delete-goal-btn" data-id="' + prop + '" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></label></li>');
+            }
+            $('#save-new-priority-goals-btn').hide();
+          }
+        }
+      });
+    }
+  }
+  
+  function hasFilledNewGoals(classname='newgoals') {
     var filled = true;
     newgoalsInput = [];
-    $newgoalsinputEmpty = document.querySelectorAll("textarea.newgoals");
+    $newgoalsinputEmpty = document.querySelectorAll("textarea." + classname);
     for (var i = 0; i < $newgoalsinputEmpty.length; ++i) {
       if ($newgoalsinputEmpty[i].value == '') {
         filled = false;
@@ -817,6 +911,7 @@ if ($row) {
     }
     return filled;
   }
+  
 
   function CreateGoal(type) {
 
@@ -834,9 +929,28 @@ if ($row) {
 
 
   }
+  function CreatePriorityGoal(type) {
+
+    $wrapper = $('#new-priority-goal-creation-container');
+    var validated = hasFilledNewGoals();
+    console.log('validated', validated);
+    $newgoalsinput = document.querySelectorAll("textarea.newimpgoals");
+    if (validated && remainingImportantGoals > 0) {
+      $wrapper.append("<div class='form-group'><textarea placeholder='Write goal details' class='form-input form-control newimpgoals' name='newimpgoals[]'/></textarea></div>");
+      remainingImportantGoals--;
+      $('#save-new-priority-goals-btn').show();
+
+    } else {
+      showToast('error', 'You can only add maximum 3 goals.');
+    }
+   
+
+
+  }
+  
   $(document).on('click', '.edit-goal-btn', function(e) {
     e.preventDefault();
-
+    var haspriorityClass=$(this).hasClass('priority');
     var goalId = $(this).data('id');
     console.log('goalId', goalId);
     var goalText = $('#goalText-' + goalId).text();
@@ -848,6 +962,7 @@ if ($row) {
       $("#list-label-" + goalId).append('<textarea id="edittextarea-' + goalId + '">' + goalText + '</textarea>');
     } else {
       var checked = $(this).find('.input-goals').is(':checked');
+     
       $(this).find('.fa').addClass('fa-pencil');
       $(this).find('.fa').removeClass('fa-save');
       $('#goalText-' + goalId).show();
@@ -860,11 +975,13 @@ if ($row) {
       } else {
         achieved = 0;
       }
+      
+      console.log('haspriorityClass',haspriorityClass);
       $.ajax({
         url: SITE_URL + "/users/ajax/ajax.php",
         type: "POST",
         data: {
-          UpdateSuperGoal: 'UpdateSuperGoal',
+          UpdateSuperGoal: haspriorityClass? 'UpdateSuperPriorityGoal':'UpdateSuperGoal',
           type: goalType,
           startDate: startDate,
           endDate: endDate,
@@ -895,6 +1012,7 @@ if ($row) {
   $(document).on('click', '.delete-goal-btn', function(e) {
     e.preventDefault();
     var goalId = $(this).data('id');
+    var haspriorityClass=$(this).hasClass('priority');
     console.log('goalId', goalId);
     var goalIds = [];
     goalIds.push(goalId);
@@ -902,7 +1020,7 @@ if ($row) {
       url: SITE_URL + "/users/ajax/ajax.php",
       type: "POST",
       data: {
-        DeleteGoals: 'DeleteGoals',
+        DeleteGoals: haspriorityClass? 'DeletePriorityGoal':'DeleteGoals',
         type: goalType,
         startDate: startDate,
         endDate: endDate,
@@ -912,7 +1030,12 @@ if ($row) {
         console.log('data', data, goalIds);
         for (let index = 0; index < goalIds.length; index++) {
           var gid = goalIds[index];
-          $("#goal-list-item-" + gid).remove();
+          if(haspriorityClass){
+            $("#priority-goal-list-item-" + gid).remove();
+          }else{
+            $("#goal-list-item-" + gid).remove();
+          }
+          
         }
 
         if (data == 'Deleted') {
@@ -929,7 +1052,14 @@ if ($row) {
       }
     });
   });
-
+  $('#editBtn1').click(function(e) {
+    if ($(this).text() == 'Editar') {
+      $(this).text('Cancelar');
+    } else {
+      $(this).text('Editar');
+    }
+    $('#priority-goals-area').toggleClass('edit');
+  });
   $('#editBtn').click(function(e) {
     if ($(this).text() == 'Editar') {
       $(this).text('Cancelar');
@@ -946,11 +1076,15 @@ if ($row) {
     console.log('goalId', goalId, checked, goalText);
     var achieved = 0;
     if (checked) achieved = 1;
+    var actionName='UpdateSuperGoal';
+    if($(this).hasClass('priority')){
+      actionName='UpdateSuperProrityGoal';
+    }
     $.ajax({
       url: SITE_URL + "/users/ajax/ajax.php",
       type: "POST",
       data: {
-        UpdateSuperGoal: 'UpdateSuperGoal',
+        UpdateSuperGoal: actionName,
         type: goalType,
         startDate: startDate,
         endDate: endDate,
@@ -994,6 +1128,7 @@ toastList.forEach(toast => toast.show()); // This show them
 }
   function UpdateGoals() {
     var LetterApplication = window.editors['LetterApplication'].getData();
+    var planning = window.editors['planning'].getData();
     $("#print-evaluation").html(LetterApplication);
     var goalsData = [];
     $('input.input-goals').each(function() {
@@ -1014,6 +1149,7 @@ toastList.forEach(toast => toast.show()); // This show them
         UpdateSuperGoals: 'UpdateSuperGoals',
         type: goalType,
         description: LetterApplication,
+        planning:planning,
         goalsData: goalsData,
         startDate: startDate,
         endDate: endDate,

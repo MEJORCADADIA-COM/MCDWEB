@@ -446,6 +446,90 @@ function pullPreviousLifeGoals($userId, $currentDate)
 //    }
 //}
 
+if (isset($_POST['UpdateSuperGoal']) && ($_POST['UpdateSuperGoal'] == 'UpdateSuperProrityGoal')) {
+
+    $type = $_POST['type'];
+    $user_id = Session::get('user_id');
+    
+    $achieved = isset($_POST['achieved']) ? $_POST['achieved'] : 0;
+    $goalText = empty($_POST['goalText']) ? '' : $_POST['goalText'];
+    $startDate = isset($_POST['startDate']) ? $_POST['startDate'] : '';
+    $endDate = isset($_POST['endDate']) ? $_POST['endDate'] : '';
+    $goalId = isset($_POST['goalId']) ? (int)$_POST['goalId'] : 0;
+
+    if (!empty($goalId)) {
+        $common->update('supergoals_priorites', ['goal' => $goalText, 'achieved' => $achieved], 'id = :goal_id', ['goal_id' => $goalId], false);
+        echo 'Updated';
+    } else {
+        if (!empty($goalText)) {
+
+            //pullPreviousGoals($user_id,$type,$startDate,$endDate);    
+            $row = $common->first(
+                "supergoals_priorites",
+                'goal = :goal AND user_id = :user_id AND type = :type AND DATE(start_date) >= :start_date AND DATE(end_date) <= :end_date',
+                ['goal' => $goalText, 'user_id' => $user_id, 'type' => $type, 'start_date' => $startDate, 'end_date' => $endDate]
+            );
+
+            if ($row) {
+                $common->update('supergoals_priorites', ['achieved' => $achieved], 'id = :id', ['id' => $row['id']], false);
+
+            } else {
+                $common->insert('supergoals_priorites', [
+                    'user_id' => $user_id,
+                    'type' => $type,
+                    'goal' => $goalText,
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                ]);
+            }
+        }
+        echo 'Update';
+    }
+
+
+}
+if (isset($_POST['UpdateSuperGoal']) && ($_POST['UpdateSuperGoal'] == 'UpdateSuperPriorityGoal')) {
+
+    $type = $_POST['type'];
+    $user_id = Session::get('user_id');
+   
+    $achieved = isset($_POST['achieved']) ? $_POST['achieved'] : 0;
+    $goalText = empty($_POST['goalText']) ? '' : $_POST['goalText'];
+    $startDate = isset($_POST['startDate']) ? $_POST['startDate'] : '';
+    $endDate = isset($_POST['endDate']) ? $_POST['endDate'] : '';
+    $goalId = isset($_POST['goalId']) ? (int)$_POST['goalId'] : 0;
+
+    if (!empty($goalId)) {
+        $common->update('supergoals_priorites', ['goal' => $goalText, 'achieved' => $achieved], 'id = :goal_id', ['goal_id' => $goalId], false);
+        echo 'Updated';
+    } else {
+        if (!empty($goalText)) {
+
+            //pullPreviousGoals($user_id,$type,$startDate,$endDate);    
+            $row = $common->first(
+                "supergoals_priorites",
+                'goal = :goal AND user_id = :user_id AND type = :type AND DATE(start_date) >= :start_date AND DATE(end_date) <= :end_date',
+                ['goal' => $goalText, 'user_id' => $user_id, 'type' => $type, 'start_date' => $startDate, 'end_date' => $endDate]
+            );
+
+            if ($row) {
+                $common->update('supergoals_priorites', ['achieved' => $achieved], 'id = :id', ['id' => $row['id']], false);
+
+            } else {
+                $common->insert('supergoals_priorites', [
+                    'user_id' => $user_id,
+                    'type' => $type,
+                    'goal' => $goalText,
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                ]);
+            }
+        }
+        echo 'Update';
+    }
+
+
+}
 if (isset($_POST['UpdateSuperGoal']) && ($_POST['UpdateSuperGoal'] == 'UpdateSuperGoal')) {
 
     $type = $_POST['type'];
@@ -812,6 +896,7 @@ if (isset($_POST['UpdateSuperGoals']) && ($_POST['UpdateSuperGoals'] == 'UpdateS
     }
     $goalsData = isset($_POST['goalsData']) ? $_POST['goalsData'] : [];
     $description = empty($_POST['description']) ? '' : $_POST['description'];
+    $planning = empty($_POST['planning']) ? '' : $_POST['planning'];
     $startDate = isset($_POST['startDate']) ? $_POST['startDate'] : '';
     $endDate = isset($_POST['endDate']) ? $_POST['endDate'] : '';
 
@@ -842,13 +927,14 @@ if (isset($_POST['UpdateSuperGoals']) && ($_POST['UpdateSuperGoals'] == 'UpdateS
         ['user_id' => $user_id, 'type' => $type, 'start_date' => $startDate, 'end_date' => $endDate]
     );
     if ($row) {
-        $common->update('supergoals_evaluation', ['description' => $description], 'id = :id', ['id' => $row['id']], false);
+        $common->update('supergoals_evaluation', ['description' => $description,'planning'=>$planning], 'id = :id', ['id' => $row['id']], false);
     } else {
 
         $common->insert('supergoals_evaluation', [
             'user_id' => $user_id,
             'type' => $type,
             'description' => $description,
+            'planning'=>$planning,
             'start_date' => $startDate,
             'end_date' => $endDate
         ]);
@@ -876,6 +962,20 @@ if (isset($_POST['DeleteGoals']) && ($_POST['DeleteGoals'] == 'DeleteGoals')) {
     if (!empty($goalIds)) {
         $placeholders = array_fill(0, count($goalIds), '?');
         $common->delete("supergoals", "id IN (".implode(',', $placeholders).")", $goalIds);
+    }
+    echo 'Deleted';
+}
+if (isset($_POST['DeleteGoals']) && ($_POST['DeleteGoals'] == 'DeletePriorityGoal')) {
+    $user_id = Session::get('user_id');
+    
+    $goalIds = isset($_POST['goalIds']) ? $_POST['goalIds'] : [];
+    $type = $_POST['type'];
+    $startDate = isset($_POST['startDate']) ? $_POST['startDate'] : date('Y-m-d h:i:s');
+    $endDate = isset($_POST['endDate']) ? $_POST['endDate'] : date('Y-m-d h:i:s');
+    $table_name = 'supergoals_priorites';
+    if (!empty($goalIds)) {
+        $placeholders = array_fill(0, count($goalIds), '?');
+        $common->delete("supergoals_priorites", "id IN (".implode(',', $placeholders).")", $goalIds);
     }
     echo 'Deleted';
 }
@@ -1511,6 +1611,29 @@ if (isset($_POST['saveNewGoals']) && ($_POST['saveNewGoals'] == 'saveNewGoals'))
     echo json_encode(['success' => true, 'goals' => $addedGoals]);
 
 }
+if (isset($_POST['saveNewGoals']) && ($_POST['saveNewGoals'] == 'SaveNewPriorityGoals')) {
+    $user_id = Session::get('user_id');
+   
+    $goals = isset($_POST['goals']) ? $_POST['goals'] : [];
+    $type = $_POST['type'];
+    $startDate = isset($_POST['startDate']) ? $_POST['startDate'] : date('Y-m-d');
+    $endDate = isset($_POST['endDate']) ? $_POST['endDate'] : date('Y-m-d');
+    $table_name = 'supergoals_priorites';
+    $addedGoals = [];
+    //pullPreviousGoals($user_id,$type,$startDate,$endDate);
+    foreach ($goals as $key => $goal) {
+
+        if (!empty($goal)) {
+            $common->insert($table_name, ['user_id' => $user_id, 'type' => $type, 'goal' => $goal, 'start_date' => $startDate, 'end_date' => $endDate]);
+            $id = $common->insertId();
+            $addedGoals[$id] = $goal;
+        }
+
+    }
+    echo json_encode(['success' => true, 'goals' => $addedGoals]);
+
+}
+
 
 if (isset($_POST['EmailSendDailyGoal']) && ($_POST['EmailSendDailyGoal'] == 'EmailSendDailyGoal')) {
     $dailyImprovements = $format->validation($_POST['dailyImprovements']);
