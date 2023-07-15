@@ -614,7 +614,7 @@ if ($row) {
 
 
 
-      <div style="background-color: #fef200; padding: 10px">
+      <div class="mt-3" style="background-color: #fef200; padding: 10px">
         <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; "><?= $goals_heading; ?>
 
           <button type="button" class="btn btn-info btn-sm screenonly pull-right" id="editBtn">Editar</button>
@@ -623,7 +623,7 @@ if ($row) {
       </div>
       <form class="form" id="goalsFrom">
 
-        <div class="goals-area" id="goals-area" style="display:block;">
+        <div class="goals-area mb-4" id="goals-area" style="display:block;">
 
           <ol id="goal-list" class="goal-list">
             <?php foreach ($goals as $key => $item) :  ?>
@@ -649,13 +649,15 @@ if ($row) {
               <button type="button" class="button btn btn-info" onClick="CreateGoal('<?= $type; ?>')"><i class="fa fa-book"></i> Agrega Objetivo</button>
             </div>
           <?php endif; ?>
+      </div>
+
           <?php if(!empty($priority_heading)): ?>
-             <div style="background-color: #fef200; padding: 10px">
+             <div class="mt-5" style="background-color: #fef200; padding: 10px; margin-top:30px;">
                 <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; "><?= $priority_heading; ?>
                   <button type="button" class="btn btn-info btn-sm screenonly pull-right" id="editBtn1">Editar</button>
                 </h2>
             </div>
-            <div class="goals-area" id="priority-goals-area" style="display:block;">
+            <div class="goals-area mb-4" id="priority-goals-area" style="display:block;">
 
               <ol id="priority-goal-list" class="goal-list">
                 <?php foreach ($priorityGoals as $key => $item) :  ?>
@@ -674,25 +676,25 @@ if ($row) {
               <?php if (count($priorityGoals) <3) : ?>
                 <div class="form-group screenonly" style="padding:20px; text-align:right;" id="create-goal-btn-wrapper">
                   <button type="button" id="save-new-priority-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewPriorityGoals('<?= $type; ?>')"><i class="fa fa-save"></i> Guarda Resultado</button>
-                  <button type="button" class="button btn btn-info" onClick="CreatePriorityGoal('<?= $type; ?>')"><i class="fa fa-book"></i>Resultado</button>
+                  <button type="button" class="button btn btn-info" onClick="CreatePriorityGoal('<?= $type; ?>')"><i class="fa fa-book"></i> Resultado</button>
                 </div>
                 <?php endif; ?>
                 
               
             </div>
           <?php endif; ?>
-          <div class="form-group mx-1">
+          <div class="form-group mx-1 mt-5">
             <div class="description-area">
 
               
-              <div class="d-flex justify-content-between my-2">
+              <div class="d-flex justify-content-between my-3">
               <label style="color:#FFF; font-size:1.1rem;">Planificación Exitosa</label>
               </div>
               <textarea id="planning" class="LetterApplication" name="planning"><?= $planning; ?></textarea>
             </div>
           </div>
 
-          <div class="form-group mx-1">
+          <div class="form-group mx-1 mt-5 mb-3 pt-2">
             <div class="description-area">
 
               
@@ -726,7 +728,7 @@ if ($row) {
 
             </div>
           </div>
-        </div>
+        
       </form>
     </div>
   </div>

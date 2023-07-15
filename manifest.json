@@ -4,8 +4,8 @@
     "description": "MejorCadaDía",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#3367D6",
-    "theme_color": "#3367D6",
+    "background_color": "#070907",
+    "theme_color": "#070907",
     "icons": [
       {
         "src": "/assets/images/major-192x192.png",
