@@ -65,6 +65,9 @@ $profile_info = $common
         var SITE_URL = '<?= SITE_URL; ?>';
     </script>
     <style>
+        .login-option-buttons{
+            width:375px; margin:0 auto;
+        }
         @media only screen and (min-width: 768px) {
             .desktop-only {
                 display: block;
@@ -105,10 +108,8 @@ $profile_info = $common
                 display: none !important;
             }
 
-            .mobile-blog-btn {
-                position: absolute;
-                right: 10px;
-                top: 10px;
+            .login-option-buttons{
+                width:100%; margin:0 auto;
             }
 
             .res_logo .mobile {
@@ -119,7 +120,64 @@ $profile_info = $common
             .res_logo .desktop {
                 display: none;
             }
+            .nav{
+                padding:20px 10px;
+            }
+            .nav-brand.mobile-only.ballon-menu{
+                text-align:right; width:100%;
+            }
+            .ballon-menu .ballon-item{
+                padding:6px 8px;
+            }
+            .ballon-menu{
+                text-align:right; width:100%;
+            }
+            .nav-brand.desktop-only.logo-icon{
+                display:none;
+            }
         }
+        #login_email_check_part{
+            display:none;
+        }
+        #register-email-form{
+            display:none;
+        }
+        #googleLoginBtnWrap{
+            margin-bottom:1rem;
+        }
+        #googleRegisterBtnWrap{
+            margin-bottom:1rem;
+        }
+        
+        .alert.alert-white{
+            background:#FFF;
+            color:rgb(22, 24, 35);
+            border: 1px solid rgba(22, 24, 35, 0.12);
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            padding:0.5rem;
+            padding-left:1.6rem;
+        }
+        .alert.alert-white .icon-wrap{
+            left: 12px;
+            font-size: 20px;
+            position: absolute;
+            display: flex;
+        }
+        
+        .bi {
+            width: 1em;
+            height: 1em;
+        }
+        #login-back-btn,#register-back-btn{
+            position:absolute;
+            top:12px;
+            left:20px;
+            cursor: pointer;
+            z-index: 99999;
+        }
+        #login-back-btn, #register-back-btn{display:none;}
     </style>
 </head>
 

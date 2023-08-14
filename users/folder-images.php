@@ -102,6 +102,8 @@ $isPastDate=false;
         <div class="row">
           <div class="col-12" style="text-align:center;">
          
+            <a class="btn btn-warning btn-sm pull-left" href="<?=SITE_URL;?>/users/photo-drive.php">Back</a>
+          
             <h2 style="text-transform: capitalize;">
             Imagenes de Exito
             </h2>

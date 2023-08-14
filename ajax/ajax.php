@@ -78,7 +78,7 @@ if(isset($_POST['email_registration']) && ($_POST['email_registration'] == 'emai
     }
 }
 
-if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'facebook' || $_POST['type'] == 'email')) {
+if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'facebook' || $_POST['type'] == 'email'|| $_POST['type'] == 'instagram')) {
     $type = $format->validation($_POST['type']);
     if (!empty($type)) {
         if ($type == 'google') {
@@ -173,6 +173,65 @@ if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'fa
                 
             } else {
                 echo 'No account found!';
+            }
+        }elseif($type=='instagram'){
+             $code= $_POST['credential'];
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, 'https://api.instagram.com/oauth/access_token');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            $post = array(
+                'client_id' => '614656524100935',
+                'client_secret' => '27b9887112c7ff3261d1f5f14cf579ed',
+                'grant_type' => 'authorization_code',
+                'redirect_uri' => 'https://mejorcadadia.com/',
+                'code' => $code
+            );
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+
+            $result = curl_exec($ch);
+           
+            if (curl_errno($ch)) {
+                echo 'Error:' . curl_error($ch);
+            }
+            curl_close($ch);
+            $resObj=json_decode($result);
+            if(!empty($resObj)){
+                $access_token=$resObj->access_token;
+                $user_id=$resObj->user_id;
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'https://graph.instagram.com/v17.0/'.$user_id.'?fields=account_type,id,username&access_token='.$access_token);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+                $result = curl_exec($ch);
+                if (curl_errno($ch)) {
+                    echo 'Error:' . curl_error($ch);
+                }
+                curl_close($ch);
+                $resObj=json_decode($result);
+
+                if(!empty($resObj)){
+                    $user_checks = $common->first("users", "gmail = :email AND type= :type", ['email' => $resObj->id,'type'=>$type]);
+                    if ($google_checks) {
+                        $type_check = $google_checks['type'];
+                        if($google_checks['status'] == '1') {
+                            Session::set('login', true);
+                            Session::set('user_id', $google_checks['id']);
+                           echo 'logged_in';
+                        } else {
+                            echo 'Your account has been blocked!';
+                        }
+                    } else {
+                        $user_insert = $common->insert('users', ['full_name' => $resObj->username, 'type' => $type, 'gmail' => $resObj->id]);
+                        if ($user_insert) {
+                            $user_infos = $common->first("`users`", "`gmail` = :email AND type= :type", ['email' => $resObj->id,'type'=>$type]);
+                              Session::set('login', true);
+                            Session::set('user_id', $user_infos['id']);
+                           // (new RememberCookie())->setRememberCookie($user_infos);
+                           echo 'logged_in';
+                        }
+                    }
+                }
             }
         }
     }

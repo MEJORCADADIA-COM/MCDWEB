@@ -156,13 +156,15 @@ require_once "../inc/inspirationQuote.php";
                     <li> <a class="text-decoration-none text-white py-1 <?= $path == 'index.php' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/index.php" id="navbarDropdown">Cartas</a></li>
                     <li>  <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/notebook.php">Escribe Carta</a></li>
                     <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/mynotes.php">MejorNotes</a></li>
-                    
+                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/capsules.php">MejorCapsule</a></li>
                 </ul>
             </div>
             <div class="col-7">
                 <ul class="list-unstyled">
                     <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/missions.php">Mi Missión</a></li>
-                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/vision.php">Mi Visión</a></li>
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/vision.php?plan=3">Visión 3-Años</a></li>
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/vision.php>plan=5">Visión 5-Años</a></li>
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/vision.php?plan=10">Visión 10-Años</a></li>
                     <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/commitments.php">Mis Compromisos</a></li>
                     <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/agreements.php">Mis Acuerdos</a></li>
                     <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/promises.php">Mis Promesas</a></li>
@@ -171,7 +173,7 @@ require_once "../inc/inspirationQuote.php";
                     <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/toRemember.php">Eventos para Recordar</a></li>
                     <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/biggestVictories.php">Mis Mayores Victorias</a></li>
                     <li> <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/inspirations.php">MejorInspiration</a></li>
-                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/capsules.php">MejorCapsule</a></li>
+                   
                     <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/folder-images.php">Imagenes de Exito</a></li>
                 </ul>
             </div>
@@ -400,6 +402,117 @@ function addToHomeScreen() {
         return null;
     };
 </script>
+<style>
+    .mejor-info-popover{
+        max-width:400px;
+        border-color:#0b57cf;
+        background:#0b57cf;
+        position: fixed !important;
+        right:50px !important; 
+        top:100px !important;
+        transform: none !important;
+        left: auto !important;
+        bottom: auto !important;
+        
+    }
+    
+    .popover.mejor-info-popover .popover-arrow{
+        bottom: auto !important;
+        transform: translate3d(350px, 0px, 0px) !important;
+
+    }
+    .mejor-info-popover .popover-body{
+        color:#FFF;
+    }
+    .mejor-info-popover>.popover-arrow::before{
+
+        border-width: 0 0.5rem 0.5rem !important;
+
+    }
+    .mejor-info-popover.bs-popover-auto>.popover-arrow::before, .mejor-info-popover.bs-popover-bottom>.popover-arrow::before,
+    .mejor-info-popover.bs-popover-auto>.popover-arrow::after, .mejor-info-popover.bs-popover-bottom>.popover-arrow::after{
+        border-bottom-color:#0b57cf;
+    }
+    .mejor-info-popover .close{
+        color:#FFF;
+        position:absolute;
+        right:0;
+        top:0;
+        text-decoration:none;
+        padding: 0 5px;
+    }
+    .mejor-info-popover .popover-header{
+        padding:0;
+        border:none;
+        background:#0b57cf;
+    }
+    
+    .mejor-info-popover.bs-popover-auto[data-popper-placement^=bottom] .popover-header::before, .mejor-info-popover.bs-popover-bottom .popover-header::before{
+        display:none;
+    }
+    @media (max-width: 575.98px) { 
+        .mejor-info-popover{
+            width:300px;
+        }
+        .popover.mejor-info-popover .popover-arrow{
+            transform: translate3d(250px, 0px, 0px) !important;
+        }
+    }
+    </style>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize popovers
+        function setCookie(cname, cvalue, exdays) {
+            console.log('setting cookie');
+            const d = new Date();
+           d.setTime(d.getTime() + (exdays*24*60*60*1000));
+           // d.setTime(d.getTime() + (60*1000));
+            let expires = "expires="+ d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for(let i = 0; i <ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        
+       
+        
+       
+        $('[data-bs-toggle="popover"]').popover({container: 'body', title:'<a class="close" href="#">&times;</a>', customClass:'mejor-info-popover bs-popover-bottom',placement:'bottom', html: true});
+       
+        setTimeout(function() {
+            var popover_page=$('#popovertip').data('page');
+            let pagePoperOverCookie = getCookie(popover_page);
+            //pagePoperOverCookie='';
+            console.log('pagePoperOverCookie',popover_page,pagePoperOverCookie);
+            if(pagePoperOverCookie==''){
+                
+                $('#popovertip').popover('show');
+                $(".mejor-info-popover").removeClass('bs-popover-auto');
+                setCookie(popover_page, '1', 1);
+            }            
+        }, 1000);
+        $(document).on('click','a.close',function(e){
+            e.preventDefault();
+            $('#popovertip').popover('hide');
+        });
+
+        // You can adjust the delay as needed
+    });
+    </script>
 </body>
 
 </html>

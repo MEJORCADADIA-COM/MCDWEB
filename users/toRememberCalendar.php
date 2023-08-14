@@ -80,6 +80,13 @@ function getTDClass($day, $monthlyDailyToRemember): string
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
 
 <style>
+    .border{
+        border:1px solid #484848 !important;
+    }
+    td.border p{
+        color:#000;
+        font-size:10px;
+    }
     .ck-editor .ck.ck-editor__main{
             max-height:300px;
             overflow: scroll;

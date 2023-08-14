@@ -1,5 +1,7 @@
 {
     "require": {
-        "google/apiclient": "^2.12"
+        "google/apiclient": "^2.12",
+        "gimucco/tiktok-loginkit": "^0.5.3",
+        "php-ffmpeg/php-ffmpeg": "^1.1"
     }
 }

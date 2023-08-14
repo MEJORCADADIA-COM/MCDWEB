@@ -5,6 +5,7 @@ $folder_id = isset($_GET['folder_id'])? intval($_GET['folder_id']):0;
 ?>
 <?php require_once "inc/header.php"; ?>
 <?php
+
 $timezoneOffset = empty($_SESSION['timezoneOffset']) ? '' : $_SESSION['timezoneOffset'];
 $time = time();
 if (!empty($timezoneOffset)) {
@@ -41,13 +42,13 @@ $folderImages=[];
 $userFolders=[];
 $selectedFolder=[];
 if(!empty($folder_id)){
-  $folderImages = $common->get('user_folder_photos', 'user_id = :user_id AND folder_id=:folder_id', ['user_id' => $user_id,'folder_id'=>$folder_id],[],'created_at','DESC');
-  $userFolders = $common->get('user_photo_folders', 'user_id = :user_id AND id=:folder_id', ['user_id' => $user_id,'folder_id'=>$folder_id],[],'created_at','DESC');
+  $folderImages = $common->get('user_folder_videos', 'user_id = :user_id AND folder_id=:folder_id', ['user_id' => $user_id,'folder_id'=>$folder_id],[],'created_at','DESC');
+  $userFolders = $common->get('user_video_folders', 'user_id = :user_id AND id=:folder_id', ['user_id' => $user_id,'folder_id'=>$folder_id],[],'created_at','DESC');
   if(!empty($userFolders)){
     $selectedFolder=$userFolders[0];
   }
 }else{
-  $userFolders = $common->get('user_photo_folders', 'user_id = :user_id', ['user_id' => $user_id],[],'created_at','DESC');
+  $userFolders = $common->get('user_video_folders', 'user_id = :user_id', ['user_id' => $user_id],[],'created_at','DESC');
 }
 
 $selectedDate = $currentDate;
@@ -84,6 +85,13 @@ $isPastDate=false;
   .modal-header .modal-title{
     color:#FFF;
   }
+  .v7-media-box {
+    width: 114px;
+    position: relative;
+}
+.v7-media-box img{
+    max-height:106px;
+  }
   .v7-media-box-folder{
     width:160px;
     position: relative;
@@ -93,12 +101,9 @@ $isPastDate=false;
     text-align:center;
     margin-bottom:15px;
   }
-  .v7-media-box{
-    width:114px;
-    position: relative;
-  }
+  
   .v7-media-box-folder img{
-    max-height:48px;
+    max-height:90px;
   }
   .v7-media-box-folder a{
     color:#000; text-decoration:none;
@@ -166,6 +171,31 @@ $isPastDate=false;
      font-size:1.5rem;
     
 }
+.media-thumb-wrapper {
+    position: relative;
+}
+.v7-media-box video {
+    max-width: 106px;
+    width: 106px;
+    height: 106px;
+}
+.v7-media-box-folder.v7-media-box-playlist{
+  background:none;
+  color:#FFF;
+}
+.v7-media-box-folder.v7-media-box-playlist div{
+  color:#FFF;
+}
+.v7-media-box-folder.v7-media-box-playlist img{
+  width:100%;
+  border-radius:10px;
+  
+}
+.v7-media-box-folder.v7-media-box-playlist .thumbdiv{
+  background:#FFF;
+  border-radius:10px;
+}
+
 </style>
 
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10">
@@ -179,15 +209,13 @@ $isPastDate=false;
         <div class="row">
           <div class="col-12" style="text-align:center;">
           <?php  if(!empty($selectedFolder)): ?>
-            <a class="btn btn-warning btn-sm pull-left" href="<?=SITE_URL;?>/users/photo-drive.php">Back</a>
+            <a class="btn btn-warning btn-sm pull-left" href="<?=SITE_URL;?>/users/video-playlists.php">Back</a>
           <?php endif; ?>
           
           
-          
-          <a class="btn btn-warning btn-sm pull-right" href="<?=SITE_URL;?>/users/folder-images.php">View All</a>
             <h2 style="text-transform: capitalize;">
             
-            <?=empty($selectedFolder)? 'Imagenes de Exito':$selectedFolder['name']; ?>
+            <?=empty($selectedFolder)? 'Upload Video':$selectedFolder['name']; ?>
             </h2>
            
           </div>
@@ -203,11 +231,12 @@ $isPastDate=false;
                 <div class="d-flex flex-wrap bd-highlight mb-3" id="gallary-items" uk-lightbox="animation: slide">
                     
                     <?php  $i=0; foreach ($folderImages as $key => $file):  ?>
+
                       <?php setlocale(LC_ALL, "es_ES");
-        $string = date('d/m/Y', strtotime($file['created_at']));
-        $dateObj = DateTime::createFromFormat("d/m/Y", $string);
-        ?>
-                    <div class="p-1 bd-highlight v7-media-box" data-index="<?=$key;?>"  data-file="<?=$file['id'];?>" style="order:1; position:relative;">
+                      $string = date('d/m/Y', strtotime($file['created_at']));
+                      $dateObj = DateTime::createFromFormat("d/m/Y", $string);
+                      ?>
+                    <div class="p-1 bd-highlight v7-media-box " data-index="<?=$key;?>"  data-file="<?=$file['id'];?>" style="order:1; position:relative;">
                             
                                 <a href="<?=$file['url'];?>" data-index="<?=$key;?>"  data-file="<?=$file['id'];?>" data-caption="<?= utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp())); ?>" > 
                                 <img data-bs-target="#carouselExampleIndicators" data-bs-slide-to="<?=$key;?>" class="img-fluid rounded-3 w-100 shadow-1-strong"  src="<?=$file['thumb'];?>">
@@ -227,22 +256,24 @@ $isPastDate=false;
                         </div>
                            
                     </div>
-                    <?php $i++; endforeach;?>
-                    <div class="p-1 bd-highlight v7-media-box" style="order:0;">                        
-                        <div class="upload-box-image upload-file-box" data-type="image">                        
-                          <input type="file" name="newfileAdd" id="newfileAdd" class="inputfile" multiple="true" accept="image/png, image/gif, image/jpeg"  />
-                          <label for="newfileAdd"><i class="fa fa-camera"></i></label>
 
-                        </div>
+                    <?php $i++; endforeach;?>
+                    
+                    <div class="p-1 bd-highlight v7-media-box" style="order:0;">   
+                      <div class="upload-box-image upload-file-box" data-type="video">                        
+                        <input type="file" name="video1File" id="video1File" class="inputfile" accept="video/*" />
+                        <label for="video1File"><i class="fa fa-file-video-o"></i></label>
+                      </div>                     
+                        
                     </div>
                 </div>
               <?php else: ?>
                 <div class="observe-container" id="observe-container"></div>
                 <div class="d-flex flex-wrap bd-highlight mb-3 item-container">
-                    <div class="v7-media-box-folder" style="order:0; background:#b5e4bf;">                        
+                    <div class="v7-media-box-folder" style="order:0; background:transparent;">                        
                         <a href="#" data-bs-toggle="modal" data-bs-target="#FolderModal">                        
-                         <div class="my-2"><img src="<?= SITE_URL; ?>/assets/images/create-folder-48.png"></div>
-                         <div class="my-2">Create New</div>
+                         <div class="my-1 py-4" style="background:#FFF; height:90px; border-radius:10px;"><img src="<?= SITE_URL; ?>/assets/images/video-playlist.png"></div>
+                         <div class="my-2" style="color:#FFF;">Create Playlist</div>
                         </a>
                     </div>
                     
@@ -268,13 +299,13 @@ $isPastDate=false;
   <div class="modal-dialog modal-fullscreen-md-down modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content bg-dark">
       <div class="modal-header border-0">
-        <h3 class="text-white">Crea Carpeta  </h3>      
+        <h3 class="text-white">Crear lista de reproducción </h3>      
         <button type="button" class="btn-close bg-white border border-warning" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" style="min-height:350px;">  
            <form method="">
               <div class="form-group">
-                <input type="text" id="form_folder_name" class="form-control folder_name" placeholder="Nombre de la Carpeta">
+                <input type="text" id="form_folder_name" class="form-control folder_name" placeholder="Nombre de la lista de reproducción de video">
                 <input type="hidden" id="form_folder_id" class="form-control folder_id" value="0">
               </div>
               <div class="form-group mt-3">
@@ -302,7 +333,7 @@ $isPastDate=false;
    
    function createElmFolder(folder){
     
-    const classesToAdd = ['v7-media-box-folder'];
+    const classesToAdd = ['v7-media-box-folder','v7-media-box-playlist'];
                   const item = document.createElement("div");
                   item.dataset.file = folder.id;
                   folder_name=folder.name;
@@ -310,8 +341,8 @@ $isPastDate=false;
                     folder_name=folder_name.substring(0,11)+"...";
                   }
                   item.innerHTML =
-                     `<a href="${SITE_URL}/users/photo-drive.php?folder_id=${folder.id}">
-                        <div class="my-3"><img src="${folder.icon}"></div>
+                     `<a href="${SITE_URL}/users/video-playlists.php?folder_id=${folder.id}">
+                        <div class="my-1 thumbdiv"><img src="${folder.icon}"></div>
                         <div class="my-2">${folder_name}(${folder.count})</div>
                      </a>
                      <div class="file-actions">
@@ -334,7 +365,7 @@ $isPastDate=false;
                   
    }
    function loadDriveFolders() {
-    const url = `<?= SITE_URL; ?>/users/ajax/ajax.php?action=get_user_photo_folders`;
+    const url = `<?= SITE_URL; ?>/users/ajax/ajax.php?action=get_user_video_folders`;
       fetch(url)
          .then(res => res.json())
          .then(data => {
@@ -366,7 +397,7 @@ $(document).on('click','.file-actions .folder_delete',function(e){
         url: SITE_URL + "/users/ajax/ajax.php",
         type: "POST",
         data: {
-          action: 'DeleteUserFolder',
+          action: 'DeleteUserVideoFolder',
           id: fileId,
         },
         success: function(data) {
@@ -385,7 +416,7 @@ $(document).on('click','.file-actions .file_delete',function(e){
         url: SITE_URL + "/users/ajax/ajax.php",
         type: "POST",
         data: {
-          action: 'DeleteUserFolderImage',
+          action: 'DeleteUserFolderVideo',
           currentDate: currentDate,
           id: fileId,
         },
@@ -418,13 +449,52 @@ function showToast(type = 'success', message = '') {
 
  
 
-  
+  var videoThumbnail=null;
+  function dataURLtoFile(dataurl, filename) {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  }
+  async function getVideoBlobTHumb(){
+    scaleFactor=0.5;
+    var _VIDEO = document.querySelector("#video-preview-player");
+    let w = _VIDEO.videoWidth * scaleFactor;
+    let h = _VIDEO.videoHeight * scaleFactor;
+    const maxWidth = 640;
+    const maxHeight = 480;
+    let newWidth, newHeight;
+    if (_VIDEO.videoWidth > _VIDEO.videoHeight) {
+      newWidth = Math.min(maxWidth, _VIDEO.videoWidth);
+      newHeight = (newWidth * _VIDEO.videoHeight) / _VIDEO.videoWidth;
+    } else {
+      newHeight = Math.min(maxHeight, _VIDEO.videoHeight);
+      newWidth = (newHeight * _VIDEO.videoWidth) / _VIDEO.videoHeight;
+    }
+    newWidth=106;
+    newHeight=106;
+    let canvas = document.createElement('canvas');
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+    console.log('getVideoBlobTHumb',_VIDEO.videoWidth,_VIDEO.videoHeight,newWidth,newHeight,_VIDEO.duration);
+    let ctx = canvas.getContext('2d');
+    ctx.drawImage(_VIDEO, 0, 0, newWidth, newHeight);
+    let dataURI = canvas.toDataURL('image/jpeg');
+   videoThumbnail=dataURLtoFile(dataURI, `${+new Date()}_thumb.jpg`);
+
+   return videoThumbnail;
+   
+    //return dataURI;
+  }
   
   function createFilePreviewEle(id, url, type,$wrapper){
     console.log('createFilePreviewEle',id, url, type,$wrapper);
     
         let filePreview ='';
-        filePreview= `<img alt="preview" class="preview-img files_img img-fluid rounded-3 w-100 shadow-1-strong" src="${url}"/>`;
+        filePreview= `<video id="video-preview-player" alt="preview" class="files_img rounded-3" src="${url}"/></video>`;
+        //filePreview= `<img alt="preview" class="preview-img files_img img-fluid rounded-3 w-100 shadow-1-strong" src="${url}"/>`;
        $wrapper=$("#gallary-items");
         let $previewCard = $(
             `<div class="p-2 bd-highlight v7-media-box" style="order:1" id="${id}">
@@ -476,6 +546,16 @@ function showToast(type = 'success', message = '') {
             dict.set(blobUrl, blob)
             return blobUrl
         },
+        createVideoBlobUrl:function(blob){
+          let canvas = document.createElement('canvas');
+          canvas.width = 106;
+          canvas.height = 106;
+          let ctx = canvas.getContext('2d');
+         ctx.drawImage(blob, 0, 0, 106, 106);
+          let dataURI = canvas.toDataURL('image/jpeg');
+          return dataURI;
+         // videoThumbnail=dataURLtoFile(dataURI, `${+new Date()}_thumb.jpg`);
+        },
         // 销毁 blob 对象
         revokeBlobUrl: function (url) {
             windowURL.revokeObjectURL(url)
@@ -487,12 +567,15 @@ function showToast(type = 'success', message = '') {
         }
     }
 }();
+
   function paramsBuilder(uploaderFile) {
+     
         let form = new FormData();
         form.append("file", uploaderFile.file);
-        form.append("action", 'UploadFolderImage');
+        form.append("action", 'UploadFolderVideo');
         form.append("hash", uploaderFile.id);
         form.append("folder_id", folderId);
+        form.append("thumb", videoThumbnail); 
        //form.append("date", currentDate);        
         return form;
   }
@@ -501,7 +584,10 @@ function showToast(type = 'success', message = '') {
     for (let i = 0; i < files.length; i++) {
             let file = files[i]
             let type = file.type;
-            let url = BLOB_UTILS.createBlobUrl(file)
+
+            let url = BLOB_UTILS.createBlobUrl(file);
+            
+           
             let id = uuid()
             let $previewCard = createFilePreviewEle(id, url, type)
             
@@ -514,51 +600,57 @@ function showToast(type = 'success', message = '') {
                 $ele: $previewCard
             })
         }
-        
-        addFiles.forEach(file => {
-          $fileWrapperElem=$("#"+file.id);
-          $.ajax({
-            url: SITE_URL+'/users/ajax/ajax.php',
-            contentType: false,
-            processData: false,
-            method: "POST",
-            data: paramsBuilder(file),
-            success: function (json) {
-              console.log('success response',json);
-              let response=JSON.parse(json);            
-              if(response.success){
-                $uploadFileWrapper=$("#"+response.hash);
-                $uploadFileWrapper.find('.jquery-uploader-preview-progress').hide();              
+        setTimeout(() => {
+          getVideoBlobTHumb();
+          addFiles.forEach(file => {
+            $fileWrapperElem=$("#"+file.id);
+            $.ajax({
+              url: SITE_URL+'/users/ajax/ajax.php',
+              contentType: false,
+              processData: false,
+              method: "POST",
+              data: paramsBuilder(file),
+              success: function (json) {
+                console.log('success response',json);
+                let response=JSON.parse(json);            
+                if(response.success){
+                  $uploadFileWrapper=$("#"+response.hash);
+                  $uploadFileWrapper.find('.jquery-uploader-preview-progress').hide();            
+                  
+                             
                 
                  // $fileWrapperElem.find('img').attr('src',response.url);
-                 $uploadFileWrapper.find('img').remove();
+                 $uploadFileWrapper.find('video').remove();
+                  
                   let $audioElm=$(`<a href="${response.file_url}"> <img class="img-fluid rounded-3 w-100 shadow-1-strong"  src="${response.thumb_url}"></a>`);
                   $uploadFileWrapper.prepend($audioElm);
+                  
+                  
+                }else{
+                  console.log(response);
+                  showToast('danger', response.msg);
+                }
+              
+              },
+              error: function (response) {
+                  console.error("上传异常", response)
                 
-                
-              }else{
-                console.log(response);
-                showToast('danger', response.msg);
+              },
+              xhr: function () {
+                  let xhr = new XMLHttpRequest();
+                  //使用XMLHttpRequest.upload监听上传过程，注册progress事件，打印回调函数中的event事件
+                  xhr.upload.addEventListener('progress', function (e) {
+                      let progressRate = (e.loaded / e.total) * 100;
+                      console.log('success progressCallback',progressRate);
+                      $fileWrapperElem.find('.progress-mask').innerHTML=Math.ceil(progressRate)+'%';                    
+                      
+                  })
+                  return xhr;
               }
-             
-            },
-            error: function (response) {
-                console.error("上传异常", response)
-               
-            },
-            xhr: function () {
-                let xhr = new XMLHttpRequest();
-                //使用XMLHttpRequest.upload监听上传过程，注册progress事件，打印回调函数中的event事件
-                xhr.upload.addEventListener('progress', function (e) {
-                    let progressRate = (e.loaded / e.total) * 100;
-                    console.log('success progressCallback',progressRate);
-                    $fileWrapperElem.find('.progress-mask').innerHTML=Math.ceil(progressRate)+'%';                    
-                    
-                })
-                return xhr;
-            }
-        })
-        });
+          })
+          });
+        }, 1000);
+        
         
    
   }
@@ -568,10 +660,10 @@ function showToast(type = 'success', message = '') {
     input.addEventListener( 'change', function( e ){
       var alreadyUploadedFiles=$('.v7-media-box').length;
       var filesCount=alreadyUploadedFiles+this.files.length;        
-      if(filesCount<22){
+      if(filesCount<12){
         handleFileUpload(this.files)
       }else{
-        alert('You can upload maximun 20 images.');
+        alert('You can upload maximun 10 images.');
       }
       
       
@@ -590,7 +682,7 @@ function showToast(type = 'success', message = '') {
           url: SITE_URL + "/users/ajax/ajax.php",
           type: "POST",
           data: {
-            action: 'CreatePhotoFolder',
+            action: 'CreateVideoFolder',
             folder_name: folderName,
             folder_id: folderId,
           },

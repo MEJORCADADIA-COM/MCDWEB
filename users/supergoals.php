@@ -1458,4 +1458,16 @@ $(document).on('click','.file-actions .file_delete',function(e){
     
   });
 </script>
+<?php if($type=='weekly'): ?>
+  <div id="popovertip" data-page="supergoals_weekly" data-bs-custom-class="mejor-info-popover" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Escribe las Acciones o Resultados más importantes que quieres lograr esta Semana. No dejes Pasar esta Semana sin Hacer algo Extraordinario para tí o para otras Personas. Si puedes."></div>
+<?php elseif($type=='monthly'): ?>
+  <div id="popovertip" data-page="supergoals_montly" data-bs-custom-class="mejor-info-popover" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Escribe las Acciones o Resultados más importantes que quieres lograr este Mes. Haz este Mes lo Mejor Posible. Tus logros Más Extraordinarios son Posibles. ¡Tu Puedes!"></div>
+<?php elseif($type=='quarterly'): ?>
+  <div id="popovertip" data-page="supergoals_quarterly" data-bs-custom-class="mejor-info-popover" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Transforma y Revoluciona tu Vida en los Próximos 90 Días. Decide qué es lo más Importante y Trabaja cada día en ello. Si Puedes."></div>
+<?php elseif($type=='yearly'): ?>
+  <div id="popovertip" data-page="supergoals_yearly" data-bs-custom-class="mejor-info-popover" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Todo es 'imposible' hasta que alguien lo hace Posible. Destroza tus limites y logra este Año tus Objetivos más Extraordinarios. Toma responsabilidad de tu mundo. Trabaja duro e inteligéntemente. ¡Tu Puedes!"></div>
+<?php elseif($type=='lifetime'): ?>
+  <div id="popovertip" data-page="supergoals_lifetime" data-bs-custom-class="mejor-info-popover" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Escribe 100 Sueños, Deseos y Objetivos para el Resto de tu Vida. Ten el Valor y el Coraje de Soñar en Grande. ¡Con el Nivel Adecuado de Acción, Dedicación, Perseverancia, Creatividad y Determinación, No Hay Nada que No Puedas Hacer Realidad!"></div>
+  <?php endif; ?>
+
 <?php require_once "inc/footer.php"; ?>

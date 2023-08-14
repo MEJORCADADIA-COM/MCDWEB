@@ -959,5 +959,5 @@ $isPastDate=false;
       });
   });
 </script>
-
+<div id="popovertip" data-page="biggestvictories" data-bs-custom-class="mejor-info-popover" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Escribe tus Mayores Victorias, Recuerda tus Triunfos, Refuerza tu Espíritu y tu Entusiasmo. Tu mente necesita refuerzo Positivo diario igual que tu Cuerpo necesita Actividad Física Diaria."></div>
 <?php require_once "inc/footer.php"; ?>

@@ -1,34 +1,55 @@
 <?php
+$plan=isset($_GET['plan'])? intval($_GET['plan']):3;
+if($plan==3){
+    $p_title='Mi Visión a 3 Años';
+    $p_heading1='Describe la VISION más Espectacular que Puedas Imaginar para Próximos 3 Años:';
+    $p_heading2='Hoja de Ruta; Pasos y Estrategias para Hacer Realidad esta Visión:';
+    $p_heading3='Posibles Desafios y Cómo los Superarás:';
+    $p_heading4='Victorias y Progreso:';
+}elseif($plan==5){
+    $p_title='Mi Visión a 5 Años';
+    $p_heading1='Describe la VISION más Espectacular que Puedas Imaginar para Próximos 5 Años:';
+    $p_heading2='Hoja de Ruta; Pasos y Estrategias para Hacer Realidad esta Visión:';
+    $p_heading3='Posibles Desafios y Cómo los Superarás:';
+    $p_heading4='Victorias y Progreso:';
+}else{
+    $p_title='Mi Visión a 10 Años';
+    $p_heading1='Describe la VISION más Espectacular que Puedas Imaginar para Próximos 10 Años:';
+    $p_heading2='Hola de Ruta; Pasos y Estrategias para Hacer Realidad esta Visión:';
+    $p_heading3='Posibles Desafios y Cómo los Superarás:';
+    $p_heading4='Victorias y Progreso:';
+}
 require_once "inc/header.php";
 require_once base_path('/users/services/Email.php');
 
 use Users\services\Email;
 
+
 ?>
 
 <?php
-
-$userVisions = $common->first('visions', 'user_id = :user_id', ['user_id' => $user_infos['id']]);
+$vision_type=$plan."_year";
+$userVisions = $common->first('user_visions', 'user_id = :user_id AND vision_type=:vision_type', ['user_id' => $user_infos['id'],'vision_type'=>$vision_type]);
 
 if (isset($_POST['save_vision'])) {
     
-    $visionMonths = $fm->validation($_POST['next_month_vision']);
-    $vision3Years = $fm->validation($_POST['next_3_years_vision']);
-    $vision5Years = $fm->validation($_POST['next_5_years_vision']);
-    $vision10Years = $fm->validation($_POST['next_10_years_vision']);
+    $section1 = $fm->validation($_POST['section1']);
+    $section2 = $fm->validation($_POST['section2']);
+    $section3 = $fm->validation($_POST['section3']);
+    $section4 = $fm->validation($_POST['section4']);
 
     try {
         if ($userVisions) {
             $common->update(
-                'visions',
-                ['next_month_vision' => $visionMonths, 'next_3_years_vision' => $vision3Years, 'next_5_years_vision' => $vision5Years, 'next_10_years_vision' => $vision10Years],
+                'user_visions',
+                ['section1' => $section1, 'section2' => $section2, 'section3' => $section3, 'section4' => $section4],
                 'id = :id',
                 ['id' => $userVisions['id']]
             );
         } else {
             $common->insert(
-                'visions',
-                ['user_id' => $user_infos['id'], 'next_month_vision' => $visionMonths, 'next_3_years_vision' => $vision3Years, 'next_5_years_vision' => $vision5Years, 'next_10_years_vision' => $vision10Years]
+                'user_visions',
+                ['user_id' => $user_infos['id'], 'section1' => $section1, 'section2' => $section2, 'section3' => $section3, 'section4' => $section4,'vision_type'=>$vision_type]
             );
         }
     } catch (Exception $e) {
@@ -37,15 +58,15 @@ if (isset($_POST['save_vision'])) {
     Session::set('success', 'Visions saved successfully!');
 
 
-    header("Location: " . SITE_URL . "/users/vision.php");
+    header("Location: " . SITE_URL . "/users/vision.php?plan=".$plan);
     return;
 }
 
 if (isset($_POST['send_email'])) {
-    $visionMonths = $fm->validation($_POST['next_month_vision']);
-    $vision3Years = $fm->validation($_POST['next_3_years_vision']);
-    $vision5Years = $fm->validation($_POST['next_5_years_vision']);
-    $vision10Years = $fm->validation($_POST['next_10_years_vision']);
+    $section1 = $fm->validation($_POST['section1']);
+    $section2 = $fm->validation($_POST['section2']);
+    $section3 = $fm->validation($_POST['section3']);
+    $section4 = $fm->validation($_POST['section4']);
 
     $email = $fm->validation($_POST['to_email']);
 
@@ -55,22 +76,22 @@ if (isset($_POST['send_email'])) {
         return;
     }
 
-    if (empty($vision3Years) && empty($vision5Years) && empty($vision10Years) && empty($visionMonths)) {
+    if (empty($section1) && empty($section2) && empty($section3) && empty($section4)) {
         setError('Visions can not be empty');
-        redirect('users/vision.php');
+        redirect('users/vision.php?plan='.$plan);
         return;
     }
-    if (!empty($visionMonths)) {
-        $visions = "<h4>Describe la Vida Más Espectacular que Puedas Imaginar:</h4><div>".html_entity_decode($visionMonths)."</div>";
+    if (!empty($section1)) {
+        $visions = "<h4>".$p_heading1."</h4><div>".html_entity_decode($section1)."</div>";
     }
-    if (!empty($vision3Years)) {
-        $visions = "<h4>Describe en detalle tu Visión para los Próximos 3 Años:</h4><div>".html_entity_decode($vision3Years)."</div>";
+    if (!empty($section2)) {
+        $visions = "<h4>".$p_heading2."</h4><div>".html_entity_decode($section2)."</div>";
     }
-    if (!empty($vision5Years)) {
-        $visions .= "<h4>Describe en detalle tu Visión para los Próximos 5 Años:</h4><div>".html_entity_decode($vision5Years)."</div>";
+    if (!empty($section3)) {
+        $visions .= "<h4>".$p_heading3."</h4><div>".html_entity_decode($section3)."</div>";
     }
-    if (!empty($vision10Years)) {
-        $visions .= "<h4>Describe en detalle tu Visión para los Próximos 10 Años:</h4><div>".html_entity_decode($vision10Years)."</div>";
+    if (!empty($section4)) {
+        $visions .= "<h4>".$p_heading4."</h4><div>".html_entity_decode($section4)."</div>";
     }
 
     try {
@@ -100,7 +121,7 @@ if (isset($_POST['send_email'])) {
     Session::set('success', 'Mail sent successfully!');
 
 
-    redirect("users/vision.php");
+    redirect("users/vision.php?plan=".$plan);
     return;
 }
 ?>
@@ -111,24 +132,24 @@ if (isset($_POST['send_email'])) {
     <!-- Secondary Nav -->
     <div class="projects py-5" style="background-color: #ed008c;">
         <div class="mb-5" style="background-color: #fef200; padding: 10px">
-            <h2 class="toptitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;">Creando un Futuro Extraordinario:</h2>
+            <h2 class="toptitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;"><?=$p_title;?></h2>
         </div>
         <form class="px-1 px-lg-0" action="" method="post">
-            <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="next-3-years-vision">Describe la Vida Más Espectacular que Puedas Imaginar:</label>
-                <textarea name="next_month_vision" id="next-month-vision" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['next_month_vision'] ?? '' ?></textarea>
+            <div class="mb-5">
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="section1"><?=$p_heading1;?></label>
+                <textarea name="section1" id="section1" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['section1'] ?? '' ?></textarea>
             </div>
-            <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="next-3-years-vision">Describe en detalle tu Visión para los Próximos 3 Años:</label>
-                <textarea name="next_3_years_vision" id="next-3-years-vision" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['next_3_years_vision'] ?? '' ?></textarea>
+            <div class="mb-5">
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="section2"><?=$p_heading2;?></label>
+                <textarea name="section2" id="section2" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['section2'] ?? '' ?></textarea>
             </div>
-            <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="next-5-years-vision">Describe en detalle tu Visión para los Próximos 5 Años:</label>
-                <textarea name="next_5_years_vision" id="next-3-years-vision" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['next_5_years_vision'] ?? '' ?></textarea>
+            <div class="mb-5">
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="section3"><?=$p_heading3;?></label>
+                <textarea name="section3" id="section3" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['section3'] ?? '' ?></textarea>
             </div>
-            <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="next-10-years-vision">Describe en detalle tu Visión para los Próximos 10 Años:</label>
-                <textarea name="next_10_years_vision" id="next-10-years-vision" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['next_10_years_vision'] ?? '' ?></textarea>
+            <div class="mb-5">
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="section4"><?=$p_heading4;?></label>
+                <textarea name="section4" id="section4" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userVisions['section4'] ?? '' ?></textarea>
             </div>
             <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Email</button>
             <button class="btn btn-info letter" type="submit" name="save_vision">Guardar</button>
@@ -193,5 +214,5 @@ if (isset($_POST['send_email'])) {
         window.print();
     });
 </script>
-
+<div id="popovertip" data-page="vision" data-bs-custom-class="mejor-info-popover" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Sin una Visión que te Inspire y Empodere, tu Vida se desvanece y tus sueños también. Crea la Visión más Espectacular y Atrevida que Puedas Imaginar para tu Vida y que desafíe todo tu ser. Trabaja sin descanso en hacerla Realidad. ¡Si Puedes!"></div>
 <?php require_once "inc/footer.php"; ?>

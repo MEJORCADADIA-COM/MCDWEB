@@ -219,6 +219,23 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['get_evolutions']) && $_G
     return response(['success' => true, 'data' => ['evolutions' => $evolutions, 'total_page' => $totalPage, 'current_page' => !empty($_GET['page']) ? (int)$_GET['page'] : 1]]);
 
 }
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['action']) && $_GET['action'] === 'get_user_video_folders') {
+    $UserId = $user_id = Session::get('user_id');
+   
+    $userFolders = $common->get('user_video_folders', 'user_id = :user_id', ['user_id' => $user_id],[],'created_at','DESC'); 
+    foreach($userFolders as $k=>$folder) {
+        $folder_photo = $common->get('user_folder_videos', 'user_id = :user_id AND folder_id=:folder_id', ['user_id' => $user_id,'folder_id'=>$folder['id']],[],'created_at','DESC'); 
+        $userFolders[$k]['count']=count($folder_photo);
+        if(!empty($folder_photo)){
+            $userFolders[$k]['icon']=$folder_photo[0]['thumb'];
+        }else{
+            $userFolders[$k]['icon']=SITE_URL.'/assets/images/playlist-icon.png';
+        }
+    }
+   
+    return response(['success' => true, 'data' => ['folders' => $userFolders]]);
+
+}
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['action']) && $_GET['action'] === 'get_user_photo_folders') {
     $UserId = $user_id = Session::get('user_id');
    
@@ -773,7 +790,22 @@ if (isset($_POST['UpdateDailyGoal']) && ($_POST['UpdateDailyGoal'] == 'UpdateDai
 
 
 }
-
+if (isset($_POST['action']) && ($_POST['action'] == 'UpdateSuperMemoryGoal')) {
+    $user_id = Session::get('user_id');
+    $goalText = empty($_POST['goalText']) ? '' : $_POST['goalText'];
+    $currentDate = isset($_POST['currentDate']) ? $_POST['currentDate'] : date('Y-m-d');
+    $goalId = isset($_POST['goalId']) ? (int)$_POST['goalId'] : 0;
+    
+    if (!empty($goalId)) {
+        try{
+            $common->update('supermemories_goals', ['goal' => $goalText], 'id = :id', ['id' => $goalId], modifiedColumnName: 'updated_at');
+            echo 'Updated';
+        }catch(Exception $e){
+            var_dump($e);
+        }
+        
+    } 
+}
 
 if (isset($_POST['UpdateDailyGoals']) && ($_POST['UpdateDailyGoals'] == 'UpdateDailyGoals')) {
     $user_id = Session::get('user_id');
@@ -1211,7 +1243,41 @@ if (isset($_POST['action']) && ($_POST['action'] == 'createNotes')) {
 
 
 }
+if (isset($_POST['action']) && ($_POST['action'] == 'CreateVideoFolder')) {
+    $user_id = Session::get('user_id');    
+    $folder_name = $format->validation($_POST['folder_name']);
+    $folder_id=isset($_POST['folder_id'])? $_POST['folder_id']:0;    
+    $resArr = ['success' => false, 'new'=>true, 'folder_id'=>$folder_id,'folder_name' => $folder_name, 'message' => ""];
+    if(empty($folder_id)){
+        $common->insert('user_video_folders', [
+            'user_id' => $user_id,
+            'name' => $folder_name
+        ]);
+        $folder_id = $common->insertId();
+        $resArr['success'] = true;
+        $resArr['message'] = "created successfully";
+        $resArr['folder'] = ['id'=>$folder_id,'name'=>$folder_name,'icon'=>SITE_URL.'/assets/images/playlist-icon.png','count'=>0];        
+        $resArr['new'] = true;
+    }else{
+        $common->update(
+            table: "user_video_folders",
+            data: ['name' => $folder_name],
+            cond: 'WHERE user_id = :user_id AND id = :id',
+            params: ['user_id' => $user_id, 'id' => $folder_id]
+        );
+        $resArr['new'] = false;
+        $resArr['message'] = "updated successfully";
+        $resArr['success'] = true;
+        $folder_photo = $common->get('user_video_folders', 'user_id = :user_id AND folder_id=:folder_id', ['user_id' => $user_id,'folder_id'=>$folder_id],[],'created_at','DESC'); 
+  
+        $resArr['folder'] = ['id'=>$folder_id,'name'=>$folder_name,'icon'=>SITE_URL.'/assets/images/playlist-icon.png','count'=>count($folder_photo)];  
 
+    }    
+    
+    echo json_encode($resArr);
+
+
+}
 if (isset($_POST['action']) && ($_POST['action'] == 'CreatePhotoFolder')) {
     $user_id = Session::get('user_id');    
     $folder_name = $format->validation($_POST['folder_name']);
@@ -1280,6 +1346,38 @@ if (isset($_POST['action']) && ($_POST['action'] == 'createFolder')) {
 
     }    
     
+    echo json_encode($resArr);
+
+
+}
+
+if (isset($_POST['action']) && ($_POST['action'] == 'SaveSuperMemoriesBox')) {
+    $user_id = Session::get('user_id');
+    $body = $format->validation($_POST['body']);
+    $resArr = ['success' => false, 'goals' => [], 'message' => ""];
+    $selectedDate=date('Y-m-d H:i:s');
+    if (!empty($body)) {
+        $result = $common->count("supermemories", 'user_id = :user_id', ['user_id' => $user_id]);
+        
+        if ($result > 0) {
+            $updated=$common->update(
+                table: "supermemories",
+                data: ['content' => $body],
+                cond: 'user_id = :user_id',
+                params: ['user_id' => $user_id],
+                modifiedColumnName: 'updated_at'
+            );
+          
+            $resArr['success'] = true;
+        } else {
+            $common->insert('supermemories', [
+                'user_id' => $user_id,
+                'content' => $body,
+                'created_at' => $selectedDate
+            ]);
+            $resArr['success'] = true;
+        }
+    }
     echo json_encode($resArr);
 
 
@@ -1524,6 +1622,23 @@ if (isset($_POST['SaveNewDailyImportantGoals']) && ($_POST['SaveNewDailyImportan
     $table_name = 'daily_important_goals';
     $addedGoals = [];
     //pullPreviousGoals($user_id,$type,$startDate,$endDate);
+    foreach ($goals as $key => $goal) {
+
+        if (!empty($goal)) {
+            $common->insert($table_name, ['user_id' => $user_id, 'goal' => $goal, 'created_at' => $currentDate]);
+            $id = $common->insertId();
+            $addedGoals[$id] = $goal;
+        }
+    }
+    echo json_encode(['success' => true, 'goals' => $addedGoals]);
+}
+if (isset($_POST['SaveNewSuperMemoriesGoals']) && ($_POST['SaveNewSuperMemoriesGoals'] == 'SaveNewSuperMemoriesGoals')) {
+    $user_id = Session::get('user_id');
+    
+    $goals = isset($_POST['goals']) ? $_POST['goals'] : [];
+    $currentDate = isset($_POST['currentDate']) ? $_POST['currentDate'] : date('Y-m-d');
+    $table_name = 'supermemories_goals';
+    $addedGoals = [];
     foreach ($goals as $key => $goal) {
 
         if (!empty($goal)) {
@@ -1916,7 +2031,25 @@ if (isset($_POST['action']) && ($_POST['action'] == 'DeleteUserFolder')) {
         echo 'Something is wrong!';
     }
 }
-
+if (isset($_POST['action']) && ($_POST['action'] == 'DeleteUserVideoFolder')) {
+    if (isset($_POST['id'])) {
+        $id = $_POST['id'];
+        $app_delete = $common->delete("user_folder_videos", "folder_id = :id", ['id' => $id]);
+        $app_delete = $common->delete("user_video_folders", "id = :id", ['id' => $id]);
+        echo 'Delete';
+    } else {
+        echo 'Something is wrong!';
+    }
+}
+if (isset($_POST['action']) && ($_POST['action'] == 'DeleteUserFolderVideo')) {
+    if (isset($_POST['id'])) {
+        $id = $_POST['id'];
+        $app_delete = $common->delete("user_folder_videos", "id = :id", ['id' => $id]);
+        echo 'Delete';
+    } else {
+        echo 'Something is wrong!';
+    }
+}
 if (isset($_POST['action']) && ($_POST['action'] == 'DeleteUserFolderImage')) {
     if (isset($_POST['id'])) {
         $id = $_POST['id'];
@@ -2061,6 +2194,66 @@ function createThumbnail($src, $dest, $targetWidth, $targetHeight = null) {
     $thumbImage=imagejpeg($thumbnail,$dest);
    
     return $thumbImage;
+}
+if (isset($_POST['action']) && ($_POST['action'] == 'UploadFolderVideo')) {
+    
+    $maxAllowed=10;
+    $hash = $format->validation($_POST['hash']);
+    $folder_id=$format->validation($_POST['folder_id']);
+    $user_id = Session::get('user_id');
+   
+    $resAr=['url'=>"",'success'=>false,'msg'=>'','hash'=>$hash];
+    $fileCounts = $common->count(
+        "user_folder_videos",
+        'user_id = :user_id AND folder_id=:folder_id',
+        ['user_id' => $user_id,'folder_id'=>$folder_id]
+    );
+    if($fileCounts<$maxAllowed){
+        $file_name=strtolower(basename($_FILES["file"]["name"])); 
+        $target_dir = "../uploads/videodrive/".$user_id."/";
+        if ( !is_dir( $target_dir ) ) {
+            mkdir( $target_dir,0777,true );       
+        }
+        $target_file = $target_dir . $file_name;
+        $target_thumb = $target_dir .$file_name.'_thumb.jpg';
+        $target_file_url=SITE_URL."/users/uploads/videodrive/".$user_id."/".$file_name;
+        $target_thumb_url=$target_file_url.'_thumb.jpg';
+        
+        $FileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        $resAr['file_type']=$FileType;
+        $check = getimagesize($_FILES["file"]["tmp_name"]);
+        $uploadOk=1;
+        if ($uploadOk == 0) {  
+         $resAr['msg']="Sorry, your file was not uploaded.";
+       } else {
+         if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) { 
+            $postData=[
+                'user_id' => $user_id,
+                'folder_id' => $folder_id,
+                'url' => $target_file_url,
+                'thumb' => $target_thumb_url
+            ];
+            if(!empty($_FILES["thumb"]["tmp_name"])){
+                if (move_uploaded_file($_FILES["thumb"]["tmp_name"], $target_thumb)) { 
+                    $postData['thumb']=$target_thumb_url;
+                    $resAr['thumb']=$target_thumb_url;
+                }
+            }  
+            $file_insert = $common->insert("user_folder_videos", $postData);
+            $fileId = $common->insertId(); 
+            $resAr['thumb_url']=$target_thumb_url;           
+           $resAr['file_url']=$target_file_url;
+           $resAr['success']=true;
+           $resAr['id']=$fileId;
+         } else {
+             $resAr['msg']="Sorry, there was an error uploading your file.";
+           
+         }
+       }
+    }else{
+        $resAr['msg']="Maximum limit reached.";
+    }
+    echo  json_encode($resAr);
 }
 if (isset($_POST['action']) && ($_POST['action'] == 'UploadFolderImage')) {
     
@@ -2239,13 +2432,22 @@ if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'UploadV7File')) {
                 'url' => $target_file_url,
                 'thumb' => $target_file_url
             ];
-            try {
-                createThumbnail($target_file,$target_thumb, 300,300);
-                $postData['thumb']=$target_thumb_url;
-
-            }catch (ImagickException $e) {
-                echo $e->getMessage();
-            }    
+            if(!empty($_FILES["thumb"]["tmp_name"])){
+                if (move_uploaded_file($_FILES["thumb"]["tmp_name"], $target_thumb)) { 
+                    $postData['thumb']=$target_thumb_url;
+                    $resAr['thumb']=$target_thumb_url;
+                }
+            }else{
+                try {
+                    createThumbnail($target_file,$target_thumb, 300,300);
+                    $postData['thumb']=$target_thumb_url;
+                    $resAr['thumb']=$target_thumb_url;
+    
+                }catch (ImagickException $e) {
+                    echo $e->getMessage();
+                } 
+            }
+               
             $file_insert = $common->insert("uploaded_files", $postData);
             $fileId = $common->insertId(); 
             if($type=='image'){

@@ -762,7 +762,7 @@ if ($dailyLifeGoals) {
                 </div>
               <?php endif; ?>
             </div>
-            </div>
+          </div>
             <div class="cardd mb-5" id="section-2" style="padding:0 5px;">
             <div class="d-flex justify-content-between my-1">
               <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Mini Resumen de Hoy:</h5>
@@ -949,9 +949,11 @@ if ($dailyLifeGoals) {
                   <div class="p-1 bd-highlight">
 
                   <div class="v7-media-box <?=count($dailyV7Videos)>0? 'file-added':''; ?>" id="videoMediabox4">
-                      <?php if(!empty($dailyV7Videos) && count($dailyV7Videos)>0):  ?>                      
+                      <?php if(!empty($dailyV7Videos) && count($dailyV7Videos)>0):  
+                      $poster=''; 
+                        if(!empty($dailyV7Videos[0]['thumb'])){ $poster='poster="'.$dailyV7Videos[0]['thumb'].'"'; } ?>                      
                         <div class="media-thumb-wrapper" data-file="<?=$dailyV7Videos[0]['id'];?>" id="fileid-<?=$dailyV7Videos[0]['id'];?>">
-                        <video controls preload="auto">
+                        <video controls preload="metadata" <?=$poster;?>>
                         <source src="<?=$dailyV7Videos[0]['url'];?>#t=0.2" type="video/mp4">
                         Your browser does not support the video tag.
                       </video>
@@ -1191,7 +1193,10 @@ if ($dailyLifeGoals) {
     </div>
   </div>
 </div>
+
 <script>
+
+
   $('#show').css('display', 'none');
 
 
@@ -1810,7 +1815,17 @@ if ($dailyLifeGoals) {
 
 
   }
-
+  var videoThumbnail='';
+  function dataURLtoFile(dataurl, filename) {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  }
+  
+  
   function createFilePreviewEle(id, url, type,$wrapper){
     console.log('createFilePreviewEle'+type,type,id, url, type,$wrapper);
     
@@ -1822,8 +1837,12 @@ if ($dailyLifeGoals) {
           filePreview= `<span class="preview-thumb"><i class="fa fa-file-audio-o "></i> </span>`;
         }
         if(type=='video/mp4' || type.startsWith("video")){
-          filePreview= `<span class="preview-thumb"><i class="fa fa-file-video-o"></i> </span>`;
+          //filePreview= `<img alt="preview" class="files_img rounded-3" src="${url}"/>`;
+          filePreview= `<video id="video-preview-player" alt="preview" class="files_img rounded-3" src="${url}"/></video>`;
+          //filePreview= `<span class="preview-thumb"><i class="fa fa-file-video-o"></i> </span>`;
+          
         }  
+       
         console.log('filePreview',filePreview);
         let $previewCard = $(
             `<div class="media-thumb-wrapper" id="${id}">
@@ -1849,6 +1868,8 @@ if ($dailyLifeGoals) {
                  </div>`);
         $wrapper.prepend($previewCard);
         $wrapper.addClass("file-added");
+        
+        
         return $previewCard
   }
   function uuid() {
@@ -1887,25 +1908,71 @@ if ($dailyLifeGoals) {
         }
     }
 }();
+
 function paramsBuilder(uploaderFile,upload_type) {
+        
         let form = new FormData();
-        form.append("file", uploaderFile.file);
+        
         form.append("action", 'UploadV7File');
         form.append("type", upload_type);
-        form.append("date", currentDate);        
+        form.append("date", currentDate); 
+        form.append("thumb", videoThumbnail); 
+        if(upload_type=='video' && compressedVideoBlob!=null){
+          form.append("file", compressedVideoBlob);  
+          form.append("compressed", 1);         
+        }else{
+          form.append("file", uploaderFile.file);
+        }
+             
         return form;
   }
-  function handleFileUpload(files,upload_type,$fileWrapperElem){
+  var compressedVideoBlob=null;
+  async function getVideoBlobTHumb(){
+    scaleFactor=0.5;
+    var _VIDEO = document.querySelector("#video-preview-player");
+    let w = _VIDEO.videoWidth * scaleFactor;
+    let h = _VIDEO.videoHeight * scaleFactor;
+    const maxWidth = 640;
+    const maxHeight = 480;
+    let newWidth, newHeight;
+    if (_VIDEO.videoWidth > _VIDEO.videoHeight) {
+      newWidth = Math.min(maxWidth, _VIDEO.videoWidth);
+      newHeight = (newWidth * _VIDEO.videoHeight) / _VIDEO.videoWidth;
+    } else {
+      newHeight = Math.min(maxHeight, _VIDEO.videoHeight);
+      newWidth = (newHeight * _VIDEO.videoWidth) / _VIDEO.videoHeight;
+    }
+    let canvas = document.createElement('canvas');
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+    console.log('getVideoBlobTHumb',_VIDEO.videoWidth,_VIDEO.videoHeight,newWidth,newHeight,_VIDEO.duration);
+    let ctx = canvas.getContext('2d');
+    ctx.drawImage(_VIDEO, 0, 0, newWidth, newHeight);
+    let dataURI = canvas.toDataURL('image/jpeg');
+   videoThumbnail=dataURLtoFile(dataURI, `${+new Date()}_thumb.jpg`);
+
+   
+   
+    //return dataURI;
+  }
+   
+  function handleFileUpload(files,upload_type,$fileWrapperElem,thumbURI=''){
     let addFiles = [];
     for (let i = 0; i < files.length; i++) {
             let file = files[i]
             let type = file.type;
-            let url = BLOB_UTILS.createBlobUrl(file)
+            let url = BLOB_UTILS.createBlobUrl(file);
+           /* if(upload_type=='video'){
+              url = thumbURI;
+            } */
             let id = uuid();
             if(upload_type=='audio' && type==''){
               type='audio/wav';
             }
-            let $previewCard = createFilePreviewEle(id, url, type,$fileWrapperElem)
+            let $previewCard = createFilePreviewEle(id, url, type,$fileWrapperElem);
+           
+            
+            
             
             addFiles.push({
                 id: id,
@@ -1916,7 +1983,16 @@ function paramsBuilder(uploaderFile,upload_type) {
                 $ele: $previewCard
             })
         }
-        addFiles.forEach(file => {
+        var waitTime=100;
+        if(upload_type=='video'){
+          waitTime=2000;
+        }
+        setTimeout(() => {
+          if(upload_type=='video'){
+            getVideoBlobTHumb();
+          }
+          
+          addFiles.forEach(file => {
           $.ajax({
             url: SITE_URL+'/users/ajax/ajax.php?action=UploadV7File&date='+currentDate,
             contentType: false,
@@ -1937,6 +2013,7 @@ function paramsBuilder(uploaderFile,upload_type) {
                   $fileWrapperElem.find('.media-thumb-wrapper').prepend($audioElm);
                   $fileWrapperElem.addClass("has-audio-file");
                 }else if(response.type=='video'){
+                  $fileWrapperElem.find('video').remove();
                   let $audioElm=$(`<video controls="" preload="metadata">
                   <source src="${response.url}#t=0.2" type="video/mp4">
                         Your browser does not support the video tag.</video>`);
@@ -1968,6 +2045,9 @@ function paramsBuilder(uploaderFile,upload_type) {
             }
         })
         });
+        }, waitTime);
+        
+
         
    
   }
@@ -1980,6 +2060,7 @@ function paramsBuilder(uploaderFile,upload_type) {
     const result = `${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`;
     return result;
   }
+  
   var inputs = document.querySelectorAll( '.inputfile' );
   Array.prototype.forEach.call( inputs, function( input )  {
     input.addEventListener( 'change', function( e ){      
@@ -2003,6 +2084,8 @@ function paramsBuilder(uploaderFile,upload_type) {
         media.src = URL.createObjectURL(inputFile);
         media.addEventListener('loadedmetadata', () => {
           const duration = media.duration;
+          
+          
           if(duration>maxAllowed){
             var mins=duration/60;
             if(upload_type=='audio'){
@@ -2012,7 +2095,10 @@ function paramsBuilder(uploaderFile,upload_type) {
             }
             
           }else{
+                      
             handleFileUpload(this.files,upload_type,$fileWrapperElem);
+           
+            
           }
         });
 
@@ -2119,4 +2205,5 @@ function paramsBuilder(uploaderFile,upload_type) {
 <script type="application/javascript">
   
 </script>
+<div id="popovertip" data-page="dailygoals" data-bs-placement="bottom" data-bs-custom-class="mejor-info-popover" data-bs-toggle="popover" data-bs-content="Cada día es una Oportunidad Inmensa de Vivir y de Servir. Elije las 7 Acciones o Resultados más importantes que quieres lograr. Cada Momento es Irrepetible. Haz el Esfuerzo para que hoy sea Excepcional. ¡Si puedes!"></div>
 <?php require_once "inc/footer.php"; ?>

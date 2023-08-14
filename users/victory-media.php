@@ -127,8 +127,10 @@ $isPastDate=false;
                                     Download audio
                                 </a> 
                                 </audio>
-                            <?php elseif($file['type']=='video'): ?>
-                                <video class="" controls preload="metadata">
+                            <?php elseif($file['type']=='video'):  $poster=''; 
+                            if(!empty($file['thumb'])){ $poster='poster="'.$file['thumb'].'"'; }
+                            ?>
+                                <video class="" controls preload="metadata" <?=$poster;?> >
                                     <source src="<?=$file['url'];?>#t=0.2" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>

@@ -11,7 +11,7 @@ date_default_timezone_set("America/New_York");
 define("DB_HOST", 'localhost');
 define("DB_USER", 'root');
 define("DB_PASS", '');
-define("SITE_URL", 'http://localhost/vault/raza/mejorcadadia.com');
+define("SITE_URL", 'https://localhost/vault/raza/mejorcadadia.com');
 
 
     //mail sender

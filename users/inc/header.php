@@ -84,6 +84,8 @@ if (Session::get('user_id') !== NULL) {
     <meta name="msapplication-TileImage" content="/assets/images/major-192x192.png">
     <meta name="msapplication-TileColor" content="green">
 
+
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -524,7 +526,7 @@ if (Session::get('user_id') !== NULL) {
                 width:calc(100% - 286px);
             }
         }
-        .ck.ck-editor,. *{
+        .ck.ck-editor,.ck.ck-editor *{
             color:#000!important;
             font-size:1rem;
         }
@@ -667,7 +669,7 @@ if (Session::get('user_id') !== NULL) {
     <?php endif; ?>
     <!-- Alerts End -->
 
-    <section class="admin-dashbord">
+    <section class="admin-dashbord userinfoid-<?=$user_id;?>">
         <nav class="navbar header-navbar navbar-dark sticky-top flex-md-nowrap pb-2 navselect">
 
             <a class="btn d-block d-md-none custom-toggler" data-bs-toggle="offcanvas" href="#offcanvasWithBothOptions" role="button" aria-controls="offcanvasWithBothOptions">
@@ -770,8 +772,17 @@ if (Session::get('user_id') !== NULL) {
                                     <li class="nav-item">
                                         <a class="nav-link" href="<?= SITE_URL; ?>/users/missions.php">Mi Missión</a>
                                     </li>
+                                    
                                     <li class="nav-item">
-                                        <a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php">Mi Visión</a>
+                                        <a class="nav-link dropdown-toggle" href="#mivisions" id="mivisionsDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
+                                        Mi Visión
+                                        </a>
+                                        <ul id="mivisions" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="mivisionsDropdown" style="margin-left:1rem;">
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=3">Visión 3-Años</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=5">Visión 5-Años</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=10">Visión 10-Años</a></li>
+                                            
+                                        </ul>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" href="<?= SITE_URL; ?>/users/commitments.php">Mis Compromisos</a>
@@ -797,10 +808,12 @@ if (Session::get('user_id') !== NULL) {
                                     <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/toRemember.php">Eventos para Recordar</a></li>
                                     <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/biggestVictories.php">Mis Mayores Victorias</a></li>
                                     <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/superdias.php">SuperDias</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/photo-drive.php">Imagenes de Exito</a></li>
+                                    
                                 </ul>
                             </li>
-
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="supermemories.php"><i class="fa fa-tree" aria-hidden="true"></i> SuperMemorias</a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link dropdown-toggle" href="#dentletter" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
                                 <i class="fa fa-envelope-o" aria-hidden="true"></i> Cartas para la Eternidad
@@ -817,17 +830,26 @@ if (Session::get('user_id') !== NULL) {
                                 <ul id="Imagenes" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
                                     <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/victory-images.php">Gallery</a></li>
                                     <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/dream-wall.php">Dream wall</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/folder-images.php">Imagenes de Exito</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/photo-drive.php">Imagenes de Exito</a></li>
                                 </ul>
                             </li>
                                     <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=audio">
                                     <i class="fa fa-volume-up" aria-hidden="true"></i> Audios</a></li>
-                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=video">
-                                    <i class="fa fa-video-camera" aria-hidden="true"></i> Videos</a></li>
+                                    
+                                    <li class="nav-item">
+                                        <a class="nav-link dropdown-toggle" href="#mivideos" id="mivideosDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
+                                        <i class="fa fa-video-camera" aria-hidden="true"></i> Videos
+                                        </a>
+                                        <ul id="mivideos" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="mivideosDropdown" style="margin-left:1rem;">
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/video-playlists.php">Upload Video</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/victory-media.php?type=video">Victory 7 Videos</a></li>
+                                            
+                                        </ul>
+                                    </li>
                                     
                             <li class="nav-item">
-                       <a class="nav-link" aria-current="page" href="mynotes.php"><i class="fa fa-sticky-note-o" aria-hidden="true"></i> MejorNotes</a>
-                    </li>
+                            <a class="nav-link" aria-current="page" href="mynotes.php"><i class="fa fa-sticky-note-o" aria-hidden="true"></i> MejorNotes</a>
+                            </li>
                         </ul>
                     </li>
                     
@@ -855,7 +877,15 @@ if (Session::get('user_id') !== NULL) {
                         <a class="nav-link" href="<?= SITE_URL; ?>/users/logout.php" onclick="return confirm('Are you sure to logout?');"><i class="fa fa-power-off" aria-hidden="true"></i> Salir</a>
                     </li>
                     <?php endif; ?>  
-                    <li class="text-center mt-3">           
+                    <li class="text-center mt-3"> 
+                    <div class="mobile-menu-logo text-center">
+                        <a class="" href="https://mejorcadadia.com">
+                            <img src="<?=SITE_URL;?>/users/assets/logo.png" alt="image" width="100px">
+                        </a>                        
+                    </div>
+                    <div class="brand-info-bar text-center mb-2">
+                        <h1 class="" style="color:#FFF; font-size:20px;">El Club de la Gente Excepcional</h1>                      
+                    </div>          
                             <h6 class="text-light">Comparte MCD con tus amigos</h6>                     
                                 <div class="text-center">
                                     <a target="_blank" href="http://www.facebook.com/sharer.php?u=mejorcadadia.com" class="btn-facebook btn btn-social-icon"><i class="fa fa-facebook" aria-hidden="true"></i></a>
@@ -871,10 +901,13 @@ if (Session::get('user_id') !== NULL) {
                         </div>
                     </li>
                     <li class="nav-item lastfooteritem">
-                    <h1 class="migualtitle">By Miguel De La Fuente
-                        <br>
-                        <p>+507 6445-1418</p>
-                    </h1>
+                    
+                    <div class="brand-info-bar text-center">
+                       <h1 class="migualtitle">By Miguel De La Fuente
+                            <p class="text-center">+507 6445-1418</p>
+                        </h1>
+                    </div>
+                    
                     </li> 
 
                 </ul>
@@ -967,8 +1000,17 @@ if (Session::get('user_id') !== NULL) {
                                             <li class="nav-item">
                                                 <a class="nav-link" href="<?= SITE_URL; ?>/users/missions.php">Mi Missión</a>
                                             </li>
+                                            
                                             <li class="nav-item">
-                                                <a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php">Mi Visión</a>
+                                                <a class="nav-link dropdown-toggle" href="#mivisions" id="mivisionsDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
+                                                Mi Visión
+                                                </a>
+                                                <ul id="mivisions" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="mivisionsDropdown" style="margin-left:1rem;">
+                                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=3">Visión 3-Años</a></li>
+                                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=5">Visión 5-Años</a></li>
+                                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=10">Visión 10-Años</a></li>
+                                                    
+                                                </ul>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link" href="<?= SITE_URL; ?>/users/commitments.php">Mis Compromisos</a>
@@ -994,10 +1036,12 @@ if (Session::get('user_id') !== NULL) {
                                             <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/toRemember.php">Eventos para Recordar</a></li>
                                             <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/biggestVictories.php">Mis Mayores Victorias</a></li>
                                             <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/superdias.php">SuperDias</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/photo-drive.php">Imagenes de Exito</a></li>
+                                            
                                         </ul>
                                     </li>
-
+                                    <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="supermemories.php"><i class="fa fa-tree" aria-hidden="true"></i> SuperMemorias</a>
+                            </li>
                                     <li class="nav-item">
                                         <a class="nav-link dropdown-toggle" href="#dentletter" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
                                         <i class="fa fa-envelope-o"></i> Cartas para la Eternidad
@@ -1014,11 +1058,20 @@ if (Session::get('user_id') !== NULL) {
                                 <ul id="Imagenes" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
                                     <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/victory-images.php">Gallery</a></li>
                                     <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/dream-wall.php">Dream wall</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/folder-images.php">Imagenes de Exito</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/photo-drive.php">Imagenes de Exito</a></li>
                                 </ul>
                             </li>
                                     <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=audio"><i class="fa fa-volume-up"></i> Audios</a></li>
-                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=video"><i class="fa fa-video-camera"></i> Videos</a></li>
+                                    <li class="nav-item">
+                                        <a class="nav-link dropdown-toggle" href="#mivideos" id="mivideosDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
+                                        <i class="fa fa-video-camera" aria-hidden="true"></i> Videos
+                                        </a>
+                                        <ul id="mivideos" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="mivideosDropdown" style="margin-left:1rem;">
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/video-playlists.php">Upload Video</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/victory-media.php?type=video">Victory 7 Videos</a></li>
+                                            
+                                        </ul>
+                                    </li>
                                     <li class="nav-item">
                                     <a class="nav-link" aria-current="page" href="mynotes.php"><i class="fa fa-sticky-note-o"></i> MejorNotes</a>
                                     </li>

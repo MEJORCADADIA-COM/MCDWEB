@@ -950,5 +950,5 @@ if ($row) {
       });
   });
 </script>
-
+<div id="popovertip" data-page="dailycommitments" data-bs-custom-class="mejor-info-popover" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Escribe las Acciones que estás Comprometido/a a Realizar Hoy y todos los Días. La Regularidad y Consistencia es tan Importante como la Genialidad. Si puedes."></div>
 <?php require_once "inc/footer.php"; ?>
