@@ -70,7 +70,11 @@ $isPastDate=false;
   var SITE_URL = '<?= SITE_URL; ?>';
   var currentDate = '<?= $currentDate; ?>';
 </script>
+<link rel="stylesheet" href="<?=SITE_URL; ?>/users/assets/uikit-lightbox.css" />
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit-icons.min.js"></script>
 
 <style>
   .media-gallery-row video{
@@ -80,6 +84,12 @@ $isPastDate=false;
   @media screen and (max-width: 767px) {
     audio,video{width:100%;}
   }
+  .v7-media-box{
+    width:114px;
+  }
+  .v7-media-box img {
+    max-height: 106px;
+}
 </style>
 
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10">
@@ -108,7 +118,7 @@ $isPastDate=false;
         </div>
 
       </header>
-      <div class="media-items media-gallery" style="min-height:500px;">
+      <div class="media-items media-gallery" style="min-height:500px;" uk-lightbox="animation: slide">
         <?php foreach ($dailyV7Gallery as $day => $files): ?>
         <?php setlocale(LC_ALL, "es_ES");
         $string = date('d/m/Y', strtotime($day));
@@ -120,20 +130,24 @@ $isPastDate=false;
                 <div class="d-flex flex-row bd-highlight m-3">
                     
                     <?php foreach ($files as $key => $file): ?>
-                    <div class="p-1 w-100 bd-highlight">
+                    <div class="p-1 w-100 bd-highlight ">
                             <?php if($file['type']=='audio'): ?>
                                 <audio controls src="<?=$file['url'];?>">
                                 <a href="<?=$file['url'];?>">
                                     Download audio
                                 </a> 
                                 </audio>
-                            <?php elseif($file['type']=='video'):  $poster=''; 
-                            if(!empty($file['thumb'])){ $poster='poster="'.$file['thumb'].'"'; }
+                            <?php elseif($file['type']=='video'):
+                            $thumb_path=str_replace("https://mejorcadadia.com/users/","",$file['thumb']);
+                             
+                           
+                            if(!file_exists($thumb_path)){ $file['thumb']='https://mejorcadadia.com/assets/images/playlist-icon.png'; }
                             ?>
-                                <video class="" controls preload="metadata" <?=$poster;?> >
-                                    <source src="<?=$file['url'];?>#t=0.2" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
+                            <div class="v7-media-box">
+                             <a href="<?=$file['url'];?>" data-index="<?=$key;?>"  data-file="<?=$file['id'];?>" data-caption="<?= utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp())); ?>" > 
+                                <img data-bs-target="#carouselExampleIndicators" data-bs-slide-to="<?=$key;?>" class="img-fluid rounded-3 w-100 shadow-1-strong"  src="<?=$file['thumb'];?>">
+                              </a>
+                            </div>
                             <?php endif; ?>
                     </div>
                     <?php endforeach;?>

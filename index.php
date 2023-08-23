@@ -37,7 +37,7 @@ require_once "inc/inspirationQuote.php";
                 <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#newLoginModel" style="background-color: #F0EA20; color:#000 !important;">
                     Accede
                 </button>
-                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#registration" style="background-color: #FF007A;">
+                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#registration" style="background-color: #2DC3E7;">
                     Regístrate
                 </button>
             <?php

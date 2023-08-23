@@ -894,7 +894,7 @@ if (Session::get('user_id') !== NULL) {
                                     <a target="_blank" href="mailto:?subject=Este Mundo Necesita tu Mejor Versión y por eso te invitamos a que formes parte de la familia de mejorcadadia.com&body=Este Mundo Necesita tu Mejor Versión y por eso te invitamos a que formes parte de la familia de mejorcadadia.com" class="btn btn-social-icon btn-email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>
                                     
                                 </div>
-                            </li>
+                    </li>
                     <li class="text-center">
                         <div class="text-center mt-3 mb-3">
                             <button id="install-button" class="btn btn-warning mx-auto">Add To HomeScreen</button>
@@ -1099,8 +1099,19 @@ if (Session::get('user_id') !== NULL) {
                                 <a class="nav-link" href="<?= SITE_URL; ?>/users/logout.php" onclick="return confirm('Are you sure to logout?');"><i class="fa fa-power-off" aria-hidden="true"></i> Salir</a>
                             </li>  
                             <?php endif; ?>
-                             
-                            <li class="text-center mt-3">    
+                            
+                       
+                           
+                    
+                            <li class="text-center mt-3">  
+                            <div class="mobile-menu-logo text-center">
+                                <a class="" href="https://mejorcadadia.com">
+                                    <img src="<?=SITE_URL;?>/users/assets/logo.png" alt="image" width="100px">
+                                </a>                        
+                            </div>
+                            <div class="brand-info-bar text-center mb-2">
+                                <h1 class="" style="color:#FFF; font-size:20px;">El Club de la Gente Excepcional</h1>                      
+                            </div>       
                             <h6 class="text-light">Comparte MCD con tus amigos</h6>                                  
                                 <div class="text-center">
                                     <a target="_blank" href="http://www.facebook.com/sharer.php?u=mejorcadadia.com" class="btn-facebook btn btn-social-icon"><i class="fa fa-facebook" aria-hidden="true"></i></a>
