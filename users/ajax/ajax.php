@@ -1812,49 +1812,7 @@ if (isset($_POST['EmailSendDailyGoal']) && ($_POST['EmailSendDailyGoal'] == 'Ema
     $Date = date('Y-m-d');
     $user = $common->first('users', 'id=:id', ['id' => $user_id]);
     if ($user) {
-        if ($user) {
-            $Title = "Victory-7";
-            $email = 'miguel@mejorcadadia.com';
-            $email = $user['gmail'];
-            $from = $user['full_name'] . '<' . $email . '>';
-
-            $mail = new PHPMailer();
-            $mail->isSMTP();
-
-            $mail->Host = "smtp.ionos.es";
-            $mail->SMTPAuth = true;
-            $mail->SMTPSecure = 'tls';
-            $mail->Port = 587;
-            $mail->Username = "miguel@mejorcadadia.com";
-            $mail->Password = "k8#pb27%Iae*ml!A!ZlxD3(C";
-            $mail->Subject = $Title;
-            $mail->setFrom($email);
-            $mail->addReplyTo('miguel@mejorcadadia.com');
-            $mail->addReplyTo($email);
-            $mail->isHTML(true);
-            // $mail->AddEmbeddedImage('../assets/logo.png', 'logoimg', '../assets/logo.png');
-            $mail->Body = '
-                    <html>
-                        <head>
-                            <title>' . $Title . '</title>
-                        </head>
-                        <body>
-                        <div style="background-color:#f3f2f0;">                        
-                            ' . $goalBodyHtml . '
-                        </div>
-                        </body></html>';
-            $mail->AltBody = "This is the plain text version of the email content";
-            //$emailto='ehsan.ullah.tarar@gmail.com';
-            $mail->addAddress($toEmail);
-            if ($mail->send()) {
-                echo 'Insert';
-            } else {
-                echo 'Failed to send mail!';
-            }
-            $mail->smtpClose();
-        } else {
-            echo 'Something is wrong!!';
-        }
+       sendEmail($user_id, 'Victory-7', $user['gmail'], $goalBodyHtml); 
     } else {
         echo 'Something is wrong!';
     }
@@ -2494,7 +2452,7 @@ function sendEmail($user_id, $Title, $toEmail, $body)
         $mail->charSet = "UTF-8";
         $mail->Subject = '=?utf-8?B?' . base64_encode($Title) . '?=';
         $mail->setFrom($fromEmail, $user['full_name']);
-        $mail->addReplyTo('miguel@mejorcadadia.com');
+        $mail->addReplyTo('verify@mejorcadadia.com');
         $mail->addReplyTo($email);
         $mail->isHTML(true);
 
