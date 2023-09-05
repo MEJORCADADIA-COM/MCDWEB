@@ -11,7 +11,7 @@ require_once base_path("/PHPMailer/Exception.php");
 
 class Email
 {
-    public function __construct(public readonly string $from = 'verify@mejorcadadia.com', public readonly string $password = 'hQjg-D?x9Pr+Knvb@rexU)4J%9E?fVD,dzK')
+    public function __construct(public readonly string $from = 'miguel@mejorcadadia.com', public readonly string $password = 'hQjg-D?x9Pr+Knvb@rexU)4J%9E?fVD,dzK')
     {
     }
 

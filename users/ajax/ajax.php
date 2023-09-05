@@ -1814,7 +1814,7 @@ if (isset($_POST['EmailSendDailyGoal']) && ($_POST['EmailSendDailyGoal'] == 'Ema
     if ($user) {
         if ($user) {
             $Title = "Victory-7";
-            $email = 'verify@mejorcadadia.com';
+            $email = 'miguel@mejorcadadia.com';
             $email = $user['gmail'];
             $from = $user['full_name'] . '<' . $email . '>';
 
@@ -1825,11 +1825,11 @@ if (isset($_POST['EmailSendDailyGoal']) && ($_POST['EmailSendDailyGoal'] == 'Ema
             $mail->SMTPAuth = true;
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
-            $mail->Username = "verify@mejorcadadia.com";
-            $mail->Password = "hQjg-D?x9Pr+Knvb@rexU)4J%9E?fVD,dzK";
+            $mail->Username = "miguel@mejorcadadia.com";
+            $mail->Password = "k8#pb27%Iae*ml!A!ZlxD3(C";
             $mail->Subject = $Title;
             $mail->setFrom($email);
-            $mail->addReplyTo('verify@mejorcadadia.com');
+            $mail->addReplyTo('miguel@mejorcadadia.com');
             $mail->addReplyTo($email);
             $mail->isHTML(true);
             // $mail->AddEmbeddedImage('../assets/logo.png', 'logoimg', '../assets/logo.png');
@@ -1910,7 +1910,7 @@ if (isset($_POST['EmailSendSuperGoal']) && ($_POST['EmailSendSuperGoal'] == 'Ema
     $user = $common->first("users", "id = :id", ['id' => $user_id]);
     if ($user) {
         $Title = "SuperGoals - " . $type;
-        $email = 'verify@mejorcadadia.com';
+        $email = 'miguel@mejorcadadia.com';
         $email = $user['gmail'];
         $from = $user['full_name'] . '<' . $email . '>';
         $mail = new PHPMailer();
@@ -1919,11 +1919,11 @@ if (isset($_POST['EmailSendSuperGoal']) && ($_POST['EmailSendSuperGoal'] == 'Ema
         $mail->SMTPAuth = true;
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
-        $mail->Username = "verify@mejorcadadia.com";
-        $mail->Password = "hQjg-D?x9Pr+Knvb@rexU)4J%9E?fVD,dzK";
+        $mail->Username = "miguel@mejorcadadia.com";
+        $mail->Password = "k8#pb27%Iae*ml!A!ZlxD3(C";
         $mail->Subject = $Title;
         $mail->setFrom($email);
-        $mail->addReplyTo('verify@mejorcadadia.com');
+        $mail->addReplyTo('miguel@mejorcadadia.com');
         $mail->addReplyTo($email);
         $mail->isHTML(true);
         // $mail->AddEmbeddedImage('../assets/logo.png', 'logoimg', '../assets/logo.png');
@@ -2478,7 +2478,7 @@ function sendEmail($user_id, $Title, $toEmail, $body)
 
     if ($user) {
 
-        $fromEmail = 'verify@mejorcadadia.com';
+        $fromEmail = 'miguel@mejorcadadia.com';
         $email = $user['gmail'];
         $from = $user['full_name'] . '<' . $fromEmail . '>';
         $mail = new PHPMailer();
@@ -2488,13 +2488,13 @@ function sendEmail($user_id, $Title, $toEmail, $body)
         $mail->SMTPAuth = true;
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
-        $mail->Username = "verify@mejorcadadia.com";
-        $mail->Password = "hQjg-D?x9Pr+Knvb@rexU)4J%9E?fVD,dzK";
+        $mail->Username = "miguel@mejorcadadia.com";
+        $mail->Password = "k8#pb27%Iae*ml!A!ZlxD3(C";
         // $mail->Subject = $Title;
         $mail->charSet = "UTF-8";
         $mail->Subject = '=?utf-8?B?' . base64_encode($Title) . '?=';
         $mail->setFrom($fromEmail, $user['full_name']);
-        $mail->addReplyTo('verify@mejorcadadia.com');
+        $mail->addReplyTo('miguel@mejorcadadia.com');
         $mail->addReplyTo($email);
         $mail->isHTML(true);
 

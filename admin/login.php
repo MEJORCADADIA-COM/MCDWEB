@@ -33,15 +33,19 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['admin_login'])) {
       $error++;
     }
   	if($error == 0) {
-    	$admin_info = $common->select("`admin`", "`email` = '$email' && `password` = '$password'");
-      	if($admin_info) {
-          $admin_infos = mysqli_fetch_assoc($admin_info);
-          Session::set('admin_login', true);
-          Session::set('admin_id', $admin_infos['id']);
-          header("Location: https://mejorcadadia.com/admin");
+    	$admin_infos = $common->first("admin", "email = :email", ['email' => $email]);
+        if ($admin_infos) {
+            if(password_verify($password, $admin_infos['password'])) {
+                Session::set('admin_login', true);
+                Session::set('admin_id', $admin_infos['id']);
+                header("Location: ".SITE_URL."/admin");
+            } else {
+                $error_msg = '<div class="alert alert-danger">Email or password is wrong!</div>';
+            }
         } else {
-        	$error_msg = '<div class="alert alert-danger">Email or password is wrong!</div>';
+            $error_msg = '<div class="alert alert-danger">Email or password is wrong!</div>';
         }
+
     }
 }
 
@@ -55,15 +59,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['admin_forgot_password']
     }
   
   	if($forgot_error == 0) {
-    	$forgot_info = $common->select("`admin`", "`email` = '$forgot_email'");
-      	if($forgot_info) {
-          $forgot_infos = mysqli_fetch_assoc($forgot_info);
+    	$forgot_infos = $common->first("admin", "email = :email", ['email' => $forgot_email]);
+      	if($forgot_infos) {
           $forgot_email = $forgot_infos['email'];
+          $tempPassword = base64_encode(random_bytes(20));
+          $hashedPassword = password_hash($tempPassword, PASSWORD_DEFAULT);
+          $common->update(table: 'admin', data: ["password" => $hashedPassword], cond: "id = :id", params: ['id' => $forgot_infos['id']], modifiedColumnName: 'updated_at');
           $forgot_password = $forgot_infos['password'];
           //---------------Email sender---------------
           $mail_body = "Hola, bienvenido a MejorCadaDÃa, <br>
                             Email: " . $forgot_email . " <br>
-                            Password: " . $forgot_password . " <br><br>
+                            Password: " . $tempPassword . " <br><br>
 
                             Estamos creando la comunidad lÃƒder de empoderamiento personal, mÃƒÂ¡s grande del Planeta. <br>
                             Estamos viviendo momentos desafiantes y ahora mÃƒÂ¡s que nunca tenemos que trabajar en nosotros mismos. El mundo necesita nuestra Mejor versiÃƒÂ³n y no una descafeinada. <br>
@@ -78,11 +84,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['admin_forgot_password']
           $mail->SMTPAuth = true;
           $mail->SMTPSecure = 'tls';
           $mail->Port = 587;
-          $mail->Username = "verify@mejorcadadia.com"; //enter you email address
-          $mail->Password = "hQjg-D?x9Pr+Knvb@rexU)4J%9E?fVD,dzK"; //enter you email password
+          $mail->Username = "miguel@mejorcadadia.com"; //enter you email address
+          $mail->Password = "k8#pb27%Iae*ml!A!ZlxD3(C"; //enter you email password
           $mail->Subject = "Bienvenido a MejorCadaDÃa.com";
-          $mail->setFrom('verify@mejorcadadia.com');
-          $mail->addReplyTo('verify@mejorcadadia.com');
+          $mail->setFrom('miguel@mejorcadadia.com');
+          $mail->addReplyTo('miguel@mejorcadadia.com');
           $mail->isHTML(true);
 
           $mail->Body = $mail_body;   

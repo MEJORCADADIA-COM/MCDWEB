@@ -44,18 +44,24 @@ if(isset($_POST['EmailSendCheck']) && ($_POST['EmailSendCheck'] == 'EmailSendChe
     if (isset($email)) {
         if (isset($LetterApplication)) {
             $UserId = 0;
-            $all_letterapplication = $common->selectcolumn("COUNT(id) AS id","`users`","gmail = '".$email."'");
-            $usercheckid = mysqli_fetch_assoc($all_letterapplication);
+            $usercheckid = $common->first("`users`", "gmail = :email", ['email' => $email], ["COUNT(id) AS id"]);
+
             if($usercheckid['id'] >= 1) {
-                $userdetails = $common->select("`users`","gmail = '".$email."'");
-                $userdetailsId = mysqli_fetch_assoc($userdetails);
-                $UserId = $userdetailsId['id'];
-            }
-            else {
+                $userdetails = $common->first("`users`","gmail = :email", ['email' => $email]);
+                $UserId = $userdetails['id'];
+            } else {
                 $UserId = 0;
             }
             $AdminId = Session::get('admin_id');
-            $LetterApplication_insert = $common->insert("`letterapplication`(`email`,`emailto`,`date`,`title`,`letterapplicationtext`,`UserId`,`AdminId`)", "('$email','$emailto','$Date','$Title','$LetterApplication','$UserId','$AdminId')");
+            $LetterApplication_insert = $common->insert("`letterapplication`", [
+                'email' => $email,
+                'emailto' => $emailto,
+                'date' => $Date,
+                'title' => $Title,
+                'letterapplicationtext' => $LetterApplication,
+                'UserId' => $UserId,
+                'AdminId' => $AdminId,
+            ]);
             if ($LetterApplication_insert) {  
                 $mail = new PHPMailer(); 
                 $mail->isSMTP();
@@ -64,7 +70,7 @@ if(isset($_POST['EmailSendCheck']) && ($_POST['EmailSendCheck'] == 'EmailSendChe
                 $mail->SMTPSecure = 'tls';
                 $mail->Port = 587;
                 $mail->Username = "verify@mejorcadadia.com";
-                $mail->Password = "hQjg-D?x9Pr+Knvb@rexU)4J%9E?fVD,dzK";
+                $mail->Password = "Ta$77!/8H7u/SX?";
                 $mail->Subject = $Title;
                 $mail->setFrom($email);
                 $mail->addReplyTo('verify@mejorcadadia.com');
@@ -113,18 +119,24 @@ if(isset($_POST['EmailSendCheckOnlySend']) && ($_POST['EmailSendCheckOnlySend'] 
     if (isset($email)) {
         if (isset($LetterApplication)) {
             $UserId = 0;
-            $all_letterapplication = $common->selectcolumn("COUNT(id) AS id","`users`","gmail = '".$email."'");
-            $usercheckid = mysqli_fetch_assoc($all_letterapplication);
+            $usercheckid = $common->first("`users`","gmail = :email", ['email' => $email], ["COUNT(id) AS id"]);
             if($usercheckid['id'] >= 1) {
-                $userdetails = $common->select("`users`","gmail = '".$email."'");
-                $userdetailsId = mysqli_fetch_assoc($userdetails);
-                $UserId = $userdetailsId['id'];
+                $userdetails = $common->first("users","gmail = :email", ['email' => $email]);
+                $UserId = $userdetails['id'];
             }
             else {
                 $UserId = 0;
             }
             $AdminId = Session::get('admin_id');
-            $LetterApplication_insert = $common->insert("`letterapplication`(`email`,`emailto`,`date`,`title`,`letterapplicationtext`,`UserId`,`AdminId`)", "('$email','$emailto','$Date','$Title','$LetterApplication','$UserId','$AdminId')");
+            $LetterApplication_insert = $common->insert("`letterapplication`", [
+                'email' => $email,
+                'emailto' => $emailto,
+                'date' => $Date,
+                'title' => $Title,
+                'letterapplicationtext' => $LetterApplication,
+                'UserId' => $UserId,
+                'AdminId' => $AdminId,
+            ]);
             if ($LetterApplication_insert) {  
                 echo 'Insert';
             } else {
@@ -133,8 +145,7 @@ if(isset($_POST['EmailSendCheckOnlySend']) && ($_POST['EmailSendCheckOnlySend'] 
         } else {
             echo 'Something is wrong!';
         }
-    }
-    else {
+    } else {
         echo 'Field Fill';
     }
 }
@@ -143,7 +154,7 @@ if(isset($_POST['EmailIdCheck']) && ($_POST['EmailIdCheck'] == 'EmailIdCheck')) 
     if (isset($_POST['id'])) {
         $LetterApplication = htmlentities($_POST['LetterApplication']);
         $id = $_POST['id'];
-        $app_update = $common->update("`letterapplication`", "`letterapplicationtext` = '$LetterApplication'", "`id` = $id");
+        $app_update = $common->update("letterapplication", ["letterapplicationtext" => $LetterApplication], "id = :id", ['id' => $id], false);
         echo 'Update';
     }
     else {
@@ -155,7 +166,7 @@ if(isset($_POST['SaveIdCheck']) && ($_POST['SaveIdCheck'] == 'SaveIdCheck')) {
     if (isset($_POST['id'])) {
         $LetterApplication = htmlentities($_POST['LetterApplication']);
         $id = $_POST['id'];
-        $app_update = $common->update("`letterapplication`", "`letterapplicationtext` = '$LetterApplication'", "`id` = $id");
+        $app_update = $common->update("letterapplication", ["letterapplicationtext" => $LetterApplication], "id = :id", ['id' => $id], false);
         echo 'Update';
     }
     else {
@@ -166,7 +177,7 @@ if(isset($_POST['SaveIdCheck']) && ($_POST['SaveIdCheck'] == 'SaveIdCheck')) {
 if(isset($_POST['EmailDeleteCheck']) && ($_POST['EmailDeleteCheck'] == 'EmailDeleteCheck')) {
     if (isset($_POST['id'])) {
         $id = $_POST['id'];
-        $app_delete = $common->delete("`letterapplication`", "`id` = '$id'");
+        $app_delete = $common->delete("letterapplication", "id = :id", ['id' => $id]);
         echo 'Delete';
     }
     else {
