@@ -261,7 +261,7 @@ if(isset($_POST['forgot_password']) && ($_POST['forgot_password'] == 'forgot_pas
         $mail->SMTPAuth = true;
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
-        $mail->Username = "info@mejorcadadia.com"; //enter you email address
+        $mail->Username = "miguel@mejorcadadia.com"; //enter you email address
         $mail->Password = "k8#pb27%Iae*ml!A!ZlxD3(C";
         $mail->Subject = "Has miguelolvidado tu contraseña MejorCadaDÃa.com";
         $mail->setFrom('miguel@mejorcadadia.com');
