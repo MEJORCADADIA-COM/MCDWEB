@@ -6,7 +6,7 @@ include_once($filepath . '/../../helper/Format.php');
 include_once($filepath . '/../../lib/RememberCookie.php');
 include_once base_path('/users/repositories/dailyVictories.php');
 include_once base_path('/users/repositories/toRemember.php');
-
+include_once base_path('/users/repositories/dailyEvolution.php');
 
 spl_autoload_register(function ($class_name) {
     include_once "../../classes/" . $class_name . ".php";
@@ -210,12 +210,15 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['get_evolutions']) && $_G
         }
     }
     setlocale(LC_ALL, "es_ES");
+    
     foreach($evolutions as $k=>$row){
         $string = date('d/m/Y', strtotime($row['created_at']));
         $dateObj = DateTime::createFromFormat("d/m/Y", $string);
         $row['local_date']=utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp()));
         $evolutions[$k]=$row;
     }
+    $evolutions = addTagsToEvolution($evolutions);
+
     return response(['success' => true, 'data' => ['evolutions' => $evolutions, 'total_page' => $totalPage, 'current_page' => !empty($_GET['page']) ? (int)$_GET['page'] : 1]]);
 
 }
@@ -252,6 +255,35 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['action']) && $_GET['acti
    
     return response(['success' => true, 'data' => ['folders' => $userFolders]]);
 
+}
+
+if (isset($_POST['action']) && ($_POST['action'] == 'UpdateMonthlyEvlolutionNote')) {
+    $request=$_POST;
+    $user_id = Session::get('user_id');
+    if (empty($_POST['evolution']) || empty($_POST['month']) || empty($_POST['year'])) {
+        return response(['success' => false, 'message' => 'Monthly note is required'], 422);
+    }
+    try {
+        $monthYear = ((int)$request['month']) . '_' . ((int)$request['year']);
+
+        $monthlyVictory = $common->first(
+            'monthly_evolutions',
+            'user_id = :user_id AND month_year = :month_year',
+            ['user_id' => $user_id, 'month_year' => $monthYear],
+            ['id']
+        );
+       
+
+        if ($monthlyVictory) {
+            $common->update('monthly_evolutions', ['evolution' => trim($request['evolution'])], 'id = :id', ['id' => $monthlyVictory['id']]);
+        } else {
+            $common->insert('monthly_evolutions', ['user_id' => $user_id, 'evolution' => trim($request['evolution']), 'month_year' => $monthYear]);
+        }
+
+        return response(['success' => true]);
+    } catch (Exception $e) {
+        return response(['success' => false, 'message' => 'Something went wrong. Please try again.'], 500);
+    }
 }
 if (isset($_POST['LetterApplicationCheck']) && ($_POST['LetterApplicationCheck'] == 'LetterApplicationCheck')) {
     $LetterApplication = $format->validation($_POST['LetterApplication']);
@@ -808,13 +840,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'UpdateSuperMemoryGoal')) {
 }
 
 if (isset($_POST['UpdateDailyGoals']) && ($_POST['UpdateDailyGoals'] == 'UpdateDailyGoals')) {
-    $user_id = Session::get('user_id');
-    if (!$user_id) {
-        $rememberCookieData = RememberCookie::getRememberCookieData();
-        if ($rememberCookieData) {
-            $user_id = $rememberCookieData[RememberCookie::ID];
-        }
-    }
+    $user_id = Session::get('user_id');    
     $lifeGoalsData = $_POST['lifeGoalsData'] ?? [];
     $topGoalsData = $_POST['topGoalsData'] ?? [];
     $dailyEvolution = empty($_POST['dailyEvolution']) ? '' : $_POST['dailyEvolution'];
@@ -824,8 +850,9 @@ if (isset($_POST['UpdateDailyGoals']) && ($_POST['UpdateDailyGoals'] == 'UpdateD
     $dailyVictoryTags = $_POST['dailyVictoryTags'] ?? [];
     $toRemember = trim($_POST['toRemember'] ?? '');
     $toRememberTags = $_POST['toRememberTags'] ?? [];
-
-    if ((!empty($dailyVictory) && count($dailyVictoryTags) === 0) || (!empty($toRemember) && count($toRememberTags) === 0)) {
+    $evaluationTags = $_POST['evaluationTags'] ?? [];
+    
+    if ((!empty($dailyVictory) && count($dailyVictoryTags) === 0) || (!empty($dailyEvolution) && count($evaluationTags) === 0)) {
         echo json_encode(["success" => false, "message" => 'You need to have one tag at least']);
         return;
     }
@@ -837,8 +864,10 @@ if (isset($_POST['UpdateDailyGoals']) && ($_POST['UpdateDailyGoals'] == 'UpdateD
     try {
         if ($row) {
             $common->update('dailygaols', ['improvements' => $dailyImprovements, 'evolution' => $dailyEvolution], 'id = :id', ['id' => $row['id']]);
+            $evolutionId=$row['id'];
         } else {
             $common->insert('dailygaols', ['user_id' => $user_id, 'improvements' => $dailyImprovements, 'evolution' => $dailyEvolution, 'created_at' => $currentDate]);
+            $evolutionId = $common->insertId();
         }
 
         if (!empty($lifeGoalsData)) {
@@ -904,6 +933,16 @@ if (isset($_POST['UpdateDailyGoals']) && ($_POST['UpdateDailyGoals'] == 'UpdateD
             } else {
                 addToRememberWithTags($toRemember, $toRememberTags, $user_id, $currentDate);
             }
+        }
+        if (!empty($evolutionId)) {
+            foreach ($evaluationTags as $newTag) {
+                $tag = trim($newTag);
+                if (str_contains($tag, " ")) {
+                    echo json_encode(['success' => false, 'message' => 'Tags can not have spaces in them']);
+                    return;
+                }
+            }
+            updateEvolutionWithTags($evolutionId, $evaluationTags, $user_id);
         }
     } catch (Exception $exp) {
         echo json_encode(['success' => false, 'message' => $exp]);

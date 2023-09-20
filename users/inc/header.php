@@ -869,7 +869,9 @@ if (Session::get('user_id') !== NULL) {
                         <a class="nav-link" href="#"><i class="fa fa-fire" aria-hidden="true"></i> MejorFest</a>
                     </li>
                     
-
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= SITE_URL; ?>/users/backup.php"><i class="fa fa-cloud-upload" aria-hidden="true"></i> DropBox Backup</a>
+                    </li>   
                     <li class="nav-item">
                         <a class="nav-link" href="<?= SITE_URL; ?>/users/profile.php"><i class="fa fa-user-o" aria-hidden="true"></i> Perfil</a>
                     </li>
@@ -1092,6 +1094,9 @@ if (Session::get('user_id') !== NULL) {
                             <li class="nav-item">
                                 <a class="nav-link" href="#"><i class="fa fa-fire" aria-hidden="true"></i> MejorFest</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= SITE_URL; ?>/users/backup.php"><i class="fa fa-cloud-upload" aria-hidden="true"></i> DropBox Backup</a>
+                            </li> 
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= SITE_URL; ?>/users/profile.php"><i class="fa fa-user-o" aria-hidden="true"></i> Perfil</a>
                             </li>

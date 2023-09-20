@@ -17,7 +17,8 @@ class Common
 
     public function insert(string $table, array $data)
     {
-        $query = "INSERT INTO {$table} {$this->prepareInsertData($data)}";
+         $query = "INSERT INTO {$table} {$this->prepareInsertData($data)}";
+       
         return $this->db->query($query, array_values($data));
     }
 

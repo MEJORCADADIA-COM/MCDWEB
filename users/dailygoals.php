@@ -79,7 +79,9 @@ foreach ($dailyV7Files as $file) {
 
 
 $row = $common->first('dailygaols', 'user_id = :user_id AND created_at = :created_at', ['user_id' => $user_id, 'created_at' => $currentDate]);
+$dailyEvolutionRow=null;
 if ($row) {
+  $dailyEvolutionRow=$row;
   $dailyEvolution = $row['evolution'];
   $dailyImprovements = $row['improvements'];
 }
@@ -108,16 +110,16 @@ $toRemember = $common->first(
   'user_id = :user_id AND date = :date',
   ['user_id' => $user_id, 'date' => $currentDate]
 );
-
-if ($toRemember) {
-  $toRememberTags = $common->leftJoin(
-    'to_remember_user_tag',
+$evolutionTags=[];
+if ($dailyEvolution) {
+  $evolutionTags = $common->leftJoin(
+    'evolution_user_tag',
     'user_tags',
-    'to_remember_user_tag.user_tag_id = user_tags.id',
-    'to_remember_user_tag.to_remember_id = :to_remember_id',
-    ['to_remember_id' => $toRemember['id']],
-    ['tag','to_remember_user_tag.id'],
-    'to_remember_user_tag.id'
+    'evolution_user_tag.user_tag_id = user_tags.id',
+    'evolution_user_tag.evolution_id = :evolution_id',
+    ['evolution_id' => $dailyEvolutionRow['id']],
+    ['tag','evolution_user_tag.id'],
+    'evolution_user_tag.id'
   );
 }
 $dailyImportantGoals = $common->get('daily_important_goals', "user_id = :user_id AND created_at = :created_at", ['user_id' => $user_id, 'created_at' => $currentDate]);
@@ -777,6 +779,15 @@ if ($dailyLifeGoals) {
                 </div>
               </div>
             </div>
+            <div class="row px-1 mb-5">
+              <h5 class="" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Escribre 3 Etiquetas para facilitar la busqueda
+                :</h5>
+              <?php for ($i = 0; $i < 3; $i++) : ?>
+                <div class="col-md-4 my-2">
+                  <input type="text" class="form-control evaluation-tags" placeholder="Tag" name="evaluation_tag_1" value="<?= $evolutionTags[$i]['tag'] ?? '' ?>">
+                </div>
+              <?php endfor; ?>
+            </div>
 
             <div class="cardd my-5" id="section-2" style="padding:0 5px;">
               <div class="d-flex justify-content-between my-1">
@@ -820,15 +831,7 @@ if ($dailyLifeGoals) {
               </div>
             </div>
 
-            <div class="row px-1 mb-5">
-              <h5 class="" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Escribre 3 Etiquetas para facilitar la busqueda
-                :</h5>
-              <?php for ($i = 0; $i < 3; $i++) : ?>
-                <div class="col-md-4 my-2">
-                  <input type="text" class="form-control to-remember-tags" placeholder="Tag" name="remember_tag_1" value="<?= $toRememberTags[$i]['tag'] ?? '' ?>">
-                </div>
-              <?php endfor; ?>
-            </div>
+           
 
             <div class="cardd mb-5" id="section-3" style="padding:0 5px;">
              
@@ -1767,8 +1770,8 @@ if ($dailyLifeGoals) {
     const toRemember = window.editors['to_remember'].getData();
     const dailyVictoryTags = [];
     document.querySelectorAll('.daily-victory-tags').forEach(tag => tag.value.trim() !== '' ? dailyVictoryTags.push(tag.value) : '');
-    const toRememberTags = [];
-    document.querySelectorAll('.to-remember-tags').forEach(tag => tag.value.trim() !== '' ? toRememberTags.push(tag.value) : '');
+    const evaluationTags = [];
+    document.querySelectorAll('.evaluation-tags').forEach(tag => tag.value.trim() !== '' ? evaluationTags.push(tag.value) : '');
 
 
     $("#print-evaluation").html(dailyEvolution);
@@ -1801,7 +1804,7 @@ if ($dailyLifeGoals) {
         dailyVictory: dailyVictory,
         dailyVictoryTags: dailyVictoryTags,
         toRemember: toRemember,
-        toRememberTags: toRememberTags
+        evaluationTags: evaluationTags
       },
       success: function(data) {
         data = JSON.parse(data);
@@ -2205,5 +2208,5 @@ function paramsBuilder(uploaderFile,upload_type) {
 <script type="application/javascript">
   
 </script>
-<div id="popovertip" data-page="dailygoals" data-bs-placement="bottom" data-bs-custom-class="mejor-info-popover" data-bs-toggle="popover" data-bs-content="Cada día es una Oportunidad Inmensa de Vivir y de Servir. Elije las 7 Acciones o Resultados más importantes que quieres lograr. Cada Momento es Irrepetible. Haz el Esfuerzo para que hoy sea Excepcional. ¡Si puedes!"></div>
+<div id="popovertip" data-page="dailygoals" data-bs-custom-class="mejor-info-popover" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Cada día es una Oportunidad Inmensa de Vivir y de Servir. Elije las 7 Acciones o Resultados más importantes que quieres lograr. Cada Momento es Irrepetible. Haz el Esfuerzo para que hoy sea Excepcional. ¡Si puedes!"></div>
 <?php require_once "inc/footer.php"; ?>

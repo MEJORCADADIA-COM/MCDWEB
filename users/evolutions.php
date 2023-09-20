@@ -11,6 +11,11 @@ require_once "inc/header.php"; ?>
    .list-text:hover {
       color: gainsboro;
    }
+   .date-font small{
+      font-size:1em;
+      text-transform: capitalize;
+      color:#FFF;
+   }
 </style>
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 mb-3 text-white min-vh-100">
@@ -23,7 +28,8 @@ require_once "inc/header.php"; ?>
             <button class="px-2 py-1 rounded bg-primary"><i class="fa fa-search text-white" aria-hidden="true"></i></button>
          </div>
          <!--  -->
-         <div class="cal-input-wrapper">
+         <a class="bg-primary text-white px-2 py-1 rounded" href="<?= SITE_URL; ?>/users/dailyEvolutionsCalendar.php" id=" calendarBtn"><i class="fa fa-calendar"></i></a>
+         <!--<div class="cal-input-wrapper">
          <div class="input-group date datepicker" id="datepicker">
                 
                 <input type="text" class="form-control" value="<?=empty($selectedDate)? '':date('d-m-Y', strtotime($selectedDate)); ?>" id="date" readonly />
@@ -33,7 +39,7 @@ require_once "inc/header.php"; ?>
                   </span>
                 </span>
               </div>
-         </div>
+         </div>-->
             
          
       </div>
@@ -100,10 +106,17 @@ require_once "inc/header.php"; ?>
                   const item = document.createElement("li")
                   item.innerHTML =
                      `<div>
-                     <p class="text-muted date-font mt-2"> 
+                     <p class="date-font mt-2"> 
                            <small>${dailyVictory.local_date}</small>
-                           </P>
-                        <div class="my-2">${dailyVictory.evolution}</div>
+                           </P>                        
+                        <p class="my-2"><a class="list-text" href="<?= SITE_URL; ?>/users/dailyEvolutionsCalendar.php?month_year=${formatMonth(new Date(dailyVictory.date))}&date=${formatday(new Date(dailyVictory.date))}">${dailyVictory.evolution}</a></p>
+                        <div class="d-flex justify-content-between">                           
+                           <div class="d-flex">
+                              <p class=" date-font mt-2">
+                                 <small><strong>${dailyVictory.tags.length>1?"Tags: ":"Tag: "}</strong>${dailyVictory.tags[0]?`${dailyVictory.tags[0].tag}`:""}${dailyVictory.tags[1]?`, ${dailyVictory.tags[1].tag}`:""}${dailyVictory.tags[2]?`, ${dailyVictory.tags[2].tag}`:""}</small>
+                              </p>
+                           </div>
+                        </div>
                      </div>`
                   item.classList.add(...classesToAdd)
                   itemContainer.appendChild(item)

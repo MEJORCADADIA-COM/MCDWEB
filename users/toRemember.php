@@ -8,20 +8,17 @@
    .list-text:hover {
       color: gainsboro;
    }
+   .date-font small{
+      font-size:1em;
+      text-transform: capitalize;
+      color:#FFF;
+   }
 </style>
 
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 mb-3 text-white min-vh-100">
    <?php require_once 'inc/thirdNav.php'; ?>
    <div class="px-3-sm px-5-lg mt-4 mt-lg-5 pt-0 pt-lg-3">
-      <div class="d-flex justify-content-between px-3">
-         <!-- Search box -->
-         <div>
-            <input class="border rounded p-1" type="text" placeholder="write your tag here" id="search-tag">
-            <button class="px-2 py-1 rounded bg-primary"><i class="fa fa-search text-white" aria-hidden="true"></i></button>
-         </div>
-         <!--  -->
-         <a class="bg-primary text-white px-2 py-1 rounded" href="<?= SITE_URL; ?>/users/toRememberCalendar.php" id=" calendarBtn"><i class="fa fa-calendar"></i></a>
-      </div>
+      
       <div class="p-2-sm p-5-lg py-4">
          <h3 class="text-center">Momentos Para Recordar</h3>
          <br>
@@ -41,12 +38,13 @@
    let pageNumber = 0;
    let totalPage = 0;
    const itemContainer = document.querySelector(".item-container")
-   document.getElementById("search-tag").addEventListener("change", (e) => {
+  /* document.getElementById("search-tag").addEventListener("change", (e) => {
       tag = e.target.value;
       pageNumber = 1;
       itemContainer.innerHTML = ""
       loadMoreItems(pageNumber, tag)
    })
+   */
 
    function loadMoreItems(pageNumber, tag) {
       console.log(pageNumber, "46");
@@ -65,18 +63,11 @@
                   const item = document.createElement("li")
                   item.innerHTML =
                      `<div>
-                     <p class=" date-font mt-2"> 
+                     <p class="date-font mt-2"> 
                            <small>${memory.local_date}</small>
                            </P>
                         <p class="my-2"><a class="list-text" href="<?= SITE_URL; ?>/users/toRememberCalendar.php?month_year=${formatMonth(new Date(memory.date))}&date=${formatday(new Date(memory.date))}">${memory.to_remember}</a></p>
-                        <div class="d-flex justify-content-between">
-                           
-                           <div class="d-flex">
-                              <p class=" date-font mt-2">
-                                 <small><strong>${memory.tags.length>1?"Tags: ":"Tag: "}</strong>${memory.tags[0]?`${memory.tags[0].tag}`:""}${memory.tags[1]?`, ${memory.tags[1].tag}`:""}${memory.tags[2]?`, ${memory.tags[2].tag}`:""}</small>
-                              </p>
-                           </div>
-                        </div>
+                       
                      </div>`
                   item.classList.add(...classesToAdd)
                   itemContainer.appendChild(item)
