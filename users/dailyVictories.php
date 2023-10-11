@@ -8,6 +8,11 @@
    .list-text:hover {
       color: gainsboro;
    }
+   .date-font small{
+      font-size:1.2em;
+      text-transform: capitalize;
+      color:#FFF;
+   }
 </style>
 
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 mb-3 text-white min-vh-100">
@@ -58,7 +63,7 @@
             const dailyVictories = data.data.victories;
             dailyVictories.forEach(dailyVictory => {
                if (dailyVictory.daily_victory) {
-                  const classesToAdd = ['py-2', 'mb-2', 'border-bottom', 'border-1', 'border-light', 'border-opacity-25', 'quote-item']
+                  const classesToAdd = ['py-3', 'mb-2', 'border-bottom', 'border-1', 'border-light', 'border-opacity-25', 'quote-item']
                   const item = document.createElement("li")
                   item.innerHTML =
                      `<div>

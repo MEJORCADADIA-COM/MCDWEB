@@ -66,26 +66,26 @@ if(isset($_POST['reset_password']) && $_POST['reset_password']=='Submit'){
                     <h3>Restablecer su contraseña</h3>
                     <?php if($password_updated==true): ?>
                         <div class="alert alert-success" role="alert">
-                                Your password has been updated. Please login to your account now. 
+                        Tu Contraseña ha sido Actualizada. Por Favor, Accede a tu Cuenta. 
                             </div>
                             <div class="text-center">
-                                <a class="btn btn-primary" href="<?=SITE_URL;?>">Login</a>
+                                <a class="btn btn-primary" href="<?=SITE_URL;?>">Accede</a>
                             </div>
                     <?php else: ?>
                         <?php if(!empty($user_info)): ?>
                             <form id="email_check_part" method="post">
                             <div class="form-group">
                                 <label class="fw-bold">New Password</label>
-                                <input type="password"  name="password" id="password" placeholder="Enter New Password" required>
+                                <input type="password"  name="password" id="password" placeholder="Escribe tu Nueva Contraseña" required>
                                 <div class="msg d-none"></div>
                             </div>
                             <div class="form-group mt-3">
                                 <label class="fw-bold">Confirm Password</label>
-                                <input type="password" name="confirm_password" id="confirm_password" placeholder="Enter password">
+                                <input type="password" name="confirm_password" id="confirm_password" placeholder="Escribe Contraseña">
                                 <div  class="msg d-none"></div>
                             </div>
                             <div class="form-group mt-3">
-                                <input class="mb-3" type="submit" name="reset_password" value="Submit">
+                                <input class="mb-3" type="submit" name="reset_password" value="Enviar">
                             </div>
                         </form>
                         <?php else: ?>

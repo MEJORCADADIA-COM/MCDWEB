@@ -817,7 +817,7 @@ if ($dailyLifeGoals) {
 
             <div class="cardd my-5" id="section-2" style="padding:0 5px;">
               <div class="d-flex justify-content-between my-1">
-                <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Momentos para Recordar:</h5>
+                <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Notas:</h5>
                 <a href="<?= SITE_URL; ?>/users/toRemember.php" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none">Más <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
 
               </div>
@@ -2208,5 +2208,7 @@ function paramsBuilder(uploaderFile,upload_type) {
 <script type="application/javascript">
   
 </script>
-<div id="popovertip" data-page="dailygoals" data-bs-custom-class="mejor-info-popover" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Cada día es una Oportunidad Inmensa de Vivir y de Servir. Elije las 7 Acciones o Resultados más importantes que quieres lograr. Cada Momento es Irrepetible. Haz el Esfuerzo para que hoy sea Excepcional. ¡Si puedes!"></div>
+<div id="popovertip" class="popovertip" data-page="dailygoals" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Cada día es una Oportunidad Inmensa de Vivir y de Servir. Elije las 7 Acciones o Resultados más importantes que quieres lograr. Cada Momento es Irrepetible. Haz el Esfuerzo para que hoy sea Excepcional. ¡Si puedes!"></div>
+<div id="popovertip2" class="popovertip"  data-days="3" data-page="dailygoalsbackup" data-bs-custom-class="mejor-info-popover white-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<p>Te Gustaría hacer un Backup para no Perder tu Info? </p><a class='btn btn-warning mt-2' href='<?=SITE_URL;?>/users/backup.php'>Haz Click Aquí</a>"></div>
+
 <?php require_once "inc/footer.php"; ?>

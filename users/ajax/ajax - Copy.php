@@ -8,7 +8,6 @@ include_once base_path('/users/repositories/dailyVictories.php');
 include_once base_path('/users/repositories/toRemember.php');
 include_once base_path('/users/repositories/dailyEvolution.php');
 
-
 spl_autoload_register(function ($class_name) {
     include_once "../../classes/" . $class_name . ".php";
 });
@@ -46,290 +45,6 @@ if (!empty($timezoneOffset)) {
 }
 $today = date("Y-m-d", $time);
 
-
-if (isset($_POST['action']) && ($_POST['action'] == 'importDropboxBackup')) {
-   
-     $user_id = Session::get('user_id'); 
-     $dropbox_access_token = Session::get('dropbox_access_token');
-     $filePath=isset($_POST['filePath'])? trim($_POST['filePath']):'';
-    $userBackUp = $common->first(
-        'dropbox_backups',
-        'user_id = :user_id',
-        ['user_id' => $user_id]
-    );
-    $resArr=['success' => true, 'data' =>[]];
-    if($userBackUp && $userBackUp['file_path']){
-        $filePath = $userBackUp['file_path'];
-    }    
-    
-    if($filePath){
-        $target_dir = "../uploads/backups/".$user_id."/";
-        $extractPath="../uploads/backups/".$user_id."/imports";
-        if ( !is_dir( $target_dir ) ) {
-            mkdir( $target_dir,0777,true );       
-        }
-        if ( !is_dir( $extractPath ) ) {
-            mkdir( $extractPath,0777,true );       
-        }
-
-       
-        $downloadUrl = 'https://content.dropboxapi.com/2/files/download';
-        $ch = curl_init($downloadUrl);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Authorization: Bearer ' . $dropbox_access_token,
-            'Dropbox-API-Arg: {"path": "' . $filePath . '"}',
-        ]);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $zipFileContents = curl_exec($ch);
-        if (curl_errno($ch)) {
-            echo 'Error downloading file: ' . curl_error($ch);
-            exit;
-        }
-        curl_close($ch);        
-        $downloadedFilePath = $target_dir.'dropboximport.zip';
-        file_put_contents($downloadedFilePath, $zipFileContents);
-        if (!file_exists($extractPath)) {
-            mkdir($extractPath, 0777, true);
-        }
-        $zip = new ZipArchive();
-        if ($zip->open($downloadedFilePath) === true) {
-            $zip->extractTo($extractPath);
-            $zip->close();
-            //unlink($downloadedFilePath);
-            $pattern = $extractPath . '/*.csv';
-            $csvFiles = glob($pattern);
-          //  print_r($csvFiles);
-            foreach ($csvFiles as $csvFile) {
-                //echo "Processing file: $csvFile\n";
-                try{
-                    $table_name = pathinfo($csvFile, PATHINFO_FILENAME);
-                    if (file_exists($csvFile)) { 
-                        $fileHandle = fopen($csvFile, 'r');
-                        if ($fileHandle !== false) {
-                            $columns=[];
-                            $rows=[];
-                            $counter=0;
-                            while (($data = fgetcsv($fileHandle)) !== false) {                            
-                                if($counter==0){
-                                    $columns=$data;
-                                }else{
-                                    $rows[]=$data;
-                                }
-                                $counter++;
-                            }
-
-                            processImportData($user_id,$table_name,$columns,$rows);
-                            fclose($fileHandle);
-                        }
-                        @unlink($csvFile);
-                    }else{
-                        echo "file not found: $csvFile<br>"; 
-                    }
-                }catch(Exception $xp){
-                    var_dump($xp->getMessage());
-                }
-               
-                
-            }
-            $resArr['data']='imported successfully.';
-
-            @unlink($downloadedFilePath);
-        } else {
-            $resArr['success']=false;
-            $resArr['data']='Error opening ZIP file for extraction.';
-        }
-       
-    }else{
-        $resArr['success']=false;
-        $resArr['data']='You dont have backup in your account.';
-    }
-
-    return response($resArr);
-    
-}
-
-
-
-function processImportData($user_id,$table,$columns,$rows){ 
-   // echo "Processing Table: $user_id:$table<br>"; 
-    global $common; 
-    $dateColumns=['created_at'];
-    $userIdColumns=['user_id','UserId'];
-    @ini_set('display_errors',1);
-    error_reporting(E_ALL);
-    $checkConditions=['id'];
-    try{       
-        if(!empty($columns)){
-            foreach ($rows as $row) {
-                $wheres=[];
-                $postData=[];
-                $primary_key='';
-                $primary_key_value='';
-                $proceed_import=false;            
-                foreach ($columns as $k => $column) {            
-                    if(!empty($row[$k])){
-                        $val=$row[$k];
-                        if(in_array($column,$userIdColumns) &&  $val==$user_id){
-                            $proceed_import=true;
-                        }                    
-                        $postData[$column]=$val;
-                        if(in_array($column,$checkConditions)){
-                            $wheres[]="$column='$val'";
-                            $primary_key=$column;
-                            $primary_key_value=$val;
-                        }
-                    }                   
-                }
-                $sql="SELECT COUNT(*) as total FROM $table WHERE ".implode(' AND ',$wheres); 
-                $result=$common->db->query($sql)->fetch();
-                try{
-                    if($result && $proceed_import==true){
-                        if($result['total']<1){
-                            $common->insertIgnore($table,$postData);
-                            $insertid = $common->insertId();
-                            // echo ':::'.$insertid.':::';
-                        }else{
-                           /* if($table=='dailygaols' && $postData['id']==365){
-                                print_r($postData);
-                                echo '<br>';
-                                echo $sql;   
-                                echo $primary_key;
-                                echo $primary_key_value;         
-                            }*/
-                            $common->updateIgnore(
-                                $table,
-                                $postData,
-                                $primary_key.' = :id',
-                                ['id' => $primary_key_value],
-                                false
-                            );
-                        }
-                    } 
-                }catch(Exception $expp){
-
-                }
-                       
-                
-            }
-        }
-    }catch(Exception $exp){
-        echo $exp->getMessage();
-    }  
-   
-}
-if (isset($_POST['action']) && ($_POST['action'] == 'addDropboxBackup')) {
-    @ini_set('display_errors',1);
-    error_reporting(E_ALL);
-    $user_id = Session::get('user_id'); 
-    $plan=isset($_POST['plan'])? trim($_POST['plan']):'';
-    $data=isset($_POST['data'])? (array)$_POST['data']:[];
-    
-    $userBackUp = $common->first(
-        'dropbox_backups',
-        'user_id = :user_id',
-        ['user_id' => $user_id],
-        ['id']
-    );
-   // var_dump($userBackUp);
-    $fields=[
-        'file_name'=>$data['name'],
-        'plan'=>$plan,
-        'file_path'=>$data['path_lower'],
-        'file_size'=>$data['size'],
-        'file_id'=>$data['id'],
-        'file_hash'=>$data['content_hash'],
-    ];
-    if ($userBackUp) {
-        $common->update('dropbox_backups', $fields, 'id = :id', ['id' => $userBackUp['id']],false);
-    } else {
-        $fields['user_id']=$user_id;
-        $common->insert('dropbox_backups', $fields);
-    }
-    return response(['success' => true, 'data' =>$data]);
-}
-
-if (isset($_POST['action']) && ($_POST['action'] == 'dropboxBackupData')) {
-    $user_id = Session::get('user_id'); 
-    $backup_file_path='';
-    $backup_file_url='';
-  
-    $target_dir = "../uploads/backups/".$user_id."/";
-    $target_path= SITE_URL."/users/uploads/backups/".$user_id."/";
-    if ( !is_dir( $target_dir ) ) {
-        mkdir( $target_dir,0777,true );       
-    }
-    $backupFiles=[];
-    $backupedTables=[];
-  
-    $tables=$common->db->query("SHOW TABLES;")->fetchAll(); 
-    $emportTables=[];
-    $excludedTables=['admin','users','dropbox_backups','daily_inspirations','daily_victory_user_tag','evolution_user_tag','interests','to_remember_user_tag'];
-    foreach($tables as $key=>$table){
-        $item=array_values($table);
-        if(is_array($item) && !empty($item)){
-            $name=$item[0];
-            if(!in_array($name,$excludedTables)){
-                $emportTables[]=$name;
-            }
-        }
-        
-    }
-    $otherKeyTables=['letterapplication'];
-   
-    foreach($emportTables as $table_name){   
-        $table_key='user_id';
-        if(in_array($table_name,$otherKeyTables)){
-            $table_key='userId';
-        }        
-        $backupedTables[]=$table_name;
-        $backupFile = $target_dir.$table_name.'.csv'; 
-       // echo "SELECT * FROM $table_name WHERE $table_key='$user_id'";
-        
-        try{
-            $result = $common->get($table_name, $table_key.' = :user_id', ['user_id' => $user_id]);
-            if ($result) {
-                $file = fopen($backupFile, 'w');
-                if(count($result)>0){
-                    $headerRow=array_keys($result[0]); 
-                    fputcsv($file, $headerRow); 
-                }
-                foreach ($result as $row) { 
-                    fputcsv($file, $row);
-                }
-                fclose($file);
-                $backupFiles[]=$backupFile;
-            
-            }  
-        } catch(Exception $exp)  {
-            var_dump($exp->getMessage());
-        } 
-       
-       
-    }
-    if(!empty($backupFiles)){
-        $zip = new ZipArchive();
-        $zipFileName=$target_dir.'mejorcadadia-databackup.zip';
-        if ($zip->open($zipFileName, ZipArchive::CREATE) === TRUE) {
-            foreach($backupFiles as $filename){
-                $zip->addFile($filename, basename($filename));
-                
-            }            
-            $zip->close();
-            
-        }
-    }
-    if(file_exists($zipFileName)){
-        $backup_file_path=$zipFileName;
-        $backup_file_url=SITE_URL.str_replace("../uploads","/users/uploads",$zipFileName);
-        
-        foreach($backupFiles as $filename){
-            @unlink($filename);
-        }
-        
-    }
-    
-    return response(['success' => true, 'backup_file_path' =>$backup_file_path,'backup_file_url'=>$backup_file_url]);
-}
 if (!empty($_POST) && !empty($_POST['saveDinstyLetter'])) {
     $UserId = $user_id = Session::get('user_id');
     if (!$user_id) {
@@ -559,6 +274,73 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['action']) && $_GET['acti
    
     return response(['success' => true, 'data' => ['folders' => $userFolders]]);
 
+}
+
+
+
+if (isset($_POST['action']) && ($_POST['action'] == 'dropboxBackupData')) {
+    $user_id = Session::get('user_id');
+    $backup_file_path='';
+    $backup_file_url='';
+    $backupedTables=[];
+    $host=DB_HOST;
+    $database=DB_NAME;
+    $username=DB_USER;
+    $password=DB_PASS;
+    $target_dir = "../uploads/backups/".$user_id."/";
+    $target_path= SITE_URL."/users/uploads/backups/".$user_id."/";
+    if ( !is_dir( $target_dir ) ) {
+        mkdir( $target_dir,0777,true );       
+    }
+    $backupFiles=[];
+    foreach($backupSections as $item){
+        foreach($item['tables'] as $table){
+            //print_r($table);
+            $table_name=$table['name'];
+            $table_key=$table['key'];
+            $backupedTables[]=$table_name;
+            $backupFile = $target_dir.$table_name.'_backup.csv';   
+            
+            $result = $common->get($table_name, $table_key.' = :user_id', ['user_id' => $user_id]);
+           //print_r($result);
+            if ($result) {
+                $file = fopen($backupFile, 'w');
+                foreach ($result as $row) {                    
+                    $headerRow=array_keys($row); 
+                    fputcsv($file, $headerRow); 
+                    fputcsv($file, $row);
+                }
+                fclose($file);
+                $backupFiles[]=$backupFile;
+               
+            }            
+            
+           
+        }
+    }
+    if(!empty($backupFiles)){
+        $zip = new ZipArchive();
+        $zipFileName=$target_dir.'mejorcadadia-backup-'.$user_id.'.zip';
+        if ($zip->open($zipFileName, ZipArchive::CREATE) === TRUE) {
+            foreach($backupFiles as $filename){
+                $zip->addFile($filename, basename($filename));
+                
+            }            
+            $zip->close();
+            
+        }
+    }
+    if(file_exists($zipFileName)){
+        $backup_file_path=$zipFileName;
+        $backup_file_url=SITE_URL.str_replace("../uploads","/users/uploads",$zipFileName);
+        
+        foreach($backupFiles as $filename){
+            @unlink($filename);
+        }
+    }
+    //$data['backupFiles']=$backupFiles;
+   // $data['backupedTables']=$backupedTables;
+    return response(['success' => true, 'backup_file_path' =>$backup_file_path,'backup_file_url'=>$backup_file_url]);
 }
 
 if (isset($_POST['action']) && ($_POST['action'] == 'UpdateMonthlyEvlolutionNote')) {

@@ -214,5 +214,5 @@ if (isset($_POST['send_email'])) {
         window.print();
     });
 </script>
-<div id="popovertip" data-page="vision" data-bs-custom-class="mejor-info-popover" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Sin una Visión que te Inspire y Empodere, tu Vida se desvanece y tus sueños también. Crea la Visión más Espectacular y Atrevida que Puedas Imaginar para tu Vida y que desafíe todo tu ser. Trabaja sin descanso en hacerla Realidad. ¡Si Puedes!"></div>
+<div id="popovertip" data-page="vision" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Sin una Visión que te Inspire y Empodere, tu Vida se desvanece y tus sueños también. Crea la Visión más Espectacular y Atrevida que Puedas Imaginar para tu Vida y que desafíe todo tu ser. Trabaja sin descanso en hacerla Realidad. ¡Si Puedes!"></div>
 <?php require_once "inc/footer.php"; ?>

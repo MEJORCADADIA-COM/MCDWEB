@@ -9,7 +9,7 @@
       color: gainsboro;
    }
    .date-font small{
-      font-size:1em;
+      font-size:1.2em;
       text-transform: capitalize;
       color:#FFF;
    }
@@ -59,7 +59,7 @@
                console.log(memory);
                console.log(memory.to_remember);
                if (memory.to_remember) {
-                  const classesToAdd = ['py-2', 'mb-2', 'border-bottom', 'border-1', 'border-light', 'border-opacity-25', 'quote-item']
+                  const classesToAdd = ['py-3', 'mb-2', 'border-bottom', 'border-1', 'border-light', 'border-opacity-25', 'quote-item']
                   const item = document.createElement("li")
                   item.innerHTML =
                      `<div>

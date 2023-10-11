@@ -56,9 +56,10 @@ function addTagsToEvolution($evolutions): array
 
 
 
-function updateEvolutionWithTags($id,  $tags, $userId,$bgColor='')
+function updateEvolutionWithTags($id,$tags,$userId,$bgColor='')
 {
     global $common;
+    
     if(!empty($bgColor)){
         $common->update('dailygaols', ['color'=>$bgColor], 'id = :id', ['id' => $id]);
     }   

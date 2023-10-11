@@ -5,6 +5,8 @@ require_once base_path("/users/inc/header.php");
 require_once base_path('/users/repositories/dailyEvolution.php');
 
 
+
+
 if (isset($_POST['update_daily_victory'])) {
     $currentUrl = SITE_URL . $_SERVER['REQUEST_URI'];
 
@@ -29,7 +31,7 @@ if (isset($_POST['update_daily_victory'])) {
 
     try {
         $common->update('dailygaols', [ 'evolution' => $dailyVictory], 'id = :id', ['id' => $_POST['victory_id']]);
-        updateEvolutionWithTags($_POST['victory_id'], $dailyVictory, $tags, $user_id,$bgColor);
+        updateEvolutionWithTags($_POST['victory_id'], $tags, $user_id,$bgColor);
         setSuccess('Daily victory updated successfully');
     } catch (Exception $e) {
         setError();
@@ -87,7 +89,7 @@ function getTDClass($day, $monthlyDailyEvolutions): string
     }
     td.border p{
         color:#000;
-        font-size:10px;
+        font-size:14px;
     }
     .ck-editor .ck.ck-editor__main{
             max-height:300px;

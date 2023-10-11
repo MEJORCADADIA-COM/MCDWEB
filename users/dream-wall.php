@@ -432,5 +432,5 @@ function showToast(type = 'success', message = '') {
    
   });
 </script>
-<div id="popovertip" data-page="dreamwall" data-bs-custom-class="mejor-info-popover" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Crea la 'Pared de tus Sueños'. Agrega Imágenes que Representen lo que quieres tener o Manifestar en tu Vida. Empodera tu mente viéndo esta pared todos los días. ¡Nunca te des por vencido en lo que es importante para tí!"></div>
+<div id="popovertip" data-page="dreamwall" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Crea la 'Pared de tus Sueños'. Agrega Imágenes que Representen lo que quieres tener o Manifestar en tu Vida. Empodera tu mente viéndo esta pared todos los días. ¡Nunca te des por vencido en lo que es importante para tí!"></div>
 <?php require_once "inc/footer.php"; ?>

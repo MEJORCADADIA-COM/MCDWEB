@@ -405,6 +405,7 @@ function addToHomeScreen() {
 <style>
     .mejor-info-popover{
         max-width:400px;
+        min-width:400px;
         border-color:#0b57cf;
         background:#0b57cf;
         position: fixed !important;
@@ -415,7 +416,7 @@ function addToHomeScreen() {
         bottom: auto !important;
         
     }
-    
+   
     .popover.mejor-info-popover .popover-arrow{
         bottom: auto !important;
         transform: translate3d(350px, 0px, 0px) !important;
@@ -458,6 +459,25 @@ function addToHomeScreen() {
             transform: translate3d(250px, 0px, 0px) !important;
         }
     }
+    .modal.custom-info-modal{
+
+    }
+    .modal.custom-info-modal button.btn-close{
+        position: absolute;
+        right: 4px;
+        top: 4px;
+    }
+    .mejor-info-popover.white-popover{
+        background:#FFF;
+        border-color:#EEE;
+    }
+    .mejor-info-popover.white-popover .popover-body{
+        color:#000;
+    }
+    .mejor-info-popover.white-popover.bs-popover-auto>.popover-arrow::before, .mejor-info-popover.white-popover.bs-popover-bottom>.popover-arrow::before,
+    .mejor-info-popover.white-popover.bs-popover-auto>.popover-arrow::after, .mejor-info-popover.white-popover.bs-popover-bottom>.popover-arrow::after{
+        border-bottom-color:#FFF;
+    }
     </style>
 
 <script>
@@ -491,10 +511,33 @@ function addToHomeScreen() {
        
         
        
-        $('[data-bs-toggle="popover"]').popover({container: 'body', title:'<a class="close" href="#">&times;</a>', customClass:'mejor-info-popover bs-popover-bottom',placement:'bottom', html: true});
+        $('[data-bs-toggle="popover"]').popover({container: 'body', title:'<a class="close" href="#">&times;</a>',placement:'top', html: true});
        
+        
         setTimeout(function() {
-            var popover_page=$('#popovertip').data('page');
+            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+            var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                
+                var popoverElemId="#"+popoverTriggerEl.id;
+                var popover_page=$(popoverElemId).data('page');
+                var popover_days=$(popoverElemId).data('days');
+                if(popover_days==undefined){
+                    popover_days=1;
+                }
+                
+                let pagePoperOverCookie = getCookie(popover_page);  
+                        
+                //pagePoperOverCookie='';
+                console.log('pagePoperOverCookie',popover_page,pagePoperOverCookie,popover_days);
+                if(pagePoperOverCookie==''){                    
+                    $(popoverElemId).popover('show');
+                    $(".mejor-info-popover").removeClass('bs-popover-auto');
+                    setCookie(popover_page, '1', popover_days);
+                }
+
+            });
+            
+            /*var popover_page=$('#popovertip').data('page');
             let pagePoperOverCookie = getCookie(popover_page);
             //pagePoperOverCookie='';
             console.log('pagePoperOverCookie',popover_page,pagePoperOverCookie);
@@ -503,7 +546,8 @@ function addToHomeScreen() {
                 $('#popovertip').popover('show');
                 $(".mejor-info-popover").removeClass('bs-popover-auto');
                 setCookie(popover_page, '1', 1);
-            }            
+            }
+            showPageModals();  */          
         }, 1000);
         $(document).on('click','a.close',function(e){
             e.preventDefault();

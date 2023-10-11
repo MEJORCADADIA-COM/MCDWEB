@@ -79,6 +79,8 @@ if(isset($_POST['email_registration']) && ($_POST['email_registration'] == 'emai
 }
 
 if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'facebook' || $_POST['type'] == 'email'|| $_POST['type'] == 'instagram')) {
+    @ini_set('display_errors',1);
+    error_reporting(E_ALL);
     $type = $format->validation($_POST['type']);
     if (!empty($type)) {
         if ($type == 'google') {
@@ -88,19 +90,21 @@ if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'fa
             $jwt = new \Firebase\JWT\JWT;
             $jwt::$leeway = 60;
             $payload = $client->verifyIdToken($id_token);
-
+          // print_r($payload);
+            //die($payload);
             $full_name = $format->validation($payload['name']);
             $gmail = $format->validation($payload['email']);
             $image = $format->validation($payload['picture']);
 
             $google_checks = $common->first("users", "gmail = :email", ['email' => $gmail]);
+            
             if ($google_checks) {
                 $type_check = $google_checks['type'];
                 if($google_checks['status'] == '1') {
                     Session::set('login', true);
                     Session::set('user_id', $google_checks['id']);
                     //(new RememberCookie())->setRememberCookie($google_checks);
-                    echo 'logged_in';
+                   echo 'logged_in';
                 } else {
                     echo 'Your account has been blocked!';
                 }
@@ -236,7 +240,42 @@ if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'fa
         }
     }
 }
-
+if(isset($_POST['action']) && ($_POST['action'] == 'verify_account_pin')) {
+    $gmail=$format->validation($_POST['email']); 
+    $account_pin = $format->validation($_POST['account_pin']);
+    $account_confirm_pin = $format->validation($_POST['account_confirm_pin']);
+    $email_check = $common->first("users", "gmail = :email", ['email' => $gmail]);
+    $success=false;
+    if($account_pin==$account_confirm_pin){
+        if($email_check){
+            if($email_check['pin']==$account_pin){
+                $code_rand = time();
+                $key = "mejorcadadia.com";
+                $time = time();
+                $hash = hash_hmac('sha256', $time, $key);
+                $code_newhashpass = $hash;
+                Session::set($code_newhashpass, $gmail);
+                $reset_link=SITE_URL.'/reset_password.php?code='.$code_newhashpass;
+                $success=true;
+                $data=$reset_link;
+            }else{
+                $success=false; 
+                $data='Wrong PIN Code'; 
+                //$data=$email_check['pin'];    
+            }
+            
+        }else{
+            $success=false; 
+            $data='No account found against this email.';       
+        }
+    }else{
+        $success=false; 
+        $data='PIN not matched.';   
+    }
+    
+    return response(['success' => $success, 'data' => $data]);
+   
+}
 if(isset($_POST['forgot_password']) && ($_POST['forgot_password'] == 'forgot_password')) {
 	$gmail = $format->validation($_POST['email']); 
     $email_check = $common->first("users", "gmail = :email", ['email' => $gmail]);
@@ -247,7 +286,7 @@ if(isset($_POST['forgot_password']) && ($_POST['forgot_password'] == 'forgot_pas
         $hash = hash_hmac('sha256', $time, $key);
         $code_newhashpass = $hash;
         Session::set($code_newhashpass, $gmail);
-        
+        $reset_link=SITE_URL.'/reset_password.php?code='.$code_newhashpass;
         $mail_body = "Has olvidado tu contraseña MejorCadaDía, <br><br>
                         Ha solicitado restablecer su contraseña.<br>
                         Haga clic en el enlace a continuación para restablecer su contraseña.<br>  <br>   

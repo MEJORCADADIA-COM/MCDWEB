@@ -24,83 +24,55 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous">
 </script>
 
-<?php if(Session::get('login')==false): ?>
-<script src="https://www.instagram.com/embed.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<?php endif; ?>
 
 <script>
-        var isLoggedIn="<?php echo Session::get('login'); ?>";
-    console.log('isLoggedIn',isLoggedIn);
-    function handleCredentialResponse(response) {
-            console.log("Encoded JWT ID token: " + response.credential);
-            console.log('handleCredentialResponse', response);
-            let type = 'google';
-            let profile = response.credential;
-            phpSignIn(profile, type);
-        }
-        window.onGoogleLibraryLoad = () => {
-            google.accounts.id.initialize({
-            //client_id: "846740831076-qmsittms5rvsjes31a9fdqfrb3atigkl.apps.googleusercontent.com",
-            client_id:"51609443177-jb3b6pl4onl6h54pnq11isn07bqhr563.apps.googleusercontent.com",
-            callback: handleCredentialResponse,
-            auto_select:true
-          });
-          var btnConfig={
-            width:"375px",
-            text:"continue_with",
-          };
-          const parent = document.getElementById('googleLoginBtnWrap');
-          google.accounts.id.renderButton(parent, btnConfig);
-          const parent2 = document.getElementById('googleRegisterBtnWrap');
-          
-          google.accounts.id.renderButton(parent2, btnConfig);
-          google.accounts.id.prompt((notification) => {
-            console.log(notification);
-            if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                // continue with another identity provider.
-            }
-            });
-        };
-    
-    const clientID = '614656524100935';
-    const redirectURI = encodeURI('https://mejorcadadia.com/');
     $(document).ready(function() {
-        if(!isLoggedIn){
-            setTimeout(function(){
-            $('#newLoginModel').modal('show');
-        }, 2000);
-        }
-        
-        
+        $('#login-modal').modal('show');
     });
+    // google api login start
+    function handleCredentialResponse(response) {
+        console.log('handleCredentialResponse', response);
+        let type = 'google';
+        let profile = response.credential;
+        phpSignIn(profile, type);
+    }
 
-    function showRegisterFrom(){
-        console.log('showRegisterFrom')
-        $("#register-email-form").show();
-        $("#modal-register-options").hide();
-        $("#register-back-btn").show();
+    window.onload = function() {
+        google.accounts.id.initialize({
+            client_id: "51609443177-jb3b6pl4onl6h54pnq11isn07bqhr563.apps.googleusercontent.com",
+            callback: handleCredentialResponse
+        });
+        google.accounts.id.renderButton(
+            document.getElementById("buttonDiv"), {
+                theme: "outline",
+                size: "large",
+                width: "270",
+                shape: "circle"
+            } // customization attributes
+        );
+        google.accounts.id.renderButton(
+            document.getElementById("registrationButtonDiv"), {
+                theme: "outline",
+                size: "large",
+                width: "270",
+                shape: "circle"
+            } // customization attributes
+        );
+        google.accounts.id.prompt(); // also display the One Tap dialog
     }
-    function showLoginFrom(){
-        console.log('showLoginFrom')
-        $("#login_email_check_part").show();
-        $("#modal-login-options").hide();
-        $("#login-back-btn").show();
-    }
+    // google api login end
+
 
     // facebook api login start
     window.fbAsyncInit = function() {
-        console.log('fbAsyncInit');
         // FB JavaScript SDK configuration and setup
         FB.init({
-           // appId: '1072087170094337', // FB App ID
-            appId:'964650648118248',
+            appId: '1072087170094337', // FB App ID
             cookie: false, // enable cookies to allow the server to access the session
             xfbml: true, // parse social plugins on this page
             version: 'v14.0' // use graph api version 2.8
         });
-        
-       
     };
 
     // Load the JavaScript SDK asynchronously
@@ -114,105 +86,26 @@
     }(document, 'script', 'facebook-jssdk'));
 
     // Facebook login with JavaScript SDK
-    function tiktokLogin(){
-        var screenX = typeof window.screenX !== 'undefined' ? window.screenX : window.screenLeft,
-                screenY = typeof window.screenY !== 'undefined' ? window.screenY : window.screenTop,
-                clientWidth = typeof window.outerWidth !== 'undefined' ? window.outerWidth : document.documentElement.clientWidth,
-                clientHeight = typeof window.outerHeight !== 'undefined' ? window.outerHeight : (document.documentElement.clientHeight - 22),
-                popupWidth = 400,
-                popupHeight = 600,
-                screenWidth = (screenX < 0) ? window.screen.width + screenX : screenX,
-                popupX = parseInt(screenWidth + ((clientWidth - popupWidth) / 2), 10),
-                popupY = parseInt(screenY + ((clientHeight - popupHeight) / 2.5), 10),
-                popupFeatures = ('width=' + popupWidth + ',height=' + popupHeight + ',left=' + popupX + ',top=' + popupY + ',scrollbars=1,location=1,toolbar=0');
-       
-        const csrfState = Math.random().toString(36).substring(2);
-        let url = 'https://www.tiktok.com/v2/auth/authorize/';
-
-        // the following params need to be in `application/x-www-form-urlencoded` format.
-        url += '?client_key=aw6swkmkq3chsy78';
-        url += '&scope=user.info.basic';
-        url += '&response_type=token';
-        url += '&redirect_uri='+redirectURI;
-        url += '&state=' + csrfState;
-        const popup = window.open(
-            url,
-        'TikTokLogin',
-        popupFeatures
-        );
-
-    }
-    function instaLogin(){
-       
-
-        var redURI = encodeURI('https://mejorcadadia.com/');
-        var screenX = typeof window.screenX !== 'undefined' ? window.screenX : window.screenLeft,
-                screenY = typeof window.screenY !== 'undefined' ? window.screenY : window.screenTop,
-                clientWidth = typeof window.outerWidth !== 'undefined' ? window.outerWidth : document.documentElement.clientWidth,
-                clientHeight = typeof window.outerHeight !== 'undefined' ? window.outerHeight : (document.documentElement.clientHeight - 22),
-                popupWidth = 400,
-                popupHeight = 600,
-                screenWidth = (screenX < 0) ? window.screen.width + screenX : screenX,
-                popupX = parseInt(screenWidth + ((clientWidth - popupWidth) / 2), 10),
-                popupY = parseInt(screenY + ((clientHeight - popupHeight) / 2.5), 10),
-                popupFeatures = ('width=' + popupWidth + ',height=' + popupHeight + ',left=' + popupX + ',top=' + popupY + ',scrollbars=1,location=1,toolbar=0');
-        const popup = window.open(
-        `https://api.instagram.com/oauth/authorize?client_id=${clientID}&redirect_uri=${redURI}&response_type=code&scope=user_profile,user_media`,
-        'InstagramLogin',
-        popupFeatures
-        );
-        // Check for changes in the popup window's location (URL)
-    const interval = setInterval(() => {
-      try {
-        // If the user has successfully logged in, the URL will include the access token
-        if (popup.location.href.indexOf(redirectURI) === 0) {
-          clearInterval(interval);
-          //
-            console.log(popup.location);
-            popup.close();
-            const urlParams = new URLSearchParams(popup.location.search);
-                const accessToken = urlParams.get('code');
-                console.log('accessToken',accessToken);
-                phpSignIn(accessToken, 'instagram');
-          
-          
-
-        }
-      } catch (error) {
-        // Ignore security errors due to cross-origin access restrictions
-      }
-    }, 100);
-    }
     function fbLogin() {
-        FB.getLoginStatus(function(response) {
-            if (response.status === 'connected') {
+        FB.login(function(response) {
+            if (response.authResponse) {
                 getFbUserData();
-            } else {
-                FB.login(function(response) {
-                    console.log('FBLOGIN',response);
-                    if (response.authResponse) {
-                        getFbUserData();
-                    }
-                }, {
-                    scope: 'email,public_profile'
-                });
             }
+        }, {
+            scope: 'email'
         });
-        
     }
 
     // Fetch the user profile data from facebook
     function getFbUserData() {
-       
         FB.api('/me', {
                 locale: 'en_US',
                 fields: 'id,first_name,last_name,email,picture'
             },
             function(response) {
-                console.log('getFbUserData',response);
                 let type = 'facebook';
-                let profile = response;               
-               phpSignIn(profile, type);
+                let profile = response;
+                phpSignIn(profile, type);
             });
     }
     // facebook api login end
@@ -261,8 +154,6 @@
                         $('#email_check_part').hide();
                         $('#email_verification_part').show();
                     } else {
-                        alert(data);
-                        $("#error_success_msg_email").removeClass('d-none');
                         $("#error_success_msg_email").text('Account already exist!');
                         $("#error_success_msg_email").removeAttr('class').addClass("msg msg_error w-100");
                         $("#error_success_msg_email").show();
@@ -275,80 +166,11 @@
     $('#forgot_panel').click(function() {
                 $('#login_email_check_part').hide();
                 $('#forgot-form').show();
-                $("#login-back-btn").show();
         });
         $('#login_panel').click(function() {
               $('#forgot-form').hide();
               $('#login_email_check_part').show();
-              $("#login-back-btn").show();
         });
-        $('#login-back-btn').click(function() {
-              $('#forgot-form').hide();
-              $('#login_email_check_part').hide();
-              $('#modal-login-options').show();
-              $("#login-back-btn").hide();
-        });
-        $('#register-back-btn').click(function() {
-            $("#register-email-form").hide();
-        $("#modal-register-options").show();
-        
-              $("#register-back-btn").hide();
-        });
-
-        $('#forgot_password_pin').click(function() {
-            console.log('clicked');
-            var email = $('#pin_forgot_email').val();
-            var account_pin = $('#account_pin').val();
-            var account_confirm_pin = $('#account_confirm_pin').val();
-
-            let login_errors = 0;
-            var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            $("#forgot_error_success_msg_pin").hide();
-
-            if (email.match(mailformat)) {
-                $("#forgot_error_success_msg_pin").hide();
-            } else {
-                $("#forgot_error_success_msg_pin").text('Email is invalid!');
-                $("#forgot_error_success_msg_pin").removeAttr('class').addClass("msg msg_error w-100");
-                $("#forgot_error_success_msg_pin").show();                
-                login_errors++;
-            }
-            if(account_pin.length<4){
-                $("#forgot_error_success_msg_pin").text('PIN must be at least 4 digits.!');
-                $("#forgot_error_success_msg_pin").removeAttr('class').addClass("msg msg_error w-100");
-                $("#forgot_error_success_msg_pin").show();                
-                login_errors++;
-            }
-            if(account_pin!=account_confirm_pin){
-                $("#forgot_error_success_msg_pin").text('Confirm PIN not matched.');
-                $("#forgot_error_success_msg_pin").removeAttr('class').addClass("msg msg_error w-100");
-                $("#forgot_error_success_msg_pin").show();                
-                login_errors++;
-            }
-            if (login_errors == 0) {
-                $('#pin_forgot_email').val('');
-                $('#account_pin').val('');
-                $('#account_confirm_pin').val('');
-                $.ajax({
-                    url: SITE_URL + "/ajax/ajax.php",
-                    type: "POST",
-                    dataType: "json",
-                    data: {email:email,'account_pin':account_pin,'account_confirm_pin':account_confirm_pin,'action':'verify_account_pin'},
-                    success: function(response) {
-                        console.log(response);
-                        if(response.success){
-                            window.location.href=response.data;
-                        }else{
-                            $("#forgot_error_success_msg_pin").text(response.data);
-                            $("#forgot_error_success_msg_pin").removeAttr('class').addClass("msg msg_error w-100");
-                            $("#forgot_error_success_msg_pin").show(); 
-                        }
-                        //$("#res-msgs").html(data);
-                    }
-                });
-            }
-        });
-
         $('#forgot_password').click(function() {
             console.log('clicked');
             var email = $('#forgot_email').val();
@@ -435,11 +257,6 @@
             if (profile.gmail.length > 2) {
                 formData = profile
             }
-        }else if(type=='instagram'){
-            formData = {
-                    type: type,
-                    credential: profile
-                }
         }
 
         $.ajax({

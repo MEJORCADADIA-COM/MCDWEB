@@ -85,7 +85,7 @@ function getTDClass($day, $monthlyDailyToRemember): string
     }
     td.border p{
         color:#000;
-        font-size:10px;
+        font-size:14px;
     }
     .ck-editor .ck.ck-editor__main{
             max-height:300px;

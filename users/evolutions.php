@@ -2,6 +2,7 @@
 $selectedDate=isset($_GET['date'])? $_GET['date']:'';
 
 require_once "inc/header.php"; ?>
+
 <style>
    .list-text {
       text-decoration: none;
@@ -12,7 +13,7 @@ require_once "inc/header.php"; ?>
       color: gainsboro;
    }
    .date-font small{
-      font-size:1em;
+      font-size:1.2em;
       text-transform: capitalize;
       color:#FFF;
    }
@@ -102,7 +103,7 @@ require_once "inc/header.php"; ?>
             const dailyVictories = data.data.evolutions;
             dailyVictories.forEach(dailyVictory => {
                if (dailyVictory.evolution) {
-                  const classesToAdd = ['py-2', 'mb-2', 'border-bottom', 'border-1', 'border-light', 'border-opacity-25', 'quote-item']
+                  const classesToAdd = ['py-3', 'mb-2', 'border-bottom', 'border-1', 'border-light', 'border-opacity-25', 'quote-item']
                   const item = document.createElement("li")
                   item.innerHTML =
                      `<div>

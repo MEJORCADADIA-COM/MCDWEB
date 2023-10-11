@@ -178,6 +178,17 @@ if ($user_infos['answers']) {
             margin-bottom: 0px !important;
         }
     }
+    .profile_action_btn{
+        background: #efefef;
+    border-radius: 50px;
+    text-decoration: none;
+    color: #000;
+    font-weight: 600;
+    text-transform: capitalize;
+    padding: 10px 20px;
+    display:inline-block;
+    margin-top:20px;
+    }
 </style>
 
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 my-3 text-white" style="margin-top: 0rem!important;margin-bottom: 0rem!important;">
@@ -186,7 +197,12 @@ if ($user_infos['answers']) {
             <div style="padding: 15px">
                 <div id="Profile">
                     <img class="profile_image" src="<?= $user_infos['image'] != NULL ? $user_infos['image'] : 'https://s3-us-west-2.amazonaws.com/harriscarney/images/150x150.png'; ?>" />
-                    <a href="<?php echo SITE_URL; ?>/users/edit-profile.php" class="profile_edit_btn">Edit profile</a>
+                    
+                    <div class="buttons">
+                        <a href="<?php echo SITE_URL; ?>/users/edit-profile.php" class="profile_action_btn">Edit profile</a>
+                        <a href="<?php echo SITE_URL; ?>/users/account-pin.php" class="profile_action_btn">Actualiza tu Cuenta usando PIN</a>
+                    </div>
+
                     <h4 class="user_name"><?= $user_infos['full_name']; ?></h4>
 
                     <p class="description"><?= $user_infos['description']; ?></p>

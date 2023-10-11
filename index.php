@@ -197,19 +197,66 @@ require_once "inc/inspirationQuote.php";
                     <div class="forgot-form" id="forgot-form" style="display: <?= isset($forgot_error_msg) ? 'block' : 'none'; ?>;">
                     <h2>Has olvidado tu contraseña</h2>
                     <div id="res-msgs" class="mx-2 my-2"></div>
-                    <form action="" method="POST">
+                    <div class="accordion " id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button " style="background:#FFF; font-weight:bold; color:#bb2d3b;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Contraseña por correo electrónico
+                            </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <form action="" method="POST">
+                                    <div class="form-group">
+                                        <label class="fw-bold">Email<span>*</span></label>
+                                        <input type="email" id="forgot_email" name="forgot_email" placeholder="Email de acceso">
+                                        <div id="forgot_error_success_msg_email" class="msg d-none"></div>
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <input class="mb-3" id="forgot_password" type="button" value="Enviar">
+                                    </div>
+                                </form>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" style="background:#FFF; font-weight:bold; color:#bb2d3b;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Contraseña mediante PIN
+                            </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                    <div id="forgot_error_success_msg_pin" class="msg d-none"></div>
+                                <form action="" method="POST" id="accountPINForm">
+                                    <div class="form-group mb-2 mt-2">
+                                         <!--<label class="fw-bold">Email<span>*</span></label>-->
+                                        <input type="email" id="pin_forgot_email" name="pin_forgot_email" placeholder="Email de acceso">
+                                        
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <!--<label class="fw-bold">PIN<span>*</span></label>-->
+                                        <input type="text" id="account_pin" name="pin" placeholder="PIN">
+                                    </div>
+                                    <div class="form-group mb-2">
+                                         <!--<label class="fw-bold">Confirma tu PIN<span>*</span></label>-->
+                                        <input type="text" id="account_confirm_pin" name="confirm_pin" placeholder="Confirma tu PIN">
+                                       
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <input class="mb-3" id="forgot_password_pin" type="button" value="Enviar">
+                                    </div>
+                                </form>
+                            </div>
+                            </div>
+                        </div>  
+                    </div>
+                    
+                        
                         <div class="form-group">
-                            <label class="fw-bold">Email address<span>*</span></label>
-                            <input type="email" id="forgot_email" name="forgot_email" placeholder="Email de acceso">
-                            <div id="forgot_error_success_msg_email" class="msg d-none"></div>
+                        <a href="javascript:void(0);" class="" id="login_panel">Login</a>
                         </div>
-                        <div class="form-group mt-3">
-                            <input class="mb-3" id="forgot_password" type="button" value="Send">
-                        </div>
-                        <div class="form-group">
-                        <a href="javascript:void(0);" id="login_panel">Login</a>
-                        </div>
-                    </form>
+                   
                     </div>
                     <div class="login-option-buttons my-4" id="modal-login-options">
                         <div class="alert alert-white d-flex align-items-center" role="alert" onclick="showLoginFrom()">

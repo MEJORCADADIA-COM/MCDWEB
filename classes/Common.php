@@ -21,6 +21,12 @@ class Common
        
         return $this->db->query($query, array_values($data));
     }
+    public function insertIgnore(string $table, array $data)
+    {
+         $query = "INSERT IGNORE INTO {$table} {$this->prepareInsertData($data)}";
+       
+        return $this->db->query($query, array_values($data));
+    }
 
     public function bulkInsert(string $table, array $columns, array $data)
     {
@@ -36,7 +42,19 @@ class Common
         }
         return $this->db->query($query, $values);
     }
+    public function updateIgnore(string $table, array $data, string $cond, array $params, $hasModifiedColumn = true, $modifiedColumnName = 'modified')
+    {
+        if ($hasModifiedColumn) {
+            $data = [...$data, $modifiedColumnName => date('Y-m-d h:i:s')];
+        }
 
+        $dataString = $this->prepareUpdateData($data);
+
+        $query = "UPDATE IGNORE {$table} SET {$dataString} WHERE $cond";
+        $result = $this->db->query($query, [...$data, ...$params]);
+
+        return $result;
+    }
     public function update(string $table, array $data, string $cond, array $params, $hasModifiedColumn = true, $modifiedColumnName = 'modified')
     {
         if ($hasModifiedColumn) {
