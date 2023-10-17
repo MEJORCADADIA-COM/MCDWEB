@@ -110,6 +110,7 @@ if (Session::get('user_id') !== NULL) {
         var SITE_URL = '<?= SITE_URL; ?>';
     </script>
     <style>
+        
         .ck-editor__editable_inline {
             min-height: 180px;
             font-size:16px

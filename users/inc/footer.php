@@ -403,6 +403,7 @@ function addToHomeScreen() {
     };
 </script>
 <style>
+     
     .mejor-info-popover{
         max-width:400px;
         min-width:400px;
@@ -416,10 +417,15 @@ function addToHomeScreen() {
         bottom: auto !important;
         
     }
+
+    .mejor-info-popover.counter1{
+        top:220px !important;
+    }
+    
    
     .popover.mejor-info-popover .popover-arrow{
         bottom: auto !important;
-        transform: translate3d(350px, 0px, 0px) !important;
+        transform: translate3d(350px, 1px, 0px) !important;
 
     }
     .mejor-info-popover .popover-body{
@@ -478,6 +484,9 @@ function addToHomeScreen() {
     .mejor-info-popover.white-popover.bs-popover-auto>.popover-arrow::after, .mejor-info-popover.white-popover.bs-popover-bottom>.popover-arrow::after{
         border-bottom-color:#FFF;
     }
+    .mejor-info-popover.white-popover .close{
+        color:#000;
+    }    
     </style>
 
 <script>
@@ -485,7 +494,7 @@ function addToHomeScreen() {
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize popovers
         function setCookie(cname, cvalue, exdays) {
-            console.log('setting cookie');
+            console.log('setting cookie',cname, cvalue, exdays);
             const d = new Date();
            d.setTime(d.getTime() + (exdays*24*60*60*1000));
            // d.setTime(d.getTime() + (60*1000));
@@ -514,28 +523,40 @@ function addToHomeScreen() {
         $('[data-bs-toggle="popover"]').popover({container: 'body', title:'<a class="close" href="#">&times;</a>',placement:'top', html: true});
        
         
+        
         setTimeout(function() {
-            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-            var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-                
+            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+            var popCounter=0;
+            
+            var popoverList = popoverTriggerList.map(function (popoverTriggerEl) { 
+                popCounter++;               
                 var popoverElemId="#"+popoverTriggerEl.id;
                 var popover_page=$(popoverElemId).data('page');
                 var popover_days=$(popoverElemId).data('days');
                 if(popover_days==undefined){
                     popover_days=1;
-                }
-                
-                let pagePoperOverCookie = getCookie(popover_page);  
-                        
+                }                
+                let pagePoperOverCookie = getCookie(popover_page);                          
                 //pagePoperOverCookie='';
-                console.log('pagePoperOverCookie',popover_page,pagePoperOverCookie,popover_days);
-                if(pagePoperOverCookie==''){                    
-                    $(popoverElemId).popover('show');
+                console.log('pagePoperOverCookie',popover_page,pagePoperOverCookie,popover_days);               
+                if(pagePoperOverCookie==''){   
+                     
+                    $(popoverElemId).popover('show'); 
+                   // const popoverB = bootstrap.Popover.getInstance(popoverElemId)
+                    //console.log(popoverB);                      
                     $(".mejor-info-popover").removeClass('bs-popover-auto');
                     setCookie(popover_page, '1', popover_days);
                 }
+                
 
             });
+            
+                $( ".popover.mejor-info-popover" ).each(function(index) {
+                    console.log(index,$( this ));
+                    $( this ).addClass("counter"+index );
+                });
+            
+          
             
             /*var popover_page=$('#popovertip').data('page');
             let pagePoperOverCookie = getCookie(popover_page);
@@ -549,9 +570,16 @@ function addToHomeScreen() {
             }
             showPageModals();  */          
         }, 1000);
+
         $(document).on('click','a.close',function(e){
+            var parElm=$(this).closest('.mejor-info-popover');
             e.preventDefault();
+          if(parElm.hasClass('popovertip2')){
+            $('#popovertip2').popover('hide');
+          }else{
             $('#popovertip').popover('hide');
+          }
+            
         });
 
         // You can adjust the delay as needed

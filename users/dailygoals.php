@@ -2208,7 +2208,7 @@ function paramsBuilder(uploaderFile,upload_type) {
 <script type="application/javascript">
   
 </script>
-<div id="popovertip" class="popovertip" data-page="dailygoals" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Cada día es una Oportunidad Inmensa de Vivir y de Servir. Elije las 7 Acciones o Resultados más importantes que quieres lograr. Cada Momento es Irrepetible. Haz el Esfuerzo para que hoy sea Excepcional. ¡Si puedes!"></div>
-<div id="popovertip2" class="popovertip"  data-days="3" data-page="dailygoalsbackup" data-bs-custom-class="mejor-info-popover white-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<p>Te Gustaría hacer un Backup para no Perder tu Info? </p><a class='btn btn-warning mt-2' href='<?=SITE_URL;?>/users/backup.php'>Haz Click Aquí</a>"></div>
+<div id="popovertip2" class="popovertip"  data-days="3" data-page="dailygoalsbackup" data-bs-custom-class="mejor-info-popover white-popover bs-popover-bottom 1st popovertip2" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<p>Te Gustaría hacer un Backup para no Perder tu Info? </p><a class='btn btn-warning mt-2' href='<?=SITE_URL;?>/users/backup.php'>Haz Click Aquí</a>"></div>
+<div id="popovertip" class="popovertip" data-page="dailygoals" data-bs-custom-class="mejor-info-popover bs-popover-bottom 2nd" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Cada día es una Oportunidad Inmensa de Vivir y de Servir. Elije las 7 Acciones o Resultados más importantes que quieres lograr. Cada Momento es Irrepetible. Haz el Esfuerzo para que hoy sea Excepcional. ¡Si puedes!"></div>
 
 <?php require_once "inc/footer.php"; ?>

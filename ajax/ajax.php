@@ -92,32 +92,36 @@ if(isset($_POST['type']) && ($_POST['type'] == 'google' || $_POST['type'] == 'fa
             $payload = $client->verifyIdToken($id_token);
           // print_r($payload);
             //die($payload);
-            $full_name = $format->validation($payload['name']);
-            $gmail = $format->validation($payload['email']);
-            $image = $format->validation($payload['picture']);
-
-            $google_checks = $common->first("users", "gmail = :email", ['email' => $gmail]);
-            
-            if ($google_checks) {
-                $type_check = $google_checks['type'];
-                if($google_checks['status'] == '1') {
-                    Session::set('login', true);
-                    Session::set('user_id', $google_checks['id']);
-                    //(new RememberCookie())->setRememberCookie($google_checks);
-                   echo 'logged_in';
+            if(!empty($payload) && !empty($payload['email'])){
+                $gmail = $format->validation($payload['email']);
+                $full_name = $format->validation($payload['name']);            
+                $image = $format->validation($payload['picture']);
+                $google_checks = $common->first("users", "gmail = :email", ['email' => $gmail]);
+                if ($google_checks) {
+                    $type_check = $google_checks['type'];
+                    if($google_checks['status'] == '1') {
+                        Session::set('login', true);
+                        Session::set('user_id', $google_checks['id']);
+                        //(new RememberCookie())->setRememberCookie($google_checks);
+                       echo 'logged_in';
+                    } else {
+                        echo 'Your account has been blocked!';
+                    }
                 } else {
-                    echo 'Your account has been blocked!';
+                    $google_insert = $common->insert('users', ['full_name' => $full_name, 'type' => $type, 'gmail' => $gmail, 'image' => $image]);
+                    if ($google_insert) {
+                        $user_infos = $common->first("`users`", "`gmail` = :email", ['email' => $gmail]);
+                          Session::set('login', true);
+                        Session::set('user_id', $user_infos['id']);
+                       // (new RememberCookie())->setRememberCookie($user_infos);
+                        echo 'logged_in';
+                    }
                 }
-            } else {
-                $google_insert = $common->insert('users', ['full_name' => $full_name, 'type' => $type, 'gmail' => $gmail, 'image' => $image]);
-                if ($google_insert) {
-                    $user_infos = $common->first("`users`", "`gmail` = :email", ['email' => $gmail]);
-                  	Session::set('login', true);
-                    Session::set('user_id', $user_infos['id']);
-                   // (new RememberCookie())->setRememberCookie($user_infos);
-                    echo 'logged_in';
-                }
+            }else{
+                echo 'Try Again!';
             }
+            
+            
         } elseif ($type == 'facebook') {
             $full_name = $format->validation($_POST['full_name']);
             $gmail = $format->validation($_POST['gmail']);
