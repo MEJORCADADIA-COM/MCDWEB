@@ -282,7 +282,10 @@ endif;
   }
 });  
 
-addToHomeScreen();
+setTimeout(() => {
+    addToHomeScreen();
+}, 1000);
+
 function addToHomeScreen() {
     console.log('addToHomeScreen');
   if ('addEventListener' in document && 'localStorage' in window && 'serviceWorker' in navigator) {
@@ -460,9 +463,13 @@ function addToHomeScreen() {
     @media (max-width: 575.98px) { 
         .mejor-info-popover{
             width:300px;
+            min-width:300px;
         }
         .popover.mejor-info-popover .popover-arrow{
             transform: translate3d(250px, 0px, 0px) !important;
+        }
+        .mejor-info-popover.counter1{
+            top:240px !important;
         }
     }
     .modal.custom-info-modal{
