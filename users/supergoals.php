@@ -24,7 +24,7 @@ function getStartAndEndDate($week, $year)
 
 function localDate($cdate,$format="%A, %d %B, %Y")
 {
-  setlocale(LC_ALL, "es_ES");
+  setlocale(LC_ALL, $locales[$userLanguage]);
   $string = date('d/m/Y', strtotime($cdate));
   $dateObj = DateTime::createFromFormat("d/m/Y", $string);
   return utf8_encode(strftime($format, $dateObj->getTimestamp()));
@@ -85,28 +85,28 @@ if ($type == 'weekly') {
   $start_date = $week_array['week_start'];
   $end_date = $week_array['week_end'];
 
-  $goals_heading = 'Objetivos y Prioridades esta Semana';
-  $evaluation_heading = 'Evaluación/Progreso. Cosas para Mejorar';
-  $priority_heading='3-Acciones o Resultados Más Importantes esta Semana';
+  $goals_heading = translate('Objetivos y Prioridades esta Semana');
+  $evaluation_heading = translate('Evaluación/Progreso. Cosas para Mejorar');
+  $priority_heading=translate('3-Acciones o Resultados Más Importantes esta Semana');
 } elseif ($type == 'monthly') {
   $start_date = $selectedYear . '-' . $selectedMonth . '-01';
   $end_date = date('Y-m-t', strtotime($start_date));
-  $goals_heading = 'Objetivos y Prioridades ESTE Mes';
-  $evaluation_heading = 'Evaluación/Progreso. Cosas para Mejorar';
-  $priority_heading='3-Acciones o Resultados Más Importantes este Mes:';
+  $goals_heading = translate('Objetivos y Prioridades ESTE Mes');
+  $evaluation_heading = translate('Evaluación/Progreso. Cosas para Mejorar');
+  $priority_heading=translate('3-Acciones o Resultados Más Importantes este Mes:');
 } elseif ($type == 'yearly') {
   $start_date = $selectedYear . '-01-01';
   $end_date = $selectedYear . '-12-31';
-  $goals_heading = 'Objetivos y Sueños este Año';
-  $evaluation_heading = 'Evaluación/Progreso. Cosas para Mejorar';
-  $priority_heading='3-Acciones o Resultados Más Importantes este Año:';
+  $goals_heading = translate('Objetivos y Sueños este Año');
+  $evaluation_heading = translate('Evaluación/Progreso. Cosas para Mejorar');
+  $priority_heading=translate('3-Acciones o Resultados Más Importantes este Año:');
 } elseif ($type == 'lifetime') {
   $start_date = '1900-01-01';
   $end_date = '2200-12-31';
-  $goals_heading = 'Objetivos, Prioridades y Sueños para tu Vida';
-  $evaluation_heading = 'Evaluación/Progreso. Cosas para Mejorar';
+  $goals_heading = translate('Objetivos, Prioridades y Sueños para tu Vida');
+  $evaluation_heading = translate('Evaluación/Progreso. Cosas para Mejorar');
 } elseif ($type == 'quarterly') {
-  $priority_heading='3-Acciones o Resultados Más Importantes este Trimestre';
+  $priority_heading=translate('3-Acciones o Resultados Más Importantes este Trimestre');
   $nextQuarterYear = $selectedYear;
   if ($selectedQuarter == 1) {
     $start_date = $selectedYear . '-01-01';
@@ -139,8 +139,8 @@ if ($type == 'weekly') {
   }
 
 
-  $goals_heading = 'Objetivos y Prioridades este Trimestre';
-  $evaluation_heading = 'Evaluación/Progreso. Cosas para Mejorar';
+  $goals_heading = translate('Objetivos y Prioridades este Trimestre');
+  $evaluation_heading = translate('Evaluación/Progreso. Cosas para Mejorar');
 }
 
 
@@ -561,13 +561,13 @@ if ($row) {
           <div class="row">
             <div class="col-sm-3 col-3" style="text-align:left;"><a class="prev-arrow" href="<?= SITE_URL; ?>/users/supergoals.php?type=weekly&<?= $previousWeekString; ?>" ;><i class="fa fa-arrow-left"></i></a></div>
             <div class="col-sm-6 col-6" style="text-align:center;">
-              <h2 class="">Semana</h2>
+              <h2 class=""><?=translate('Semana');?></h2>
             </div>
             <div class="col-sm-3 col-3" style="text-align:right;"><a class="next-arrow" href="<?= SITE_URL; ?>/users/supergoals.php?type=weekly&<?= $nextWeekString; ?>"><i class="fa fa-arrow-right"></i></a></div>
           </div>
-          <p><label>Semana # :</label> <span><?= $selectedWeekNumber; ?></span></p>
-          <p><label>De :</label> <span class="datestr"><?= localDate($start_date); ?></span></p>
-          <p><label>Hasta :</label> <span class="datestr"><?= localDate($end_date); ?></span></p>
+          <p><label><?=translate('Semana');?> # :</label> <span><?= $selectedWeekNumber; ?></span></p>
+          <p><label><?=translate('De');?> :</label> <span class="datestr"><?= localDate($start_date); ?></span></p>
+          <p><label><?=translate('Hasta');?> :</label> <span class="datestr"><?= localDate($end_date); ?></span></p>
         <?php elseif ($type == 'monthly') : ?>
           <div class="row">
             <div class="col-sm-3 col-3" style="text-align:left;"><a class="prev-arrow" href="<?= SITE_URL; ?>/users/supergoals.php?type=monthly&month=<?= date("m", strtotime("-1 month", strtotime($start_date))) ?>&year=<?= date("Y", strtotime("-1 month", strtotime($start_date))) ?>" ;><i class="fa fa-arrow-left"></i></a></div>
@@ -576,9 +576,9 @@ if ($row) {
             </div>
             <div class="col-sm-3 col-3" style="text-align:right;"><a class="next-arrow" href="<?= SITE_URL; ?>/users/supergoals.php?type=monthly&&month=<?= date("m", strtotime("+1 month", strtotime($start_date))) ?>&year=<?= date("Y", strtotime("+1 month", strtotime($start_date))) ?>"><i class="fa fa-arrow-right"></i></a></div>
           </div>
-          <p><label>Mes:</label> <span><?= $selectedMonth; ?></span></p>
-          <p><label>De :</label> <span class="datestr"><?= localDate($start_date); ?></span></p>
-          <p><label>Hasta :</label> <span class="datestr"><?= localDate($end_date);; ?></span></p>
+          <p><label><?=translate('Mes');?>:</label> <span><?= $selectedMonth; ?></span></p>
+          <p><label><?=translate('De');?> :</label> <span class="datestr"><?= localDate($start_date); ?></span></p>
+          <p><label><?=translate('Hasta');?> :</label> <span class="datestr"><?= localDate($end_date);; ?></span></p>
         <?php elseif ($type == 'yearly') : ?>
           <div class="row">
             <div class="col-sm-3 col-3" style="text-align:left;"><a class="prev-arrow" href="<?= SITE_URL; ?>/users/supergoals.php?type=yearly&year=<?= $selectedYear - 1; ?>" ;><i class="fa fa-arrow-left"></i></a></div>
@@ -587,25 +587,25 @@ if ($row) {
             </div>
             <div class="col-sm-3 col-3" style="text-align:right;"><a class="next-arrow" href="<?= SITE_URL; ?>/users/supergoals.php?type=yearly&year=<?= $selectedYear + 1; ?>"><i class="fa fa-arrow-right"></i></a></div>
           </div>
-          <p><label>Año:</label> <span><?= $selectedYear; ?></span></p>
-          <p><label>De :</label> <span class="datestr"><?= localDate($start_date); ?></span></p>
-          <p><label>Hasta :</label> <span class="datestr"><?= localDate($end_date); ?></span></p>
+          <p><label><?=translate('Año');?>:</label> <span><?= $selectedYear; ?></span></p>
+          <p><label><?=translate('De');?> :</label> <span class="datestr"><?= localDate($start_date); ?></span></p>
+          <p><label><?=translate('Hasta');?> :</label> <span class="datestr"><?= localDate($end_date); ?></span></p>
         <?php elseif ($type == 'quarterly') : ?>
           <div class="row">
             <div class="col-sm-3 col-3" style="text-align:left;"><a class="prev-arrow" href="<?= SITE_URL; ?>/users/supergoals.php?type=quarterly&quarter=<?= $prevQuarter; ?>&year=<?= $prevQuarterYear; ?>" ;><i class="fa fa-arrow-left"></i></a></div>
             <div class="col-sm-6 col-6" style="text-align:center;">
-              <h2 class="">Trimestral</h2>
+              <h2 class=""><?=translate('Trimestral');?></h2>
             </div>
             <div class="col-sm-3 col-3" style="text-align:right;"><a class="next-arrow" href="<?= SITE_URL; ?>/users/supergoals.php?type=quarterly&quarter=<?= $nextQuarter; ?>&year=<?= $nextQuarterYear; ?>"><i class="fa fa-arrow-right"></i></a></div>
           </div>
-          <p><label>Trimestral:</label> <span><?= $selectedQuarter; ?></span></p>
-          <p><label>De :</label> <span class="datestr"><?= localDate($start_date);; ?></span></p>
-          <p><label>Hasta :</label> <span class="datestr"><?= localDate($end_date);; ?></span></p>
+          <p><label><?=translate('Trimestral');?>:</label> <span><?= $selectedQuarter; ?></span></p>
+          <p><label><?=translate('De');?> :</label> <span class="datestr"><?= localDate($start_date);; ?></span></p>
+          <p><label><?=translate('Hasta');?> :</label> <span class="datestr"><?= localDate($end_date);; ?></span></p>
 
         <?php elseif ($type == 'lifetime') : ?>
           <div class="row">
             <div class="col-sm-12" style="text-align:center;">
-              <h2 class="">De por Vida</h2>
+              <h2 class=""><?=translate('De por Vida')?></h2>
             </div>
           </div>
         <?php endif; ?>
@@ -617,7 +617,7 @@ if ($row) {
       <div class="mt-3" style="background-color: #fef200; padding: 10px">
         <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; "><?= $goals_heading; ?>
 
-          <button type="button" class="btn btn-info btn-sm screenonly pull-right" id="editBtn">Editar</button>
+          <button type="button" class="btn btn-info btn-sm screenonly pull-right" id="editBtn"><?=translate('Editar')?></button>
 
         </h2>
       </div>
@@ -639,14 +639,14 @@ if ($row) {
             <?php endforeach; ?>
           </ol>
           <?php if (count($goals) > 10) : ?>
-            <div class="screenonly" style="text-align:center;"><button id="morelessToggleBtn" type="button" class="btn btn-primary">Mostrar más</button></div>
+            <div class="screenonly" style="text-align:center;"><button id="morelessToggleBtn" type="button" class="btn btn-primary"><?=translate('Mostrar más') ?></button></div>
           <?php endif; ?>
 
           <div class="form-group" id="new-goal-creation-container"></div>
           <?php if ($today < $end_date) : ?>
             <div class="form-group screenonly" style="padding:20px; text-align:right;" id="create-goal-btn-wrapper">
               <button type="button" id="save-new-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewGoals('<?= $type; ?>')"><i class="fa fa-save"></i> Save New Goals</button>
-              <button type="button" class="button btn btn-info" onClick="CreateGoal('<?= $type; ?>')"><i class="fa fa-book"></i> Agrega Objetivo</button>
+              <button type="button" class="button btn btn-info" onClick="CreateGoal('<?= $type; ?>')"><i class="fa fa-book"></i> <?=translate('Agrega Objetivo') ?></button>
             </div>
           <?php endif; ?>
       </div>
@@ -654,7 +654,7 @@ if ($row) {
           <?php if(!empty($priority_heading)): ?>
              <div class="mt-5" style="background-color: #fef200; padding: 10px; margin-top:30px;">
                 <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; "><?= $priority_heading; ?>
-                  <button type="button" class="btn btn-info btn-sm screenonly pull-right" id="editBtn1">Editar</button>
+                  <button type="button" class="btn btn-info btn-sm screenonly pull-right" id="editBtn1"><?=translate('Editar')?></button>
                 </h2>
             </div>
             <div class="goals-area mb-4" id="priority-goals-area" style="display:block;">
@@ -675,8 +675,8 @@ if ($row) {
               <div class="form-group" id="new-priority-goal-creation-container"></div>
               <?php if (count($priorityGoals) <3) : ?>
                 <div class="form-group screenonly" style="padding:20px; text-align:right;" id="create-goal-btn-wrapper">
-                  <button type="button" id="save-new-priority-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewPriorityGoals('<?= $type; ?>')"><i class="fa fa-save"></i> Guarda Resultado</button>
-                  <button type="button" class="button btn btn-info" onClick="CreatePriorityGoal('<?= $type; ?>')"><i class="fa fa-book"></i> Resultado</button>
+                  <button type="button" id="save-new-priority-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewPriorityGoals('<?= $type; ?>')"><i class="fa fa-save"></i> <?=translate('Guarda Resultado')?></button>
+                  <button type="button" class="button btn btn-info" onClick="CreatePriorityGoal('<?= $type; ?>')"><i class="fa fa-book"></i> <?=translate('Resultado')?></button>
                 </div>
                 <?php endif; ?>
                 
@@ -688,7 +688,7 @@ if ($row) {
 
               
               <div class="d-flex justify-content-between my-3">
-              <label style="color:#FFF; font-size:1.1rem;">Planificación Exitosa</label>
+              <label style="color:#FFF; font-size:1.1rem;"><?=translate('Planificación Exitosa') ?></label>
               </div>
               <textarea id="planning" class="LetterApplication" name="planning"><?= $planning; ?></textarea>
             </div>
@@ -700,7 +700,7 @@ if ($row) {
               
               <div class="d-flex justify-content-between my-2">
               <label style="color:#FFF; font-size:1.1rem;"><?= $evaluation_heading ?></label>
-                <a href="<?= SITE_URL; ?>/users/supergoalsSummary.php?type=<?=$type;?>" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none">Más <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                <a href="<?= SITE_URL; ?>/users/supergoalsSummary.php?type=<?=$type;?>" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none"><?=translate('Más');?> <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
 
               </div>
               <div class="print-description" id="print-evaluation"><?= $evaluation; ?></div>
@@ -715,12 +715,12 @@ if ($row) {
           </div>
           <div class="form-group screenonly">
             <div class="button-wrapper" style="margin:30px 0; overflow:hidden;">
-              <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Email</button>
+              <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button"><?=translate('Email');?></button>
 
-              <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="Guardar pdf" />
+              <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="<?=translate('Guardar pdf');?>" />
 
              
-                <input class="btn btn-info letter" type="button" id="saveBtn" name="saveBtn" value="Guardar" />
+                <input class="btn btn-info letter" type="button" id="saveBtn" name="saveBtn" value="<?=translate('Guardar');?>" />
                 <div>
                   <button class="btn btn-primary rounded-circle fixed-save-btn text-white" type="button" id="floatingSaveBtn" name="saveBtn"><i class="fa fa-save"></i></button>
                 </div>
@@ -1055,18 +1055,19 @@ if ($row) {
     });
   });
   $('#editBtn1').click(function(e) {
-    if ($(this).text() == 'Editar') {
-      $(this).text('Cancelar');
+
+    if ($(this).text() == '<?=translate('Editar')?>') {
+      $(this).text('<?=translate('Cancelar')?>');
     } else {
-      $(this).text('Editar');
+      $(this).text('<?=translate('Editar')?>');
     }
     $('#priority-goals-area').toggleClass('edit');
   });
   $('#editBtn').click(function(e) {
-    if ($(this).text() == 'Editar') {
-      $(this).text('Cancelar');
+    if ($(this).text() == '<?=translate('Editar')?>') {
+      $(this).text('<?=translate('Cancelar')?>');
     } else {
-      $(this).text('Editar');
+      $(this).text('<?=translate('Editar')?>');
     }
     $('#goals-area').toggleClass('edit');
   });
@@ -1459,15 +1460,15 @@ $(document).on('click','.file-actions .file_delete',function(e){
   });
 </script>
 <?php if($type=='weekly'): ?>
-  <div id="popovertip" data-page="supergoals_weekly" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Escribe las Acciones o Resultados más importantes que quieres lograr esta Semana. No dejes Pasar esta Semana sin Hacer algo Extraordinario para tí o para otras Personas. Si puedes."></div>
+  <div id="popovertip" data-page="supergoals_weekly" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<?=translate('popover_supergoals_weekly') ?>"></div>
 <?php elseif($type=='monthly'): ?>
-  <div id="popovertip" data-page="supergoals_montly" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Escribe las Acciones o Resultados más importantes que quieres lograr este Mes. Haz este Mes lo Mejor Posible. Tus logros Más Extraordinarios son Posibles. ¡Tu Puedes!"></div>
+  <div id="popovertip" data-page="supergoals_montly" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<?=translate('popover_supergoals_monthly') ?>"></div>
 <?php elseif($type=='quarterly'): ?>
-  <div id="popovertip" data-page="supergoals_quarterly" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Transforma y Revoluciona tu Vida en los Próximos 90 Días. Decide qué es lo más Importante y Trabaja cada día en ello. Si Puedes."></div>
+  <div id="popovertip" data-page="supergoals_quarterly" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<?=translate('popover_supergoals_quarterly')?>"></div>
 <?php elseif($type=='yearly'): ?>
-  <div id="popovertip" data-page="supergoals_yearly" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Todo es 'imposible' hasta que alguien lo hace Posible. Destroza tus limites y logra este Año tus Objetivos más Extraordinarios. Toma responsabilidad de tu mundo. Trabaja duro e inteligéntemente. ¡Tu Puedes!"></div>
+  <div id="popovertip" data-page="supergoals_yearly" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<?=translate('popover_supergoals_yearly')?>"></div>
 <?php elseif($type=='lifetime'): ?>
-  <div id="popovertip" data-page="supergoals_lifetime" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Escribe 100 Sueños, Deseos y Objetivos para el Resto de tu Vida. Ten el Valor y el Coraje de Soñar en Grande. ¡Con el Nivel Adecuado de Acción, Dedicación, Perseverancia, Creatividad y Determinación, No Hay Nada que No Puedas Hacer Realidad!"></div>
+  <div id="popovertip" data-page="supergoals_lifetime" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<?=translate('popover_supergoals_lifetime')?>"></div>
   <?php endif; ?>
 
 <?php require_once "inc/footer.php"; ?>

@@ -12,7 +12,65 @@ require_once base_path('/vendor/autoload.php');
 $db = new Database();
 $fm = new Format();
 $common = new Common();
+$languages=[
+    'en'=>"English",
+    'es'=>"Spanish"
+];
+$locales=[
+    'en'=>"en_EN",
+    'es'=>"es_ES"
+];
 
+$currentURL = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+if(isset($_GET['lang']) && !empty($_GET['lang'])){
+    $slang=$_GET['lang'];
+    if(!empty($languages[$slang])){
+        Session::set('language', $slang);
+        $userLanguage=$slang;
+    }
+    $paramNameToRemove='lang';
+    $urlParts = parse_url($currentURL);
+    if (isset($urlParts['query'])) {
+        parse_str($urlParts['query'], $queryParameters);
+        unset($queryParameters[$paramNameToRemove]);
+        $query = http_build_query($queryParameters);
+        $updatedURL = $urlParts['scheme'] . '://' . $urlParts['host'] . $urlParts['path'];
+        if (!empty($query)) {
+            $updatedURL .= '?' . $query;
+        }
+    } else {
+        $updatedURL = $currentURL;
+    }
+   header("Location: " . $updatedURL);
+    exit();
+}
+function addParamToURL($paramName,$paramValue){
+    global $currentURL;
+     if (parse_url($currentURL, PHP_URL_QUERY)) {
+         // If the URL already has query parameters, append the new one using "&"
+         $updatedURL = $currentURL . "&" . $paramName . "=" . $paramValue;
+     } else {
+         // If the URL doesn't have any query parameters, add the new one using "?"
+         $updatedURL = $currentURL . "?" . $paramName . "=" . $paramValue;
+     }
+     return $updatedURL;
+ }
+$userLanguage = Session::get('language');
+if($userLanguage==false){
+    $userLanguage='es';
+}
+$translations=[];
+$translationFile = $filepath ."/../../translations/$userLanguage.json";
+if(file_exists($translationFile)){
+    $translations = json_decode(file_get_contents($translationFile), true);
+}
+function translate($key) {
+    global $translations;
+    if(!empty($translations[$key])){
+        return $translations[$key];
+    }
+    return $key;
+}
 $user_infos = null;
 $rememberCookieData = RememberCookie::getRememberCookieData();
 
@@ -110,7 +168,11 @@ if (Session::get('user_id') !== NULL) {
         var SITE_URL = '<?= SITE_URL; ?>';
     </script>
     <style>
-        
+        .language-switcher .dropdown-menu{
+            padding:0;
+            width:113px;
+            min-width:115px;
+        }
         .ck-editor__editable_inline {
             min-height: 180px;
             font-size:16px
@@ -216,7 +278,10 @@ if (Session::get('user_id') !== NULL) {
         }
 
         @media screen and (max-width: 786px) {
-
+            .language-switcher .dropdown-item, .language-switcher .dropdown-item:hover{
+                color:#000;
+                font-size:1rem;
+            }
             .dropdown-item:focus,
             .dropdown-item:hover {
                 color: #738297;
@@ -629,7 +694,9 @@ if (Session::get('user_id') !== NULL) {
 .admin-dashbord {
     background: #ed008c;
 }
-
+.language-switcher{
+    padding:0.5rem 0.75rem;
+}
     </style>
 </head>
 
@@ -679,10 +746,10 @@ if (Session::get('user_id') !== NULL) {
             <a class="navbar-brand mr-0 py-0" href="<?php echo SITE_URL; ?>">
                 <img src="https://mejorcadadia.com/users/assets/logo.png" alt="image" width="100px">
             </a>
-            <h1 class="heading1 d-none d-sm-block">Making Every Day Masterpiece</h1>
+            <h1 class="heading1 d-none d-sm-block"><?=translate('Making Every Day Masterpiece');?></h1>
             <!-- Example single danger button -->
             <div class="brand-info-bar">
-                <h1 class="heading1 d-block d-md-none">Making Every Day a Masterpiece</h1>
+                <h1 class="heading1 d-block d-md-none"><?=translate('Making Every Day Masterpiece');?></h1>
                 <h1 class="migualtitle">By Miguel De La Fuente
                     <p class="d-none d-md-block d-lg-block text-center">+507 6445-1418</p>
                 </h1>
@@ -712,15 +779,15 @@ if (Session::get('user_id') !== NULL) {
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <?php  if($current_file_name=='mynotes.php'): ?>
                         <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?= SITE_URL; ?>/users/dailygoals.php"><i class="fa fa-arrow-left"></i> Atrás</a>
+                        <a class="nav-link active" aria-current="page" href="<?= SITE_URL; ?>/users/dailygoals.php"><i class="fa fa-arrow-left"></i> <?=translate('Atrás');?></a>
                     </li>
                     <li class="nav-item dropdown">
-                                <a class="nav-link" href="#" role="button">MejorNotes</a>
+                                <a class="nav-link" href="#" role="button"><?=translate('MejorNotes');?></a>
                                 <ul class="submenu my-notes-menu" id="mynotesmenu">
                                     <li class="nav-item folder-item" id="folder-0">
                                         <a class="nav-link" href="mynotes.php" role="button">
                                         <i class="fa fa-list me-3"></i>
-                                        Mis Notas
+                                       <?=translate('Mis Notas');?>
                                         <span data-count="<?=$my_notes_count;?>" class="badge rounded-pill pull-right bg-light text-dark"><?=$my_notes_count;?></span>
                                         </a>
                                     </li>
@@ -730,7 +797,7 @@ if (Session::get('user_id') !== NULL) {
                                     </li>
                                     <?php endforeach; ?>
                                     <li class="nav-item create-folder-nav" id="create_folder_nav_item">
-                                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createFolderModal" role="button"><i class="fa fa-folder-open me-3"></i>Carpeta</a> 
+                                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createFolderModal" role="button"><i class="fa fa-folder-open me-3"></i><?=translate('Carpeta');?></a> 
                                     </li>                                    
 
                                 </ul>
@@ -738,40 +805,40 @@ if (Session::get('user_id') !== NULL) {
                     <?php else: ?>  
                     
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?= SITE_URL; ?>"> <i class="fa fa-home" aria-hidden="true"></i> Home</a>
+                        <a class="nav-link active" aria-current="page" href="<?= SITE_URL; ?>"> <i class="fa fa-home" aria-hidden="true"></i><?=translate('Home');?></a>
                     </li>
                     
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#menuMejorjournal" id="mejorjournalLinkItem" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="menuMejorjournal"><i class="fa fa-tasks" aria-hidden="true"></i> ExitoTotal Journal</a>
+                        <a class="nav-link dropdown-toggle" href="#menuMejorjournal" id="mejorjournalLinkItem" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="menuMejorjournal"><i class="fa fa-tasks" aria-hidden="true"></i> <?=translate('ExitoTotal Journal');?></a>
                         <ul class="submenu list-unstyled fw-normal pb-1 small collapse hide pb-1 ms-3" id="menuMejorjournal" aria-labelledby="mejorjournalLinkItem">
-                        <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button"> <i class="fa fa-diamond" aria-hidden="true"></i>  Victoria7</a> </li>
+                        <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button"> <i class="fa fa-diamond" aria-hidden="true"></i>  <?=translate('Victoria7');?></a> </li>
                             
                             <li class="nav-item">
                                 <a class="nav-link" href="cronovida.php" role="button">
-                                <i class="fa fa-clock-o" aria-hidden="true"></i> CronoVida
+                                <i class="fa fa-clock-o" aria-hidden="true"></i> <?=translate('CronoVida');?>
                                 </a>
                             </li>
-                            <li class="nav-item"><a class="nav-link" href="capsules.php" role="button"><i class="fa fa-flask" aria-hidden="true"></i> MejorCapsules</a> </li>
+                            <li class="nav-item"><a class="nav-link" href="capsules.php" role="button"><i class="fa fa-flask" aria-hidden="true"></i> <?=translate('MejorCapsules');?></a> </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="dailycommitments.php" role="button">
-                                <i class="fa fa-hand-rock-o" aria-hidden="true"></i> Guerrero Diario
+                                <i class="fa fa-hand-rock-o" aria-hidden="true"></i> <?=translate('Guerrero Diario');?>
                                 </a>
                             </li>
 
                             <li class="nav-item">
                                 <a class="nav-link dropdown-toggle" href="#SuperObjetivos" id="navbarDropdownsupergoals" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="SuperObjetivos">
-                                <i class="fa fa-bullseye" aria-hidden="true"></i> SuperObjetivos
+                                <i class="fa fa-bullseye" aria-hidden="true"></i> <?=translate('SuperObjetivos');?>
                                 </a>
                                 <ul id="SuperObjetivos" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdownsupergoals" style="margin-left:1rem;">
-                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'weekly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php">Semanal</a></li>
-                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'monthly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=monthly">Mensual</a></li>
-                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'quarterly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=quarterly">Trimestral</a></li>
-                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'yearly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=yearly">Anual</a></li>
-                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=lifetime">100Dreams</a></li>
+                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'weekly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php"><?=translate('Semana');?></a></li>
+                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'monthly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=monthly"><?=translate('Mes');?></a></li>
+                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'quarterly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=quarterly"><?=translate('Trimestre');?></a></li>
+                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'yearly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=yearly"><?=translate('Año');?></a></li>
+                                    <li class="nav-item"><a class="nav-link <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=lifetime"><?=translate('100dreams');?></a></li>
                                     <!-- New Pages -->
                                     <br />
                                     <li class="nav-item">
-                                        <a class="nav-link" href="<?= SITE_URL; ?>/users/missions.php">Mi Missión</a>
+                                        <a class="nav-link" href="<?= SITE_URL; ?>/users/missions.php"><?=translate('Mi Missión');?></a>
                                     </li>
                                     
                                     <li class="nav-item">
@@ -779,107 +846,118 @@ if (Session::get('user_id') !== NULL) {
                                         Mi Visión
                                         </a>
                                         <ul id="mivisions" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="mivisionsDropdown" style="margin-left:1rem;">
-                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=3">Visión 3-Años</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=5">Visión 5-Años</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=10">Visión 10-Años</a></li>
-                                            
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=3"><?=translate('Visión 3-Años');?></a></li>
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=5"><?=translate('Visión 5-Años');?></a></li>
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=10"><?=translate('Visión 10-Años');?></a></li>                                            
                                         </ul>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="<?= SITE_URL; ?>/users/commitments.php">Mis Compromisos</a>
+                                        <a class="nav-link" href="<?= SITE_URL; ?>/users/commitments.php"><?=translate('Mis Compromisos');?></a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="<?= SITE_URL; ?>/users/agreements.php">Mis Acuerdos</a>
+                                        <a class="nav-link" href="<?= SITE_URL; ?>/users/agreements.php"><?=translate('Mis Acuerdos');?></a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="<?= SITE_URL; ?>/users/promises.php">Mis Promesas</a>
+                                        <a class="nav-link" href="<?= SITE_URL; ?>/users/promises.php"><?=translate('Mis Promesas');?></a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="<?= SITE_URL; ?>/users/lifeTasks.php">Mi tarea de Vida</a>
+                                        <a class="nav-link" href="<?= SITE_URL; ?>/users/lifeTasks.php"><?=translate('Mi tarea de Vida');?></a>
                                     </li>
                                 </ul>
                             </li>
 
                             <li>
                                 <a class="nav-link dropdown-toggle" href="#superMemorias" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
-                                <i class="fa fa-trophy" aria-hidden="true"></i> SuperVictorias
+                                <i class="fa fa-trophy" aria-hidden="true"></i> <?=translate('SuperVictorias');?>
                                 </a>
                                 <ul id="superMemorias" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
-                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/dailyVictories.php">Mi Victoria Diaria</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/toRemember.php">Eventos para Recordar</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/biggestVictories.php">Mis Mayores Victorias</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/superdias.php">SuperDias</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/dailyVictories.php"><?=translate('Mi Victoria Diaria');?></a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/toRemember.php"><?=translate('Eventos para Recordar');?></a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/biggestVictories.php"><?=translate('Mis Mayores Victorias');?></a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/superdias.php"><?=translate('SuperDias');?></a></li>
                                     
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="supermemories.php"><i class="fa fa-tree" aria-hidden="true"></i> SuperMemorias</a>
+                                <a class="nav-link" aria-current="page" href="supermemories.php"><i class="fa fa-tree" aria-hidden="true"></i> <?=translate('SuperMemorias');?></a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link dropdown-toggle" href="#dentletter" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
-                                <i class="fa fa-envelope-o" aria-hidden="true"></i> Cartas para la Eternidad
+                                <i class="fa fa-envelope-o" aria-hidden="true"></i> <?=translate('Cartas para la Eternidad');?>
                                 </a>
                                 <ul id="dentletter" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
-                                    <li class="nav-item"><a class="nav-link<?= $path == 'index.php' ? ' active' : ''; ?>" href="https://mejorcadadia.com/users/index.php" id="navbarDropdown">Cartas</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="https://mejorcadadia.com/users/notebook.php">Escribe Carta</a></li>
+                                    <li class="nav-item"><a class="nav-link<?= $path == 'index.php' ? ' active' : ''; ?>" href="https://mejorcadadia.com/users/index.php" id="navbarDropdown"><?=translate('Cartas');?></a></li>
+                                    <li class="nav-item"><a class="nav-link" href="https://mejorcadadia.com/users/notebook.php"><?=translate('Escribe Carta');?></a></li>
                                 </ul>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link dropdown-toggle" href="#Imagenes" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
-                                <i class="fa fa-picture-o" aria-hidden="true"></i> Imagenes
+                                <i class="fa fa-picture-o" aria-hidden="true"></i> <?=translate('Imagenes');?>
                                 </a>
                                 <ul id="Imagenes" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
-                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/victory-images.php">Gallery</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/dream-wall.php">Dream wall</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/photo-drive.php">Imagenes de Exito</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/victory-images.php"><?=translate('Gallery');?></a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/dream-wall.php"><?=translate('Dream wall');?></a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/photo-drive.php"><?=translate('Imagenes de Exito');?></a></li>
                                 </ul>
                             </li>
                                     <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=audio">
-                                    <i class="fa fa-volume-up" aria-hidden="true"></i> Audios</a></li>
+                                    <i class="fa fa-volume-up" aria-hidden="true"></i> <?=translate('Audios');?></a></li>
                                     
                                     <li class="nav-item">
                                         <a class="nav-link dropdown-toggle" href="#mivideos" id="mivideosDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
-                                        <i class="fa fa-video-camera" aria-hidden="true"></i> Videos
+                                        <i class="fa fa-video-camera" aria-hidden="true"></i> <?=translate('Videos');?>
                                         </a>
                                         <ul id="mivideos" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="mivideosDropdown" style="margin-left:1rem;">
-                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/video-playlists.php">Upload Video</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/victory-media.php?type=video">Victory 7 Videos</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/video-playlists.php"><?=translate('Upload Video');?></a></li>
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/victory-media.php?type=video"><?=translate('Victory 7 Videos');?></a></li>
                                             
                                         </ul>
                                     </li>
                                     
                             <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="mynotes.php"><i class="fa fa-sticky-note-o" aria-hidden="true"></i> MejorNotes</a>
+                            <a class="nav-link" aria-current="page" href="mynotes.php"><i class="fa fa-sticky-note-o" aria-hidden="true"></i> <?=translate('MejorNotes');?></a>
                             </li>
                         </ul>
                     </li>
                     
                     <li class="nav-item">
-                        <a class="nav-link" href="https://blog.mejorcadadia.com"><i class="fa fa-newspaper-o" aria-hidden="true"></i> MejorBlog</a>
+                        <a class="nav-link" href="https://blog.mejorcadadia.com"><i class="fa fa-newspaper-o" aria-hidden="true"></i> <?=translate('MejorBlog');?></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href=" <?= SITE_URL; ?>/users/inspirations.php"><i class="fa fa-bar-chart" aria-hidden="true"></i> MejorInspiration</a>
+                        <a class="nav-link" href=" <?= SITE_URL; ?>/users/inspirations.php"><i class="fa fa-bar-chart" aria-hidden="true"></i> <?=translate('MejorInspiration');?></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fa fa-coffee" aria-hidden="true"></i> MejorCadaDía Chef</a>
+                        <a class="nav-link" href="#"><i class="fa fa-coffee" aria-hidden="true"></i> <?=translate('MejorCadaDía Chef');?></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fa fa-bed" aria-hidden="true"></i> MejorCadaDía Hotel</a>
+                        <a class="nav-link" href="#"><i class="fa fa-bed" aria-hidden="true"></i> <?=translate('MejorCadaDía Hotel');?></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fa fa-fire" aria-hidden="true"></i> MejorFest</a>
+                        <a class="nav-link" href="#"><i class="fa fa-fire" aria-hidden="true"></i> <?=translate('MejorFest');?></a>
                     </li>
                     
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= SITE_URL; ?>/users/backup.php"><i class="fa fa-cloud-upload" aria-hidden="true"></i> DropBox Backup</a>
+                        <a class="nav-link" href="<?= SITE_URL; ?>/users/backup.php"><i class="fa fa-cloud-upload" aria-hidden="true"></i> <?=translate('DropBox Backup');?></a>
                     </li>   
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= SITE_URL; ?>/users/profile.php"><i class="fa fa-user-o" aria-hidden="true"></i> Perfil</a>
+                        <a class="nav-link" href="<?= SITE_URL; ?>/users/profile.php"><i class="fa fa-user-o" aria-hidden="true"></i> <?=translate('Perfil');?></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= SITE_URL; ?>/users/logout.php" onclick="return confirm('Are you sure to logout?');"><i class="fa fa-power-off" aria-hidden="true"></i> Salir</a>
+                        <a class="nav-link" href="<?= SITE_URL; ?>/users/logout.php" onclick="return confirm('Are you sure to logout?');"><i class="fa fa-power-off" aria-hidden="true"></i> <?=translate('Salir');?></a>
                     </li>
-                    <?php endif; ?>  
+                    <?php endif; ?> 
+                    <li class="nav-item">
+                        <div class="dropdown language-switcher" style="display:inline-block;">
+                            <button class="btn dropdown-toggle" style="background-color: #2DC3E7;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="<?=SITE_URL;?>/assets/images/<?=$userLanguage;?>.png"> <?=$languages[$userLanguage];?>
+                            </button>
+                            <ul class="dropdown-menu" style="">
+                                <?php foreach($languages as $code=>$name): if($code!=$userLanguage): ?>
+                                    <li><a class="dropdown-item" href="<?=addParamToURL('lang',$code)?>"><img src="<?=SITE_URL;?>/assets/images/<?=$code;?>.png"> <?=$name;?></a></li>
+                                <?php endif; endforeach; ?>
+                            </ul>
+                        </div>  
+                    </li> 
                     <li class="text-center mt-3"> 
                     <div class="mobile-menu-logo text-center">
                         <a class="" href="https://mejorcadadia.com">
@@ -887,9 +965,9 @@ if (Session::get('user_id') !== NULL) {
                         </a>                        
                     </div>
                     <div class="brand-info-bar text-center mb-2">
-                        <h1 class="" style="color:#FFF; font-size:20px;">El Club de la Gente Excepcional</h1>                      
+                        <h1 class="" style="color:#FFF; font-size:20px;"><?=translate('El Club de la Gente Excepcional');?></h1>                      
                     </div>          
-                            <h6 class="text-light">Comparte MCD con tus amigos</h6>                     
+                            <h6 class="text-light"><?=translate('Comparte MCD con tus amigos');?></h6>                     
                                 <div class="text-center">
                                     <a target="_blank" href="http://www.facebook.com/sharer.php?u=mejorcadadia.com" class="btn-facebook btn btn-social-icon"><i class="fa fa-facebook" aria-hidden="true"></i></a>
                                     <a target="_blank" href="http://twitter.com/share?text=Este Mundo Necesita tu Mejor Versión y por eso te invitamos a que formes parte de la familia de mejorcadadia.com" class="btn btn-social-icon btn-twitter"><i class="fa fa-twitter " aria-hidden="true"></i></a>
@@ -900,13 +978,13 @@ if (Session::get('user_id') !== NULL) {
                     </li>
                     <li class="text-center">
                         <div class="text-center mt-3 mb-3">
-                            <button id="install-button" class="btn btn-warning mx-auto">Add To HomeScreen</button>
+                            <button id="install-button" class="btn btn-warning mx-auto"><?=translate('Add To HomeScreen');?></button>
                         </div>
                     </li>
                     <li class="nav-item lastfooteritem">
                     
                     <div class="brand-info-bar text-center">
-                       <h1 class="migualtitle">By Miguel De La Fuente
+                       <h1 class="migualtitle"><?=translate('By Miguel De La Fuente');?>
                             <p class="text-center">+507 6445-1418</p>
                         </h1>
                     </div>
@@ -922,7 +1000,7 @@ if (Session::get('user_id') !== NULL) {
             <div class="row">
 
                 <nav class="col-md-2 d-none d-md-block sidebar desktop-left-sidebar" style="top: 89px;position: inherit;">
-                    <h1 style="color: #ffffff; font-size: 17px; text-align: center; background-color: #fdaf40; padding: 7px; margin: 0px;">Menu</h1>
+                    <h1 style="color: #ffffff; font-size: 17px; text-align: center; background-color: #fdaf40; padding: 7px; margin: 0px;"><?=translate('Menu');?></h1>
                     <div class="sidebar-sticky bg-info" style="padding-top: 0px;width: 100%;">
 
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -930,15 +1008,15 @@ if (Session::get('user_id') !== NULL) {
                             
                             <?php  if($current_file_name=='mynotes.php'): ?>
                                 <li class="nav-item">
-                                    <a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/dailygoals.php"><i class="fa fa-arrow-left"></i> Atrás</a>
+                                    <a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/dailygoals.php"><i class="fa fa-arrow-left"></i> <?=translate('Atrás');?></a>
                                 </li>
                                 <li class="nav-item dropdown">
-                                <a class="nav-link" href="#" role="button">MejorNotes</a>
+                                <a class="nav-link" href="#" role="button"><?=translate('MejorNotes');?></a>
                                 <ul class="submenu my-notes-menu" id="mynotesmenu">
                                     <li class="nav-item folder-item" id="folder-0">
                                         <a class="nav-link" href="mynotes.php" role="button">
                                         <i class="fa fa-list me-3"></i>
-                                        Mis Notas
+                                        <?=translate('Mis Notas');?>
                                         <span data-count="<?=$my_notes_count;?>" class="badge rounded-pill pull-right bg-light text-dark"><?=$my_notes_count;?></span>
                                         </a>
                                     </li>
@@ -948,164 +1026,175 @@ if (Session::get('user_id') !== NULL) {
                                     </li>
                                     <?php endforeach; ?>
                                     <li class="nav-item create-folder-nav" id="create_folder_nav_item">
-                                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createFolderModal" role="button"><i class="fa fa-folder-open me-3"></i>Carpeta</a> 
+                                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createFolderModal" role="button"><i class="fa fa-folder-open me-3"></i><?=translate('Carpeta');?></a> 
                                     </li>                                    
 
                                 </ul>
                             </li>  
                             <?php else: ?>
                                 <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="<?= SITE_URL; ?>"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+                                <a class="nav-link active" aria-current="page" href="<?= SITE_URL; ?>"><i class="fa fa-home" aria-hidden="true"></i> <?=translate('Home');?></a>
                                 </li>
                                 
                                 <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#menuMejorjournal" id="mejorjournalLinkItem" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="menuMejorjournal"><i class="fa fa-tasks" aria-hidden="true"></i> ExitoTotal Journal</a>
+                                <a class="nav-link dropdown-toggle" href="#menuMejorjournal" id="mejorjournalLinkItem" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="menuMejorjournal"><i class="fa fa-tasks" aria-hidden="true"></i> <?=translate('ExitoTotal Journal');?></a>
                                 <ul class="submenu list-unstyled fw-normal pb-1 small collapse hide pb-1 ms-3" id="menuMejorjournal" aria-labelledby="mejorjournalLinkItem">
                         
                                 
                                 <li class="nav-item"><a class="nav-link" href="dailygoals.php" role="button">
-                                <i class="fa fa-diamond" aria-hidden="true"></i> Victoria7</a> </li>
+                                <i class="fa fa-diamond" aria-hidden="true"></i> <?=translate('Victoria7');?></a> </li>
                                     
                                     <li class="nav-item">
                                         <a class="nav-link" href="cronovida.php" role="button">
-                                        <i class="fa fa-clock-o"></i> CronoVida
+                                        <i class="fa fa-clock-o"></i> <?=translate('CronoVida');?>
                                         </a>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" href="capsules.php" role="button"><i class="fa fa-flask"></i> MejorCapsules</a> </li>
+                                    <li class="nav-item"><a class="nav-link" href="capsules.php" role="button"><i class="fa fa-flask"></i> <?=translate('MejorCapsules');?></a> </li>
                                     <li class="nav-item">
                                         <a class="nav-link" href="dailycommitments.php" role="button">
-                                        <i class="fa fa-hand-rock-o"></i> Guerrero Diario
+                                        <i class="fa fa-hand-rock-o"></i> <?=translate('Guerrero Diario');?>
                                         </a>
                                     </li>
 
                                     <li class="nav-item">
                                         <a class="nav-link dropdown-toggle" href="#SuperObjetivos" id="navbarDropdownsupergoals" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="SuperObjetivos">
-                                        <i class="fa fa-bullseye"></i> SuperObjetivos
+                                        <i class="fa fa-bullseye"></i> <?=translate('SuperObjetivos');?>
                                         </a>
                                         <ul id="SuperObjetivos" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdownsupergoals" style="margin-left:1rem;">
                                             <li class="nav-item">
-                                                <a class="nav-link <?= $goalType == 'weekly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php">Semanal</a>
+                                                <a class="nav-link <?= $goalType == 'weekly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php"><?=translate('Semanal');?></a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link <?= $goalType == 'monthly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=monthly">Mensual</a>
+                                                <a class="nav-link <?= $goalType == 'monthly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=monthly"><?=translate('Mensual');?></a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link <?= $goalType == 'quarterly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=quarterly">Trimestral</a>
+                                                <a class="nav-link <?= $goalType == 'quarterly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=quarterly"><?=translate('Trimestral');?></a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link <?= $goalType == 'yearly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=yearly">Anual</a>
+                                                <a class="nav-link <?= $goalType == 'yearly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=yearly"><?=translate('Anual');?></a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=lifetime">100Dreams</a>
+                                                <a class="nav-link <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=lifetime"><?=translate('100Dreams');?></a>
                                             </li>
                                             <!-- New Pages -->
                                             <br />
                                             <li class="nav-item">
-                                                <a class="nav-link" href="<?= SITE_URL; ?>/users/missions.php">Mi Missión</a>
+                                                <a class="nav-link" href="<?= SITE_URL; ?>/users/missions.php"><?=translate('Mi Missión');?></a>
                                             </li>
                                             
                                             <li class="nav-item">
                                                 <a class="nav-link dropdown-toggle" href="#mivisions" id="mivisionsDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
-                                                Mi Visión
+                                                <?=translate('Mi Visión');?>
                                                 </a>
                                                 <ul id="mivisions" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="mivisionsDropdown" style="margin-left:1rem;">
-                                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=3">Visión 3-Años</a></li>
-                                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=5">Visión 5-Años</a></li>
-                                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=10">Visión 10-Años</a></li>
+                                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=3"><?=translate('Visión 3-Años');?></a></li>
+                                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=5"><?=translate('Visión 5-Años');?></a></li>
+                                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/vision.php?plan=10"><?=translate('Visión 10-Años');?></a></li>
                                                     
                                                 </ul>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" href="<?= SITE_URL; ?>/users/commitments.php">Mis Compromisos</a>
+                                                <a class="nav-link" href="<?= SITE_URL; ?>/users/commitments.php"><?=translate('Mis Compromisos');?></a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" href="<?= SITE_URL; ?>/users/agreements.php">Mis Acuerdos</a>
+                                                <a class="nav-link" href="<?= SITE_URL; ?>/users/agreements.php"><?=translate('Mis Acuerdos');?></a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" href="<?= SITE_URL; ?>/users/promises.php">Mis Promesas</a>
+                                                <a class="nav-link" href="<?= SITE_URL; ?>/users/promises.php"><?=translate('Mis Promesas');?></a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" href="<?= SITE_URL; ?>/users/lifeTasks.php">Mi tarea de Vida</a>
+                                                <a class="nav-link" href="<?= SITE_URL; ?>/users/lifeTasks.php"><?=translate('Mi tarea de Vida');?></a>
                                             </li>
                                         </ul>
                                     </li>
 
                                     <li>
                                         <a class="nav-link dropdown-toggle" href="#superMemorias" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
-                                        <i class="fa fa-trophy"></i> SuperVictorias
+                                        <i class="fa fa-trophy"></i> <?=translate('SuperVictorias');?>
                                         </a>
                                         <ul id="superMemorias" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
-                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/dailyVictories.php">Mi Victoria Diaria</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/toRemember.php">Eventos para Recordar</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/biggestVictories.php">Mis Mayores Victorias</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/superdias.php">SuperDias</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/dailyVictories.php"><?=translate('Mi Victoria Diaria');?></a></li>
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/toRemember.php"><?=translate('Eventos para Recordar');?></a></li>
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/biggestVictories.php"><?=translate('Mis Mayores Victorias');?></a></li>
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/superdias.php"><?=translate('SuperDias');?></a></li>
                                             
                                         </ul>
                                     </li>
                                     <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="supermemories.php"><i class="fa fa-tree" aria-hidden="true"></i> SuperMemorias</a>
+                                <a class="nav-link" aria-current="page" href="supermemories.php"><i class="fa fa-tree" aria-hidden="true"></i> <?=translate('SuperMemorias');?></a>
                             </li>
                                     <li class="nav-item">
                                         <a class="nav-link dropdown-toggle" href="#dentletter" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
-                                        <i class="fa fa-envelope-o"></i> Cartas para la Eternidad
+                                        <i class="fa fa-envelope-o"></i> <?=translate('Cartas para la Eternidad');?>
                                         </a>
                                         <ul id="dentletter" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
-                                            <li class="nav-item"><a class="nav-link <?= $path == 'index.php' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/index.php" id="navbarDropdown">Cartas</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/notebook.php">Escribe Carta</a></li>
+                                            <li class="nav-item"><a class="nav-link <?= $path == 'index.php' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/index.php" id="navbarDropdown"><?=translate('Cartas');?></a></li>
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/notebook.php"><?=translate('Escribe Carta');?></a></li>
                                         </ul>
                                     </li>
                                     <li class="nav-item">
                                 <a class="nav-link dropdown-toggle" href="#Imagenes" id="navbarDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
-                                <i class="fa fa-picture-o"></i> Imagenes
+                                <i class="fa fa-picture-o"></i> <?=translate('Imagenes');?>
                                 </a>
                                 <ul id="Imagenes" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="navbarDropdown" style="margin-left:1rem;">
-                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/victory-images.php">Gallery</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/dream-wall.php">Dream wall</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/photo-drive.php">Imagenes de Exito</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/victory-images.php"><?=translate('Gallery');?></a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/dream-wall.php"><?=translate('Dream wall');?></a></li>
+                                    <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/photo-drive.php"><?=translate('Imagenes de Exito');?></a></li>
                                 </ul>
                             </li>
-                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=audio"><i class="fa fa-volume-up"></i> Audios</a></li>
+                                    <li class="nav-item"><a class="nav-link" aria-current="page" href="<?= SITE_URL; ?>/users/victory-media.php?type=audio"><i class="fa fa-volume-up"></i> <?=translate('Audios');?></a></li>
                                     <li class="nav-item">
                                         <a class="nav-link dropdown-toggle" href="#mivideos" id="mivideosDropdown" role="button" data-bs-toggle="collapse" aria-expanded="false">
-                                        <i class="fa fa-video-camera" aria-hidden="true"></i> Videos
+                                        <i class="fa fa-video-camera" aria-hidden="true"></i> <?=translate('Videos');?>
                                         </a>
                                         <ul id="mivideos" class="list-unstyled fw-normal pb-1 small collapse hide" aria-labelledby="mivideosDropdown" style="margin-left:1rem;">
-                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/video-playlists.php">Upload Video</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/victory-media.php?type=video">Victory 7 Videos</a></li>
-                                            
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/video-playlists.php"><?=translate('Upload Video');?></a></li>
+                                            <li class="nav-item"><a class="nav-link" href="<?= SITE_URL; ?>/users/victory-media.php?type=video"><?=translate('Victory 7 Videos');?></a></li>                                           
                                         </ul>
                                     </li>
                                     <li class="nav-item">
-                                    <a class="nav-link" aria-current="page" href="mynotes.php"><i class="fa fa-sticky-note-o"></i> MejorNotes</a>
+                                    <a class="nav-link" aria-current="page" href="mynotes.php"><i class="fa fa-sticky-note-o"></i> <?=translate('MejorNotes');?></a>
                                     </li>
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="https://blog.mejorcadadia.com"><i class="fa fa-newspaper-o" aria-hidden="true"></i> MejorBlog</a>
+                                <a class="nav-link" href="https://blog.mejorcadadia.com"><i class="fa fa-newspaper-o" aria-hidden="true"></i> <?=translate('MejorBlog');?></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= SITE_URL; ?>/users/inspirations.php"><i class="fa fa-bar-chart" aria-hidden="true"></i> MejorInspiration</a>
+                                <a class="nav-link" href="<?= SITE_URL; ?>/users/inspirations.php"><i class="fa fa-bar-chart" aria-hidden="true"></i> <?=translate('MejorInspiration');?></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="fa fa-coffee" aria-hidden="true"></i> MejorCadaDía Chef</a>
+                                <a class="nav-link" href="#"><i class="fa fa-coffee" aria-hidden="true"></i> <?=translate('MejorCadaDía Chef');?></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="fa fa-bed" aria-hidden="true"></i> MejorCadaDía Hotel</a>
+                                <a class="nav-link" href="#"><i class="fa fa-bed" aria-hidden="true"></i> <?=translate('MejorCadaDía Hotel');?></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="fa fa-fire" aria-hidden="true"></i> MejorFest</a>
+                                <a class="nav-link" href="#"><i class="fa fa-fire" aria-hidden="true"></i> <?=translate('MejorFest');?></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= SITE_URL; ?>/users/backup.php"><i class="fa fa-cloud-upload" aria-hidden="true"></i> DropBox Backup</a>
+                                <a class="nav-link" href="<?= SITE_URL; ?>/users/backup.php"><i class="fa fa-cloud-upload" aria-hidden="true"></i> <?=translate('DropBox Backup');?></a>
                             </li> 
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= SITE_URL; ?>/users/profile.php"><i class="fa fa-user-o" aria-hidden="true"></i> Perfil</a>
+                                <a class="nav-link" href="<?= SITE_URL; ?>/users/profile.php"><i class="fa fa-user-o" aria-hidden="true"></i> <?=translate('Perfil');?></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= SITE_URL; ?>/users/logout.php" onclick="return confirm('Are you sure to logout?');"><i class="fa fa-power-off" aria-hidden="true"></i> Salir</a>
+                                <a class="nav-link" href="<?= SITE_URL; ?>/users/logout.php" onclick="return confirm('<?=translate('Are you sure to logout?');?>');"><i class="fa fa-power-off" aria-hidden="true"></i> <?=translate('Salir');?></a>
                             </li>  
                             <?php endif; ?>
                             
+                            <li class="nav-item">
+                                <div class="dropdown language-switcher" style="display:inline-block;">
+                                    <button class="btn dropdown-toggle" style="background-color: #2DC3E7;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="<?=SITE_URL;?>/assets/images/<?=$userLanguage;?>.png"> <?=$languages[$userLanguage];?>
+                                    </button>
+                                    <ul class="dropdown-menu" style="">
+                                        <?php foreach($languages as $code=>$name): if($code!=$userLanguage): ?>
+                                            <li><a class="dropdown-item" href="<?=addParamToURL('lang',$code)?>"><img src="<?=SITE_URL;?>/assets/images/<?=$code;?>.png"> <?=$name;?></a></li>
+                                        <?php endif; endforeach; ?>
+                                    </ul>
+                                </div>  
+                            </li> 
                        
                            
                     
@@ -1116,9 +1205,9 @@ if (Session::get('user_id') !== NULL) {
                                 </a>                        
                             </div>
                             <div class="brand-info-bar text-center mb-2">
-                                <h1 class="" style="color:#FFF; font-size:20px;">El Club de la Gente Excepcional</h1>                      
+                                <h1 class="" style="color:#FFF; font-size:20px;"><?=translate('El Club de la Gente Excepcional');?></h1>                      
                             </div>       
-                            <h6 class="text-light">Comparte MCD con tus amigos</h6>                                  
+                            <h6 class="text-light"><?=translate('Comparte MCD con tus amigos');?></h6>                                  
                                 <div class="text-center">
                                     <a target="_blank" href="http://www.facebook.com/sharer.php?u=mejorcadadia.com" class="btn-facebook btn btn-social-icon"><i class="fa fa-facebook" aria-hidden="true"></i></a>
                                     <a target="_blank" href="http://twitter.com/share?text=Este Mundo Necesita tu Mejor Versión y por eso te invitamos a que formes parte de la familia de mejorcadadia.com" class="btn btn-social-icon btn-twitter"><i class="fa fa-twitter " aria-hidden="true"></i></a>
@@ -1129,7 +1218,7 @@ if (Session::get('user_id') !== NULL) {
                             </li>
                             <li class="text-center">
                                 <div class="text-center mt-3 mb-3">
-                                    <button id="install-button" class="btn btn-warning mx-auto">Add To HomeScreen</button>
+                                    <button id="install-button" class="btn btn-warning mx-auto"><?=translate('Add To HomeScreen.');?></button>
                                 </div>
                             </li>
 

@@ -489,7 +489,7 @@ if ($dailyLifeGoals) {
             </div>
           </div>
         <?php endif; ?>
-        <?php setlocale(LC_ALL, "es_ES");
+        <?php setlocale(LC_ALL, $locales[$userLanguage]);
         $string = date('d/m/Y', strtotime($currentDate));
         $dateObj = DateTime::createFromFormat("d/m/Y", $string);
         ?>

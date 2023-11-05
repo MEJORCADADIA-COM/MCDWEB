@@ -232,7 +232,7 @@ $isPastDate=false;
                     
                     <?php  $i=0; foreach ($folderImages as $key => $file):  ?>
 
-                      <?php setlocale(LC_ALL, "es_ES");
+                      <?php setlocale(LC_ALL, $locales[$userLanguage]);
                       $string = date('d/m/Y', strtotime($file['created_at']));
                       $dateObj = DateTime::createFromFormat("d/m/Y", $string);
                       ?>
@@ -249,7 +249,7 @@ $isPastDate=false;
 </svg>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><div class="dropdown-item file_delete" href="#">Delete</div></li>
+                              <li><div class="dropdown-item file_delete" href="#"> <?=translate('Delete') ?></div></li>
                             </ul>
                           </div>
                           
@@ -273,7 +273,7 @@ $isPastDate=false;
                     <div class="v7-media-box-folder" style="order:0; background:transparent;">                        
                         <a href="#" data-bs-toggle="modal" data-bs-target="#FolderModal">                        
                          <div class="my-1 py-4" style="background:#FFF; height:90px; border-radius:10px;"><img src="<?= SITE_URL; ?>/assets/images/video-playlist.png"></div>
-                         <div class="my-2" style="color:#FFF;">Create Playlist</div>
+                         <div class="my-2" style="color:#FFF;"><?=translate('Create Playlist') ?></div>
                         </a>
                     </div>
                     
@@ -299,17 +299,17 @@ $isPastDate=false;
   <div class="modal-dialog modal-fullscreen-md-down modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content bg-dark">
       <div class="modal-header border-0">
-        <h3 class="text-white">Crear lista de reproducción </h3>      
+        <h3 class="text-white"><?=translate('Crear lista de reproducción') ?> </h3>      
         <button type="button" class="btn-close bg-white border border-warning" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" style="min-height:350px;">  
            <form method="">
               <div class="form-group">
-                <input type="text" id="form_folder_name" class="form-control folder_name" placeholder="Nombre de la lista de reproducción de video">
+                <input type="text" id="form_folder_name" class="form-control folder_name" placeholder="<?=translate('Nombre de la lista de reproducción de video') ?>">
                 <input type="hidden" id="form_folder_id" class="form-control folder_id" value="0">
               </div>
               <div class="form-group mt-3">
-                <button type="button" id="createFolderBtn" class="btn btn-info">Subir</button>
+                <button type="button" id="createFolderBtn" class="btn btn-info"><?=translate('Subir') ?> </button>
               </div>
            </form>           
         

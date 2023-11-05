@@ -88,7 +88,7 @@ if(!empty($date) && !empty($filter)){
           <header class="projects-header" style="">
             <div class="row">         
                 <div class="col-sm-12 col-12" style="text-align:center;">                
-                  <h1 style="text-transform: capitalize;">MejorCapsules</h1>  
+                  <h1 style="text-transform: capitalize;"><?=translate('MejorCapsules');?></h1>  
                 </div>             
             </div>
             <div class="row" style="margin-bottom:15px;">
@@ -106,11 +106,11 @@ if(!empty($date) && !empty($filter)){
             <div class="col-sm-3">
             <div class="form-check form-check-inline">
               <input class="form-check-input filter_by" type="radio" name="filter_by" id="filter_week" value="week" <?php if($filter=='week') echo 'checked'; ?>>
-              <label class="form-check-label" for="filter_week">Por Semana</label>
+              <label class="form-check-label" for="filter_week"><?=translate('Por Semana');?></label>
             </div>
             <div class="form-check form-check-inline">
               <input class="form-check-input filter_by" type="radio" name="filter_by" id="filter_month" value="month" <?php if($filter=='month') echo 'checked'; ?>>
-              <label class="form-check-label" for="filter_month">Por Mes</label>
+              <label class="form-check-label" for="filter_month"><?=translate('Por Mes');?></label>
             </div>
             </div>
            
@@ -130,7 +130,7 @@ if(!empty($date) && !empty($filter)){
                       <button type="button"  data-capsule="<?=$item['id'];?>" class="btn btn-primary btn-sm savecapsule"><i class="fa fa-save"></i></button>
                     </li>
                     <li class="nav-item right" style="text-align:right;">
-                      <?php setlocale(LC_ALL, "es_ES");
+                      <?php setlocale(LC_ALL, $locales[$userLanguage]);
                       $string = date('Y-m-d H:i:s', strtotime($item['created_at']));
                       $dateObj = DateTime::createFromFormat("Y-m-d H:i:s", $string);  ?>
                       <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"><?= utf8_encode(strftime("%A, %d %B, %Y %H:%M", $dateObj->getTimestamp())); ?> </a>

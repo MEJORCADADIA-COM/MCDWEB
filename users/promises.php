@@ -61,19 +61,19 @@ if (isset($_POST['send_email'])) {
     }
 
     if (!empty($promise1)) {
-        $promises = "<h4>Promesa #1 que me Hago a mí Mismo/a:</h4><div>".html_entity_decode($promise1)."</div>";
+        $promises = "<h4>".translate('Promesa #1 que me Hago a mí Mismo/a').":</h4><div>".html_entity_decode($promise1)."</div>";
     }
     if (!empty($promise2)) {
-        $promises .= "<h4>Promesa #2 que me Hago a mí Mismo/a:</h4><div>".html_entity_decode($promise2)."</div>";
+        $promises .= "<h4>".translate('Promesa #2 que me Hago a mí Mismo/a').":</h4><div>".html_entity_decode($promise2)."</div>";
     }
     if (!empty($promise3)) {
-        $promises .= "<h4>Promesa #3 que me Hago a mí Mismo/a:</h4><div>".html_entity_decode($promise3)."</div>";
+        $promises .= "<h4>".translate('Promesa #3 que me Hago a mí Mismo/a').":</h4><div>".html_entity_decode($promise3)."</div>";
     }
     if (!empty($promise4)) {
-        $promises .= "<h4>Promesa #4 que me Hago a mí Mismo/a:</h4><div>".html_entity_decode($promise4)."</div>";
+        $promises .= "<h4>".translate('Promesa #4 que me Hago a mí Mismo/a').":</h4><div>".html_entity_decode($promise4)."</div>";
     }
     if (!empty($promise5)) {
-        $promises .= "<h4>Promesa #5 que me Hago a mí Mismo/a:</h4><div>".html_entity_decode($promise5)."</div>";
+        $promises .= "<h4>".translate('Promesa #5 que me Hago a mí Mismo/a').":</h4><div>".html_entity_decode($promise5)."</div>";
     }
 
     try {
@@ -82,7 +82,7 @@ if (isset($_POST['send_email'])) {
             <div style='width:600px; background-color:#FFF; margin:0 auto;'>
                 <header style='background-color: #74be41;'><img src='https://mejorcadadia.com/users/assets/logo.png'></header>                
                 <div style='padding:20px; background-color:#FFF;'>
-                    <h2 style='text-transform: capitalize;'>Promesas Inquebrantables que Me Hago a Mí Mismo/a</h2>
+                    <h2 style='text-transform: capitalize;'>".translate('Promesas Inquebrantables que Me Hago a Mí Mismo/a')."/a</h2>
                     <div class='goals-area' style='margin-top:20px; margin-bottom:40px;'></div>  
                     <div class='description-area' style='margin-top:20px; margin-bottom:40px;'>
                         {$promises}
@@ -92,7 +92,7 @@ if (isset($_POST['send_email'])) {
         </ol>
         ";
 
-        if ((new Email())->send('Promesas Inquebrantables que Me Hago a Mí Mismo/a', $email, $body)) {
+        if ((new Email())->send(translate('Promesas Inquebrantables que Me Hago a Mí Mismo/a'), $email, $body)) {
             setSuccess('Email sent successfully');
         } else {
             setError();
@@ -114,32 +114,32 @@ if (isset($_POST['send_email'])) {
     <!-- Secondary Nav -->
     <div class="projects py-5" style="background-color: #ed008c;">
         <div class="mb-5" style="background-color: #fef200; padding: 10px">
-            <h2 class="toptitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;">Promesas Inquebrantables que Me Hago a Mí Mismo/a:</h2>
+            <h2 class="toptitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;"><?=translate('Promesas Inquebrantables que Me Hago a Mí Mismo/a'); ?></h2>
         </div>
         <form class="px-1 px-lg-0" action="" method="post">
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="promise_1">Promesa #1 que me Hago a mí Mismo/a:</label>
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="promise_1"><?=translate('Promesa #1 que me Hago a mí Mismo/a'); ?>:</label>
                 <textarea name="promise_1" id="promise_1" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userPromises['promise_1'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="promise_2">Promesa #2 que me Hago a mí Mismo/a:</label>
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="promise_2"><?=translate('Promesa #2 que me Hago a mí Mismo/a'); ?>:</label>
                 <textarea name="promise_2" id="promise_2" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userPromises['promise_2'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="promise_3">Promesa #3 que me Hago a mí Mismo/a:</label>
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="promise_3"><?=translate('Promesa #3 que me Hago a mí Mismo/a'); ?>:</label>
                 <textarea name="promise_3" id="promise_3" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userPromises['promise_3'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="promise_4">Promesa #4 que me Hago a mí Mismo/a:</label>
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="promise_4"><?=translate('Promesa #4 que me Hago a mí Mismo/a'); ?>:</label>
                 <textarea name="promise_4" id="promise_4" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userPromises['promise_4'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="promise_5">Promesa #5 que me Hago a mí Mismo/a:</label>
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="promise_5"><?=translate('Promesa #5 que me Hago a mí Mismo/a'); ?>:</label>
                 <textarea name="promise_5" id="promise_5" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userPromises['promise_5'] ?? '' ?></textarea>
             </div>
-            <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Email</button>
-            <button class="btn btn-info letter" type="submit" name="save_promises">Save</button>
-            <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="Guardar pdf" />
+            <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button"><?=translate('Email'); ?></button>
+            <button class="btn btn-info letter" type="submit" name="save_promises"><?=translate('Save'); ?></button>
+            <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="<?=translate('Guardar pdf'); ?>" />
             <!-- Floating Button Start -->
             <button class="btn btn-primary rounded-circle text-white floating-btn" type="submit" name="save_promises"><i class="fa fa-save fa-lg"></i></button>
             <!-- Floating Button End -->
@@ -150,18 +150,18 @@ if (isset($_POST['send_email'])) {
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title text-dark" id="exampleModalToggleLabel">Send Email</h5>
+                            <h5 class="modal-title text-dark" id="exampleModalToggleLabel"><?=translate('Send Email'); ?></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label>Receiver Email Address</label>
-                                <input style="width:100%;" type="email" class="form-control" name="to_email" id="toEmail" placeHolder="Enter Email Address">
+                                <label><?=translate('Receiver Email Address'); ?></label>
+                                <input style="width:100%;" type="email" class="form-control" name="to_email" id="toEmail" placeHolder="<?=translate('Enter Email Address'); ?>">
                             </div>
                         </div>
                         <div class="modal-footer">
                             <div id="modal-msg"></div>
-                            <button class="btn btn-primary" type="submit" id="sendBtn" name="send_email">Send Email</button>
+                            <button class="btn btn-primary" type="submit" id="sendBtn" name="send_email"><?=translate('Send Email'); ?></button>
                         </div>
                     </div>
                 </div>

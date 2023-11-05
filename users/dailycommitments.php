@@ -358,7 +358,7 @@ if ($row) {
             </div>
           </div>
         <?php endif; ?>
-        <?php setlocale(LC_ALL, "es_ES");
+        <?php setlocale(LC_ALL, $locales[$userLanguage]);
         $string = date('d/m/Y', strtotime($selectedDate));
         $dateObj = DateTime::createFromFormat("d/m/Y", $string);
         ?>
@@ -376,9 +376,9 @@ if ($row) {
 
       <form class="form" id="goalsFrom">
         <div style="background-color: #fef200; padding: 10px; display:flex;">
-          <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden;">Me Comprometo 100% a Hacer Esto:
+          <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden;"><?=translate('Me Comprometo 100% a Hacer Esto');?>:
             <?php if ($isPastDate == false) : ?>
-              <button type="button" data-target="goals-area" class="btn btn-xs btn-info screenonly pull-right" id="editBtn1">Editar</button>
+              <button type="button" data-target="goals-area" class="btn btn-xs btn-info screenonly pull-right" id="editBtn1"><?=translate('Editar');?></button>
             <?php endif; ?>
           </h2>
         </div>
@@ -400,19 +400,19 @@ if ($row) {
               <?php endforeach; ?>
             </ol>
             <?php if (count($goals) > 10) : ?>
-              <div class="screenonly" style="text-align:center;"><button id="morelessToggleBtn" type="button" class="btn btn-primary">Mostrar más</button></div>
+              <div class="screenonly" style="text-align:center;"><button id="morelessToggleBtn" type="button" class="btn btn-primary"><?=translate('Mostrar más');?></button></div>
             <?php endif; ?>
             <div class="form-group" id="new-goal-creation-container"></div>
             <?php if ($isPastDate == false) : ?>
               <div class="form-group screenonly" style="padding:20px; text-align:right;" id="create-top-goal-btn-wrapper">
-                <button type="button" id="save-new-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewGoals()"><i class="fa fa-save"></i> Guarda Nuevo Compromiso</button>
-                <button type="button" class="button btn btn-info" onClick="CreateNewCommitments()"><i class="fa fa-book"></i> Agrega Compromiso</button>
+                <button type="button" id="save-new-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewGoals()"><i class="fa fa-save"></i> <?=translate('Guarda Nuevo Compromiso');?></button>
+                <button type="button" class="button btn btn-info" onClick="CreateNewCommitments()"><i class="fa fa-book"></i> <?=translate('Agrega Compromiso');?></button>
               </div>
             <?php endif; ?>
           </div>
         </div>
         <div class="cardd mb-4" id="section-2" style="padding:0 5px;">
-          <h5 class="card-header" style="color:#FFF; font-size:1.5rem; margin:5px 0;">Evaluación y Mejoramiento:</h5>
+          <h5 class="card-header" style="color:#FFF; font-size:1.5rem; margin:5px 0;"><?=translate('Evaluación y Mejoramiento');?>:</h5>
           <div class="card-body">
             <div class="form-group">
               <div class="description-area">
@@ -431,13 +431,13 @@ if ($row) {
         </div>
         <div class="form-group screenonly">
           <div class="button-wrapper" style="margin:30px 0;">
-            <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Email</button>
+            <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button"><?=translate('Email');?></button>
 
-            <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="Guardar pdf" />
+            <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="<?=translate('Guardar pdf');?>" />
 
             <!-- Floating Save Start -->
             <?php if ($today <= $selectedDate) : ?>
-              <input class="btn btn-info letter" type="button" id="saveBtn" name="saveBtn" value="Guardar" />
+              <input class="btn btn-info letter" type="button" id="saveBtn" name="saveBtn" value="<?=translate('Guardar');?>" />
               <div>
                 <button class="btn btn-primary rounded-circle fixed-save-btn text-white" type="button" id="floatingSaveBtn" name="saveBtn"><i class="fa fa-save"></i></button>
               </div>
@@ -460,18 +460,18 @@ if ($row) {
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalToggleLabel">Send Email</h5>
+        <h5 class="modal-title" id="exampleModalToggleLabel"><?=translate('Send Email');?></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label>Receiver Email Address</label>
-          <input style="width:100%;" type="email" class="form-control" name="toemail" id="toEmail" placeHolder="Enter Email Address">
+          <label><?=translate('Receiver Email Address');?></label>
+          <input style="width:100%;" type="email" class="form-control" name="toemail" id="toEmail" placeHolder="<?=translate('Enter Email Address');?>">
         </div>
       </div>
       <div class="modal-footer">
         <div id="modal-msg"></div>
-        <button class="btn btn-primary" type="button" id="sendBtn" name="sendBtn">Send Email</button>
+        <button class="btn btn-primary" type="button" id="sendBtn" name="sendBtn"><?=translate('Send Email');?></button>
       </div>
     </div>
   </div>
@@ -950,5 +950,5 @@ if ($row) {
       });
   });
 </script>
-<div id="popovertip" data-page="dailycommitments" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Escribe las Acciones que estás Comprometido/a a Realizar Hoy y todos los Días. La Regularidad y Consistencia es tan Importante como la Genialidad. Si puedes."></div>
+<div id="popovertip" data-page="dailycommitments" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<?=translate('popover_daily_commitments');?>"></div>
 <?php require_once "inc/footer.php"; ?>

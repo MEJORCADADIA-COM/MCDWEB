@@ -45,13 +45,13 @@ if(!empty($selectedDate)){
 
 
  if ($type == 'weekly') {
-   $evaluation_heading = 'Semana: Evaluación y Progreso';   
+   $evaluation_heading = translate('Semana: Evaluación y Progreso');   
  } elseif ($type == 'monthly') {   
-   $evaluation_heading = 'Mes: Evaluación y Progreso';   
+   $evaluation_heading = translate('Mes: Evaluación y Progreso');   
  } elseif ($type == 'yearly') { 
-   $evaluation_heading = 'Año: Evaluación y Progreso';   
+   $evaluation_heading = translate('Año: Evaluación y Progreso');   
  } elseif ($type == 'quarterly') {
-   $evaluation_heading = 'Trimestre: Evaluación y Progreso';
+   $evaluation_heading = translate('Trimestre: Evaluación y Progreso');
  }
  
 require_once "inc/header.php"; ?>

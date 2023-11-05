@@ -277,12 +277,12 @@ function getTDClass($day, $monthlyDailyEvolutions): string
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 text-white">
     <div class="projects min-vh-100 px-0 px-lg-3 pb-3" style="background-color: #ed008c;">
         <div class="d-flex justify-content-between my-4 px-2 px-lg-0">
-            <a class="btn btn-warning" href="<?= SITE_URL; ?>/users/evolutions.php" id=" calendarBtn">Atrás</a>
+            <a class="btn btn-warning" href="<?= SITE_URL; ?>/users/evolutions.php" id=" calendarBtn"><?=translate('Atrás');?></a>
             <div>
                 <input class="form-control" type="month" name="month" value="<?= date('Y-m', strtotime("{$year}-{$month}-01")); ?>">
             </div>
         </div>
-        <h3 class="text-center my-3">Mini Resumen de Hoy</h3>
+        <h3 class="text-center my-3"><?=translate('Mini Resumen de Hoy');?></h3>
         <div class="d-flex justify-content-between px-1 px-lg-0">
             <a class="text-white" href="<?= SITE_URL . "/users/dailyEvolutionsCalendar.php?month_year={$prevMonthYear}"; ?>"><i class="fa fa-arrow-left fs-4"></i></a>
             <h5><?= date("F Y", strtotime("$year-$month-01")) ?></h5>
@@ -331,7 +331,7 @@ function getTDClass($day, $monthlyDailyEvolutions): string
                                                     <input type="hidden" name="victory_id" value="' . $monthlyDailyVictory['id'] . '" >
                                                     <textarea class="editor-textarea" name="daily_victory">' . $monthlyDailyVictory["evolution"] . '</textarea>
                                                     <div class="mt-3">
-                                                        <p class="ms-0 ms-lg-2">Tags: </p>
+                                                        <p class="ms-0 ms-lg-2">'.translate('Tags').': </p>
                                                         <div class="d-block d-lg-flex justify-content-between">';
                                     $i = 0;
                                     foreach ($monthlyDailyVictory['tags'] as $tag) {
@@ -369,11 +369,11 @@ function getTDClass($day, $monthlyDailyEvolutions): string
         </table>
 
         <div class="mt-5 px-1 px-lg-0">
-            <h4 class="text-center">Monthly Notes</h4>
+            <h4 class="text-center"><?=translate('Monthly Notes');?></h4>
             <div x-data="monthlyEvolutions" class="text-dark">
                 <div class="text-dark">
                     <textarea class="editor-textarea" id="monthlyEvolutions" x-ref="monthlyEvolutions"><?= $monthlyEvolutions['evolution'] ?? ''; ?></textarea>
-                    <button class="btn btn-info letter my-5" @click="savemonthlyEvolutions">Save</button>
+                    <button class="btn btn-info letter my-5" @click="savemonthlyEvolutions"><?=translate('Save');?></button>
                 </div>
 
                 <div :class="`alpine-alert alert ${alertClass}`" x-show="showAlert">

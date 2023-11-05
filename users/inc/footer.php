@@ -144,37 +144,37 @@ require_once "../inc/inspirationQuote.php";
         <div class="row">
             <div class="col-5">
                 <ul class="list-unstyled">
-                    <li><a class="text-decoration-none text-white py-1" href="dailygoals.php">Victoria7</a></li>
-                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'weekly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php">Semanal</a></li>
-                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'monthly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=monthly">Mensual</a></li>
-                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'quarterly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=quarterly">Trimestral</a></li>
-                    <li> <a class="text-decoration-none text-white py-1 <?= $goalType == 'yearly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=yearly">Anual</a></li>
-                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=lifetime">100 Dreams</a></li>
-                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/dream-wall.php">Dream Wall</a></li>
+                    <li><a class="text-decoration-none text-white py-1" href="dailygoals.php"><?=translate('Victoria7');?></a></li>
+                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'weekly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php"><?=translate('Semanal');?></a></li>
+                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'monthly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=monthly"><?=translate('Mensual');?></a></li>
+                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'quarterly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=quarterly"><?=translate('Trimestral');?></a></li>
+                    <li> <a class="text-decoration-none text-white py-1 <?= $goalType == 'yearly' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=yearly"><?=translate('Anual');?></a></li>
+                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/supergoals.php?type=lifetime"><?=translate('100 Dreams');?></a></li>
+                    <li><a class="text-decoration-none text-white py-1 <?= $goalType == 'lifetime' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/dream-wall.php"><?=translate('Dream Wall');?></a></li>
                     <li><a class="text-decoration-none text-white py-1" href="dailycommitments.php">Guerrero D</a></li>
                     <li><a class="text-decoration-none text-white py-1" href="cronovida.php">CronoVida</a></li>
-                    <li> <a class="text-decoration-none text-white py-1 <?= $path == 'index.php' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/index.php" id="navbarDropdown">Cartas</a></li>
-                    <li>  <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/notebook.php">Escribe Carta</a></li>
-                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/mynotes.php">MejorNotes</a></li>
-                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/capsules.php">MejorCapsule</a></li>
+                    <li> <a class="text-decoration-none text-white py-1 <?= $path == 'index.php' ? ' active' : ''; ?>" href="<?= SITE_URL; ?>/users/index.php" id="navbarDropdown"><?=translate('Cartas');?></a></li>
+                    <li>  <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/notebook.php"><?=translate('Escribe Carta');?></a></li>
+                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/mynotes.php"><?=translate('MejorNotes');?></a></li>
+                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/capsules.php"><?=translate('MejorCapsule');?></a></li>
                 </ul>
             </div>
             <div class="col-7">
                 <ul class="list-unstyled">
-                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/missions.php">Mi Missión</a></li>
-                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/vision.php?plan=3">Visión 3-Años</a></li>
-                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/vision.php>plan=5">Visión 5-Años</a></li>
-                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/vision.php?plan=10">Visión 10-Años</a></li>
-                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/commitments.php">Mis Compromisos</a></li>
-                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/agreements.php">Mis Acuerdos</a></li>
-                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/promises.php">Mis Promesas</a></li>
-                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/lifeTasks.php">Mi tarea de Vida</a></li>
-                    <li> <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/dailyVictories.php">Mi Victoria Diaria</a></li>
-                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/toRemember.php">Eventos para Recordar</a></li>
-                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/biggestVictories.php">Mis Mayores Victorias</a></li>
-                    <li> <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/inspirations.php">MejorInspiration</a></li>
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/missions.php"><?=translate('Mi Missión');?></a></li>
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/vision.php?plan=3"><?=translate('Visión 3-Años');?></a></li>
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/vision.php>plan=5"><?=translate('Visión 5-Años');?></a></li>
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/vision.php?plan=10"><?=translate('Visión 10-Años');?></a></li>
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/commitments.php"><?=translate('Mis Compromisos');?></a></li>
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/agreements.php"><?=translate('Mis Acuerdos');?></a></li>
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/promises.php"><?=translate('Mis Promesas');?></a></li>
+                    <li><a class="text-decoration-none text-white px-1 py-1" href="<?= SITE_URL; ?>/users/lifeTasks.php"><?=translate('Mi tarea de Vida');?></a></li>
+                    <li> <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/dailyVictories.php"><?=translate('Mi Victoria Diaria');?></a></li>
+                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/toRemember.php"><?=translate('Eventos para Recordar');?></a></li>
+                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/biggestVictories.php"><?=translate('Mis Mayores Victorias');?></a></li>
+                    <li> <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/inspirations.php"><?=translate('MejorInspiration');?></a></li>
                    
-                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/folder-images.php">Imagenes de Exito</a></li>
+                    <li><a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/folder-images.php"><?=translate('Imagenes de Exito');?></a></li>
                 </ul>
             </div>
         </div>
@@ -187,16 +187,16 @@ require_once "../inc/inspirationQuote.php";
     <div class="row">
             <div class="col-5">
                 <ul class="list-unstyled">
-                    <li><a class="text-decoration-none text-white py-1" href="dailygoals.php">MejorBlog</a></li>
-                    <li> <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/inspirations.php">MejorInspiration</a></li>
+                    <li><a class="text-decoration-none text-white py-1" href="dailygoals.php"><?=translate('MejorBlog');?></a></li>
+                    <li> <a class="text-decoration-none text-white py-1" href="<?= SITE_URL; ?>/users/inspirations.php"><?=translate('MejorInspiration');?></a></li>
                    
                 </ul>
             </div>
             <div class="col-7">
                 <ul class="list-unstyled">
-                    <li> <a class="text-decoration-none text-white py-1" href="#">MejorCadaDía Chef</a></li>
-                    <li><a class="text-decoration-none text-white py-1" href="#">MejorCadaDía Hotel</a></li>
-                    <li> <a class="text-decoration-none text-white py-1" href="#">MejorFest</a></li>
+                    <li> <a class="text-decoration-none text-white py-1" href="#"><?=translate('MejorCadaDía Chef');?></a></li>
+                    <li><a class="text-decoration-none text-white py-1" href="#"><?=translate('MejorCadaDía Hotel');?></a></li>
+                    <li> <a class="text-decoration-none text-white py-1" href="#"><?=translate('MejorFest');?></a></li>
                    
                 </ul>
             </div>
@@ -245,7 +245,7 @@ if (!empty($inspirationQuote)) :
     <div class="inspiration-box d-flex px-1 px-lg-1 justify-content-center navbar quote-text text-white bg-dark position-relative">
         <?= htmlspecialchars_decode(getInspirationQuote()) ?>
         <a class="plus-icon text-white bg-primary text-decoration-none" style="font-size: 0.9rem; font-weight:300;" href="<?= SITE_URL; ?>/users/inspirations.php">
-            Más <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+            <?=translate('Más') ?> <i class="fa fa-angle-double-right" aria-hidden="true"></i>
         </a>
     </div>
 <?php endif; ?>
@@ -253,11 +253,11 @@ if (!empty($inspirationQuote)) :
 
 
 <nav class="footer-navbar navbar navbar-dark flex-md-nowrap pb-2" style="background-color: #f36523;display: flex; justify-content: center; padding: 15px;">
-    <h1 class="footertitle">Yes I Can. Yes I Will. It`s Worth it</h1>
+    <h1 class="footertitle"><?=translate('Yes I Can. Yes I Will. It`s Worth it');?></h1>
 </nav>
 <nav class="navbar footer-navbar navbar-dark flex-md-nowrap pb-2" style="background-color: #fef200;display: flex; justify-content: space-between; padding: 5px;">
     <h1 class="footertitleleft">Mejorcadadia.com</h1>
-    <h1 class="footertitlerigth">All rights reserved 2022</h1>
+    <h1 class="footertitlerigth"><?=translate('All rights reserved');?> <?=date('Y');?></h1>
 </nav>
 </section>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

@@ -209,11 +209,11 @@ $currentFolder = $common->first(
           <table class="table table-light table-hover rounded" id="notesTable">
             <thead>
               <tr>                
-                <th scope="col">Notas</th>
+                <th scope="col"><?=translate('Notas'); ?></th>
               </tr>
             </thead>
             <tbody>
-             <?php foreach($notesItems as $item): setlocale(LC_ALL, "es_ES");
+             <?php foreach($notesItems as $item): setlocale(LC_ALL, $locales[$userLanguage]);
         $string = date('Y-m-d H:i:s', strtotime($item['updated_at']));
         $dateObj = DateTime::createFromFormat("Y-m-d H:i:s", $string); ?>
               <tr id="nid-<?=$item['id']?>">
@@ -245,9 +245,9 @@ $currentFolder = $common->first(
 </svg>
                     </button>
                     <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#"  onclick="DeleteNotes()">Delete</a></li>
+                    <li><a class="dropdown-item" href="#"  onclick="DeleteNotes()"><?=translate('Delete'); ?></a></li>
                     <li><hr class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#foldersModal">Move to Folder</a></li>
+                      <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#foldersModal"><?=translate('Move to Folder'); ?></a></li>
                     </ul>
                 </div>
                   
@@ -270,12 +270,12 @@ $currentFolder = $common->first(
               <div class="modal-content">
                 
                 <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="foldersModalLabel">Move to Folder</h1>
+                  <h1 class="modal-title fs-5" id="foldersModalLabel"><?=translate('Move to Folder'); ?></h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                 <input type="hidden" name="move_note_id" id="move_note_id" class="move_note_id" value="">
-                <div><h6 data-bs-nid="0" style="cursor:pointer;" onclick="MoveToFolder(0)"><i class="fa fa-folder-o me-3"></i> My Notes</h6></div>
+                <div><h6 data-bs-nid="0" style="cursor:pointer;" onclick="MoveToFolder(0)"><i class="fa fa-folder-o me-3"></i> <?=translate('My Notes'); ?></h6></div>
                 <?php foreach($userFolders as $folder): if($folder['id']!=$folder_id): ?>
                 
                 <div><h6 data-bs-nid="0" style="cursor:pointer;" onclick="MoveToFolder(<?=$folder['id']; ?>)"><i class="fa fa-folder-o me-3"></i> <?=$folder['name']?></h6></div>
@@ -284,7 +284,7 @@ $currentFolder = $common->first(
                 
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?=translate('Close'); ?></button>
                   
                 </div>
                

@@ -10,7 +10,7 @@ $currentPage = !empty($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['
     <div class="">
         <div class="px-3-sm px-5-lg">
             <div class="container p-2-sm p-5-lg py-4 shadow">
-                <h3 class="text-center">Inspirations</h3>
+                <h3 class="text-center"><?=translate('Inspirations');?></h3>
 
                 <div>
                 <ul class="list-group p-1-sm p-3-lg item-container list-unstyled">

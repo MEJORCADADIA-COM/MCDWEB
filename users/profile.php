@@ -199,8 +199,8 @@ if ($user_infos['answers']) {
                     <img class="profile_image" src="<?= $user_infos['image'] != NULL ? $user_infos['image'] : 'https://s3-us-west-2.amazonaws.com/harriscarney/images/150x150.png'; ?>" />
                     
                     <div class="buttons">
-                        <a href="<?php echo SITE_URL; ?>/users/edit-profile.php" class="profile_action_btn">Edit profile</a>
-                        <a href="<?php echo SITE_URL; ?>/users/account-pin.php" class="profile_action_btn">Actualiza tu Cuenta usando PIN</a>
+                        <a href="<?php echo SITE_URL; ?>/users/edit-profile.php" class="profile_action_btn"><?=translate('Edit profile'); ?></a>
+                        <a href="<?php echo SITE_URL; ?>/users/account-pin.php" class="profile_action_btn"><?=translate('Actualiza tu Cuenta usando PIN'); ?></a>
                     </div>
 
                     <h4 class="user_name"><?= $user_infos['full_name']; ?></h4>
@@ -225,7 +225,7 @@ if ($user_infos['answers']) {
                 <?php if ($userInterests) : ?>
                     <ul class="d-flex flex-wrap m-0">
                         <?php foreach ($userInterests as $interest) : ?>
-                            <li class="me-2 interest-list py-1 px-4 border rounded-pill"><?= $interest['interest'] ?></li>
+                            <li class="me-2 interest-list py-1 px-4 border rounded-pill"><?= translate($interest['interest']) ?></li>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
@@ -245,7 +245,7 @@ if ($user_infos['answers']) {
                 <?php foreach ($questions as $key => $question) : ?>
                     <div class="col-sm-12 col-md-6 col-lg-6">
                         <div class="p-3 border border-light border-opacity-10 rounded shadow">
-                            <p class="qa-font py-2 text-muted "><?= $question ?></p>
+                            <p class="qa-font py-2 text-muted "><?= translate($question) ?></p>
                             <p class="qa-font"><?= $answers->{$key} ?? '' ?></p>
                         </div>
                     </div>

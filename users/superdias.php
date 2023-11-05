@@ -421,7 +421,7 @@ $isPastDate=false;
             </div>
           </div>
      
-        <?php setlocale(LC_ALL, "es_ES");
+        <?php setlocale(LC_ALL, $locales[$userLanguage]);
         $string = date('d/m/Y', strtotime($currentDate));
         $dateObj = DateTime::createFromFormat("d/m/Y", $string);
         ?>
@@ -443,9 +443,9 @@ $isPastDate=false;
         <div class="pt-5" id="slide-1">
           <form class="form" id="goalsFrom">
             <div class="mt-5" style="background-color: #fef200; padding: 10px">
-              <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; ">SuperDias:
+              <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; "><?=translate('SuperDias')?>:
                 <?php if ($isPastDate == false) : ?>
-                  <button type="button" class="btn btn-info btn-sm screenonly pull-right" id="editBtn1">Editar</button>
+                  <button type="button" class="btn btn-info btn-sm screenonly pull-right" id="editBtn1"><?=translate('Editar')?></button>
                 <?php endif; ?>
               </h2>
             </div>
@@ -453,13 +453,13 @@ $isPastDate=false;
               <div class="goals-area" id="top-goals-area" style="display:block; ">
                   <?php if($selectedDate<=$today): ?>
                   <div class="form-group screenonly" style="padding:20px; text-align:right;" id="create-top-goal-btn-wrapper">
-                    <button type="button" id="save-new-top-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewGoals()"><i class="fa fa-save"></i> Guarda Nuevo Objetivo</button>
-                    <button type="button" class="button btn btn-info" onClick="CreateDailyTopGoal()"><i class="fa fa-book"></i> Agrega Objetivo</button>
+                    <button type="button" id="save-new-top-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewGoals()"><i class="fa fa-save"></i> <?=translate('Guarda Nuevo Objetivo')?></button>
+                    <button type="button" class="button btn btn-info" onClick="CreateDailyTopGoal()"><i class="fa fa-book"></i> <?=translate('Agrega Objetivo')?></button>
                   </div>
                   <div class="form-group" id="new-top-goal-creation-container"></div>
                   <?php endif; ?>
                   <ol id="daily-top-goal-list" class="goal-list">
-                  <?php foreach ($dailyTopGoals as $key => $item) : setlocale(LC_ALL, "es_ES");
+                  <?php foreach ($dailyTopGoals as $key => $item) : setlocale(LC_ALL, $locales[$userLanguage]);
         $string = date('d/m/Y', strtotime($item['created_at']));
         $dateObj = DateTime::createFromFormat("d/m/Y", $string);  ?>
                     <li class="border-bottom py-2" id="top-goal-list-item-<?= $item['id']; ?>" style="font-size: 1rem;">

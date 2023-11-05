@@ -275,12 +275,12 @@ function getTDClass($day, $monthlyDailyToRemember): string
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 text-white">
     <div class="projects min-vh-100 px-0 px-lg-3 pb-3" style="background-color: #ed008c;">
         <div class="d-flex justify-content-between my-4 px-2 px-lg-0">
-            <a class="btn btn-warning" href="<?= SITE_URL; ?>/users/toRemember.php" id=" calendarBtn">Atrás</a>
+            <a class="btn btn-warning" href="<?= SITE_URL; ?>/users/toRemember.php" id=" calendarBtn"><?=translate('Atrás') ?></a>
             <div>
                 <input class="form-control" type="month" name="month" value="<?= date('Y-m', strtotime("{$year}-{$month}-01")); ?>">
             </div>
         </div>
-        <h3 class="text-center my-3">Eventos para Recordar</h3>
+        <h3 class="text-center my-3"><?=translate('Eventos para Recordar') ?></h3>
         <div class="d-flex justify-content-between px-1 px-lg-0">
             <a class="text-white" href="<?= SITE_URL . "/users/toRememberCalendar.php?month_year={$prevMonthYear}"; ?>"><i class="fa fa-arrow-left fs-4"></i></a>
             <h5><?= date("F Y", strtotime("$year-$month-01")) ?></h5>

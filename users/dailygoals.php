@@ -176,8 +176,13 @@ if ($dailyLifeGoals) {
 
 <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit-icons.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
 
 <style>
+   .uk-lightbox.uk-open img{
+  transition: all .2s ease-in-out;
+  transform: scale(1);
+}
   @media screen and (max-width: 480px) {
     .tox-notifications-container {
       display: none !important;
@@ -670,7 +675,7 @@ if ($dailyLifeGoals) {
             </div>
           </div>
         <?php endif; ?>
-        <?php setlocale(LC_ALL, "es_ES");
+        <?php setlocale(LC_ALL, $locales[$userLanguage]);
         $string = date('d/m/Y', strtotime($currentDate));
         $dateObj = DateTime::createFromFormat("d/m/Y", $string);
         ?>
@@ -694,9 +699,9 @@ if ($dailyLifeGoals) {
         <div class="pt-5" id="slide-1">
           <form class="form" id="goalsFrom">
             <div class="mt-5" style="background-color: #fef200; padding: 10px">
-              <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; ">7-Objetivos y Prioridades Hoy:
+              <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; "><?=translate('7-Objetivos y Prioridades Hoy');?>:
                 <?php if ($isPastDate == false) : ?>
-                  <button type="button" class="btn btn-info btn-sm screenonly pull-right" id="editBtn1">Editar</button>
+                  <button type="button" class="btn btn-info btn-sm screenonly pull-right" id="editBtn1"><?=translate('Editar');?></button>
                 <?php endif; ?>
               </h2>
             </div>
@@ -721,18 +726,18 @@ if ($dailyLifeGoals) {
                 <?php if (count($dailyTopGoals) < 7) : ?>
                   <div class="form-group screenonly" style="padding:20px; text-align:right;" id="create-top-goal-btn-wrapper">
 
-                    <button type="button" id="save-new-top-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewTopGoals()"><i class="fa fa-save"></i> Guarda Nuevo Objetivo</button>
+                    <button type="button" id="save-new-top-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewTopGoals()"><i class="fa fa-save"></i> <?=translate('Guarda Nuevo Objetivo');?></button>
 
-                    <button type="button" class="button btn btn-info" onClick="CreateDailyTopGoal()"><i class="fa fa-book"></i> Agrega Objetivo</button>
+                    <button type="button" class="button btn btn-info" onClick="CreateDailyTopGoal()"><i class="fa fa-book"></i> <?=translate('Agrega Objetivo');?></button>
 
                   </div>
                 <?php endif; ?>
               </div>
             </div>
             <div class="mt-5" style="background-color: #fef200; padding: 10px">
-              <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; ">La Acción o Resultado Más Importante Hoy:
+              <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; "><?=translate('La Acción o Resultado Más Importante Hoy');?>:
                 <?php if ($isPastDate == false) : ?>
-                  <button type="button" class="btn btn-info btn-sm screenonly pull-right" id="impEditBtn">Editar</button>
+                  <button type="button" class="btn btn-info btn-sm screenonly pull-right" id="impEditBtn"><?=translate('Editar');?></button>
                 <?php endif; ?>
               </h2>
             </div>
@@ -757,9 +762,9 @@ if ($dailyLifeGoals) {
               <?php if (count($dailyImportantGoals) < 1) : ?>
                 <div class="form-group screenonly" style="padding:20px; text-align:right;" id="create-top-goal-btn-wrapper">
 
-                  <button type="button" id="save-new-important-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewImpGoals()"><i class="fa fa-save"></i> Guarda Resultado</button>
+                  <button type="button" id="save-new-important-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewImpGoals()"><i class="fa fa-save"></i> <?=translate('Guarda Resultado');?></button>
 
-                  <button type="button" class="button btn btn-info" onClick="CreateDailyImportantGoal()"><i class="fa fa-book"></i> Resultado</button>
+                  <button type="button" class="button btn btn-info" onClick="CreateDailyImportantGoal()"><i class="fa fa-book"></i> <?=translate('Resultado');?></button>
 
                 </div>
               <?php endif; ?>
@@ -767,8 +772,8 @@ if ($dailyLifeGoals) {
           </div>
             <div class="cardd mb-5" id="section-2" style="padding:0 5px;">
             <div class="d-flex justify-content-between my-1">
-              <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Mini Resumen de Hoy:</h5>
-              <a href="<?= SITE_URL; ?>/users/evolutions.php" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none">Más <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+              <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;"><?=translate('Mini Resumen de Hoy');?>:</h5>
+              <a href="<?= SITE_URL; ?>/users/evolutions.php" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none"><?=translate('Más');?> <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
               </div>
               <div class="card-body">
                 <div class="form-group">
@@ -780,7 +785,7 @@ if ($dailyLifeGoals) {
               </div>
             </div>
             <div class="row px-1 mb-5">
-              <h5 class="" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Escribre 3 Etiquetas para facilitar la busqueda
+              <h5 class="" style="color:#FFF;  margin:5px 0; font-size: 1rem;"><?=translate('Escribre 3 Etiquetas para facilitar la busqueda');?>
                 :</h5>
               <?php for ($i = 0; $i < 3; $i++) : ?>
                 <div class="col-md-4 my-2">
@@ -791,8 +796,8 @@ if ($dailyLifeGoals) {
 
             <div class="cardd my-5" id="section-2" style="padding:0 5px;">
               <div class="d-flex justify-content-between my-1">
-                <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Mi Mayor Victoria Hoy:</h5>
-                <a href="<?= SITE_URL; ?>/users/dailyVictories.php" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none">Más <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;"><?=translate('Mi Mayor Victoria Hoy');?>:</h5>
+                <a href="<?= SITE_URL; ?>/users/dailyVictories.php" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none"><?=translate('Más');?> <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
               </div>
               <div class="card-body">
                 <div class="form-group">
@@ -805,7 +810,7 @@ if ($dailyLifeGoals) {
             </div>
 
             <div class="row px-1 mb-3">
-              <h5 class="" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Escribre 3 Etiquetas para facilitar la busqueda
+              <h5 class="" style="color:#FFF;  margin:5px 0; font-size: 1rem;"><?=translate('Escribre 3 Etiquetas para facilitar la busqueda');?>
                 :</h5>
               <?php for ($i = 0; $i < 3; $i++) : ?>
                 <div class="col-md-4 my-2">
@@ -818,7 +823,7 @@ if ($dailyLifeGoals) {
             <div class="cardd my-5" id="section-2" style="padding:0 5px;">
               <div class="d-flex justify-content-between my-1">
                 <h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Notas:</h5>
-                <a href="<?= SITE_URL; ?>/users/toRemember.php" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none">Más <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                <a href="<?= SITE_URL; ?>/users/toRemember.php" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none"><?=translate('Más');?> <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
 
               </div>
               <div class="card-body">
@@ -836,8 +841,8 @@ if ($dailyLifeGoals) {
             <div class="cardd mb-5" id="section-3" style="padding:0 5px;">
              
               <div class="d-flex justify-content-between my-1">
-              <h5 class="card-header" style="color:#FFF; margin:5px 0; font-size: 1rem;">¿Cómo Puedo Mejorar?: </h5>
-                <a href="<?= SITE_URL; ?>/users/improvements.php" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none">Más <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+              <h5 class="card-header" style="color:#FFF; margin:5px 0; font-size: 1rem;"><?=translate('¿Cómo Puedo Mejorar?');?>: </h5>
+                <a href="<?= SITE_URL; ?>/users/improvements.php" class="bg-primary py-1 px-2 rounded border border-primary text-white text-decoration-none"><?=translate('Más');?> <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
 
               </div>
               <div class="card-body">
@@ -856,7 +861,7 @@ if ($dailyLifeGoals) {
            
               
               <div class="d-flex justify-content-end my-1">              
-                <a class="btn btn-sm button btn-info pull-right" href="<?= SITE_URL; ?>/users/victory-images.php?date=<?=$currentDate;?>">Más<i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                <a class="btn btn-sm button btn-info pull-right" href="<?= SITE_URL; ?>/users/victory-images.php?date=<?=$currentDate;?>"><?=translate('Más');?><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
 
               </div>
               <div class="d-flex flex-wrap bd-highlight mb-3" uk-lightbox="animation: slide">
@@ -878,7 +883,7 @@ if ($dailyLifeGoals) {
 </svg>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><div class="dropdown-item file_delete">Delete</div></li>
+                              <li><div class="dropdown-item file_delete"><?=translate('Delete');?></div></li>
                             </ul>
                           </div>
                           
@@ -905,7 +910,7 @@ if ($dailyLifeGoals) {
                         <div class="media-thumb-wrapper" data-file="<?=$dailyV7Audios[0]['id'];?>" id="fileid-<?=$dailyV7Audios[0]['id'];?>">
                         <audio controls src="<?=$dailyV7Audios[0]['url'];?>">
                               <a href="<?=$dailyV7Audios[0]['url'];?>">
-                                  Download audio
+                               <?=translate('Download audio');?>
                               </a> </audio>
                               <div class="file-actions">
                               <div class="dropdown">
@@ -915,7 +920,7 @@ if ($dailyLifeGoals) {
 </svg>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item file_delete" href="#">Delete</a></li>
+                              <li><a class="dropdown-item file_delete" href="#"><?=translate('Delete');?></a></li>
                             </ul>
                           </div>
                         </div>
@@ -936,14 +941,14 @@ if ($dailyLifeGoals) {
                           <input type="file" name="audio12File" id="audio12File" class="inputfile dropdown-item" accept="audio/mp3,audio/x-m4a,audio/*;capture=microphone" />
                             <label for="audio12File"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload</label>
                           </li>
-                          <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#audioRecorderModal"><i class="fa fa-microphone" aria-hidden="true"></i> Record</a></li>
+                          <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#audioRecorderModal"><i class="fa fa-microphone" aria-hidden="true"></i> <?=translate('Record');?></a></li>
                         </ul>
                       </div>
                       <!--     -->
                     </div> 
                 </div>
                 <div class="ms-auto p-1 bd-highlight">
-                <a class="btn btn-sm button btn-info pull-right" href="<?= SITE_URL; ?>/users/victory-media.php?type=audio&date=<?=$currentDate;?>">Más<i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                <a class="btn btn-sm button btn-info pull-right" href="<?= SITE_URL; ?>/users/victory-media.php?type=audio&date=<?=$currentDate;?>"><?=translate('Más');?><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
 
                 </div>
               </div>
@@ -968,7 +973,7 @@ if ($dailyLifeGoals) {
 </svg>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item file_delete" href="#">Delete</a></li>
+                              <li><a class="dropdown-item file_delete" href="#"><?=translate('Delete');?></a></li>
                             </ul>
                           </div>
                         </div>
@@ -982,7 +987,7 @@ if ($dailyLifeGoals) {
                     </div> 
                   </div>
                   <div class="ms-auto p-1 bd-highlight">
-                  <a class="btn btn-sm button btn-info pull-right" href="<?= SITE_URL; ?>/users/victory-media.php?type=video&date=<?=$currentDate;?>">Más<i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                  <a class="btn btn-sm button btn-info pull-right" href="<?= SITE_URL; ?>/users/victory-media.php?type=video&date=<?=$currentDate;?>"><?=translate('Más');?><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
 
                   </div>
                 </div>
@@ -991,9 +996,9 @@ if ($dailyLifeGoals) {
               </div>
             </div>
             <div class="py-2 py-3" style="background-color: #fef200; padding: 10px">
-              <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden;">Tus 7-Objetivos y Prioridades Más Importantes para tu Vida:
+              <h2 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden;"><?=translate('Tus 7-Objetivos y Prioridades Más Importantes para tu Vida');?>:
                 <?php if ($isPastDate == false) : ?>
-                  <button type="button" class="btn btn-sm btn-info screenonly pull-right" id="editBtn2">Editar</button>
+                  <button type="button" class="btn btn-sm btn-info screenonly pull-right" id="editBtn2"><?=translate('Editar');?></button>
                 <?php endif; ?>
               </h2>
             </div>
@@ -1017,8 +1022,8 @@ if ($dailyLifeGoals) {
                 <div class="form-group" id="new-life-goal-creation-container"></div>
                 <?php if ($isPastDate == false) : ?>
                   <div class="form-group screenonly" style="padding:20px; text-align:right;" id="create-life-goal-btn-wrapper">
-                    <button type="button" id="save-new-life-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewLifeGoals()"><i class="fa fa-save"></i> Guarda Nuevo Objetivo</button>
-                    <button type="button" class="button btn btn-info" onClick="CreateDailyLifeGoal()"><i class="fa fa-book"></i> Agrega Objetivo</button>
+                    <button type="button" id="save-new-life-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewLifeGoals()"><i class="fa fa-save"></i>  <?=translate('Guarda Nuevo Objetivo');?></button>
+                    <button type="button" class="button btn btn-info" onClick="CreateDailyLifeGoal()"><i class="fa fa-book"></i> <?=translate('Agrega Objetivo');?></button>
                   </div>
                 <?php endif; ?>
               </div>
@@ -1027,16 +1032,16 @@ if ($dailyLifeGoals) {
 
             <?php
             $boxes = [
-              "box1" => ['id' => 1, 'title' => 'SuperAfirmacion', 'subtitle' => 'Afirmación para tu Mejor Versión', 'body' => ''],
-              "box2" => ['id' => 2, 'title' => 'VisualFit', 'subtitle' => 'Imagenes Exitosas de ti', 'body' => ''],
-              "box3" => ['id' => 3, 'title' => 'SuperImagen', 'subtitle' => '1-Imagen de 1 Gran Exito', 'body' => ''],
-              "box4" => ['id' => 4, 'title' => 'SuperMotivación', 'subtitle' => 'Lo qué Más te Motiva', 'body' => ''],
-              "box5" => ['id' => 5, 'title' => 'SuperInspiration', 'subtitle' => 'Ideas Que te Inspiran', 'body' => ''],
-              "box6" => ['id' => 6, 'title' => 'SuperCreencias', 'subtitle' => 'Creencias que Más te Empoderen', 'body' => ''],
-              "box7" => ['id' => 7, 'title' => 'SuperPreguntas', 'subtitle' => '¿Cómo Puedo Mejorar Ahora?', 'body' => ''],
-              "box8" => ['id' => 8, 'title' => 'SuperEntusiasmo', 'subtitle' => 'Que Estoy Más Entusiasmado Ahora?', 'body' => ''],
-              "box9" => ['id' => 9, 'title' => 'SuperAcuerdos', 'subtitle' => 'Acuerdos y Promesas', 'body' => ''],
-              "box10" => ['id' => 10, 'title' => 'SUPERVISION Ahora', 'subtitle' => 'La Visión Más Espectacular', 'body' => ''],
+              "box1" => ['id' => 1, 'title' => 'SuperAfirmacion', 'subtitle' => translate('Afirmación para tu Mejor Versión'), 'body' => ''],
+              "box2" => ['id' => 2, 'title' => 'VisualFit', 'subtitle' => translate('Imagenes Exitosas de ti'), 'body' => ''],
+              "box3" => ['id' => 3, 'title' => 'SuperImagen', 'subtitle' => translate('1-Imagen de 1 Gran Exito'), 'body' => ''],
+              "box4" => ['id' => 4, 'title' => 'SuperMotivación', 'subtitle' => translate('Lo qué Más te Motiva'), 'body' => ''],
+              "box5" => ['id' => 5, 'title' => 'SuperInspiration', 'subtitle' => translate('Ideas Que te Inspiran'), 'body' => ''],
+              "box6" => ['id' => 6, 'title' => 'SuperCreencias', 'subtitle' => translate('Creencias que Más te Empoderen'), 'body' => ''],
+              "box7" => ['id' => 7, 'title' => 'SuperPreguntas', 'subtitle' => translate('¿Cómo Puedo Mejorar Ahora?'), 'body' => ''],
+              "box8" => ['id' => 8, 'title' => 'SuperEntusiasmo', 'subtitle' => translate('Que Estoy Más Entusiasmado Ahora?'), 'body' => ''],
+              "box9" => ['id' => 9, 'title' => 'SuperAcuerdos', 'subtitle' => translate('Acuerdos y Promesas'), 'body' => ''],
+              "box10" => ['id' => 10, 'title' => 'SUPERVISION Ahora', 'subtitle' => translate('La Visión Más Espectacular'), 'body' => ''],
 
             ];
 
@@ -1063,7 +1068,7 @@ if ($dailyLifeGoals) {
 
             </div>
             <div class="load-btn-wrapper mt-5 mb-5 text-center">
-              <button class="btn btn-lg btn-warning" id="btnLoadMoreTenSections">Mostrar más</button>
+              <button class="btn btn-lg btn-warning" id="btnLoadMoreTenSections"><?=translate('Mostrar más');?></button>
             </div>
 
             <div style="display: none;" id="show">
@@ -1073,11 +1078,11 @@ if ($dailyLifeGoals) {
             </div>
             <div class="form-group screenonly">
               <div class="button-wrapper" style="margin:30px 0;">
-                <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Email</button>
+                <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button"><?=translate('Email');?></button>
 
-                <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="Guardar pdf" />
+                <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="<?=translate('Guardar pdf');?>" />
 
-                  <input class="btn btn-info letter" type="button" id="saveBtn" name="saveBtn" value="Guardar" />
+                  <input class="btn btn-info letter" type="button" id="saveBtn" name="saveBtn" value="<?=translate('Guardar');?>" />
                 
 
               </div>
@@ -1103,19 +1108,19 @@ if ($dailyLifeGoals) {
         <div class="pt-5" id="slide-2">
           <div class="cardd mb-4">
             <div class="mt-5 mb-3" style="background-color: #fef200; padding: 10px">
-              <h2 class="maintitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;">Citas y Eventos:</h2>
+              <h2 class="maintitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;"><?=translate('Citas y Eventos');?>:</h2>
             </div>
             <?php include_once 'inc/appointments.php'; ?>
             <div class="mt-5 mb-3" style="background-color: #fef200; padding: 10px">
-              <h2 class="maintitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;">Para Hacer Hoy:</h2>
+              <h2 class="maintitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;"><?=translate('Para Hacer Hoy');?>:</h2>
             </div>
             <?php include_once 'inc/toBeDone.php'; ?>
             <div class="mt-5 mb-3" style="background-color: #fef200; padding: 10px">
-              <h2 class="maintitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;">Ingresos y gastos:</h2>
+              <h2 class="maintitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;"><?=translate('Ingresos y gastos');?>:</h2>
             </div>
             <?php include_once 'inc/incomeExpense.php'; ?>
             <div class="mt-5 mb-3" style="background-color: #fef200; padding: 10px">
-              <h2 class="maintitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;">Notas:</h2>
+              <h2 class="maintitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;"><?=translate('Notas');?>:</h2>
             </div>
             <?php include_once 'inc/notes.php'; ?>
           </div>
@@ -1123,7 +1128,7 @@ if ($dailyLifeGoals) {
         <!--        extended sections end-->
         <!-- Silder Navigation -->
         <button class="bg-primary py-1 px-3 rounded border border-primary text-white" id="prev-btn"><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>
-        <button class="bg-primary py-1 px-2 rounded border border-primary text-white" id="next-btn">Más <i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
+        <button class="bg-primary py-1 px-2 rounded border border-primary text-white" id="next-btn"><?=translate('Más');?> <i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
       </div>
     </div>
   </div>
@@ -1136,18 +1141,18 @@ if ($dailyLifeGoals) {
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalToggleLabel">Send Email</h5>
+        <h5 class="modal-title" id="exampleModalToggleLabel"><?=translate('Send Email');?></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label>Receiver Email Address</label>
-          <input style="width:100%;" type="email" class="form-control" name="toemail" id="toEmail" placeHolder="Enter Email Address">
+          <label><?=translate('Receiver Email Address');?></label>
+          <input style="width:100%;" type="email" class="form-control" name="toemail" id="toEmail" placeHolder="<?=translate('Enter Email Address');?>">
         </div>
       </div>
       <div class="modal-footer">
         <div id="modal-msg"></div>
-        <button class="btn btn-primary" type="button" id="sendBtn" name="sendBtn">Send Email</button>
+        <button class="btn btn-primary" type="button" id="sendBtn" name="sendBtn"><?=translate('Send Email');?></button>
       </div>
     </div>
   </div>
@@ -1167,7 +1172,7 @@ if ($dailyLifeGoals) {
           <div class="recording-info-wrapper" id="recording-info"> 
             <div class="recording-elapsed-time">
               <p class="elapsed-time"></p>
-              <p class="max-duration-label">Max duration 2 minutes</p>
+              <p class="max-duration-label"><?=translate('Max duration 2 minutes');?></p>
             </div> 
             <div id="recordingsList"></div>
             <div class="controls">
@@ -2203,12 +2208,74 @@ function paramsBuilder(uploaderFile,upload_type) {
 
       });
   });
+  let zoomLevel = 1;
+  let maxZoomLevel=3;
+  
+  UIkit.util.on(document, 'itemhide', '.uk-lightbox.uk-open', function (event, lightbox) {
+    console.log('Lightbox is displayed! itemhide',lightbox);
+    const activeImage = lightbox.slides[lightbox.index].querySelector("img");
+    zoomLevel=1;
+    activeImage.style.transform = `scale(${zoomLevel})`;
+  });
+  UIkit.util.on(document, 'itemshown', '.uk-lightbox.uk-open', function (event, lightbox) {
+      console.log('Lightbox is displayed! itemshown',lightbox);
+      zoomLevel=1;
+      const activeImage = lightbox.slides[lightbox.index].querySelector("img");
+    
+      //console.log('activeImage',lightbox.slides[lightbox.index],activeImage);
+      //console.log('Active Image:', activeImage.getAttribute('src'));
+      const mc = new Hammer(activeImage);
+      mc.get('pinch').set({ enable: true });
+      
+      mc.on('doubletap', function (e) {        
+        if(zoomLevel==3){
+          zoomLevel=1;
+        }
+        if(zoomLevel!=3){
+          zoomLevel=3;
+        }
+        updateZoom();
+      });
+      mc.on('pinch', function (e) {
+        
+       // zoomLevel = Math.max(.999, Math.min(last_scale * (e.scale), 4));
+       zoomLevel = Math.max(1, Math.min(3, zoomLevel * e.scale)); // Adjust the maximum and minimum zoom levels as needed
+      // $('.uk-lightbox-caption').html(zoomLevel+"--"+e.scale);
+        updateZoom();
+        
+      });
+      activeImage.addEventListener('wheel', function (e) {
+        if (e.deltaY > 0) {
+          zoomOut();
+        } else {
+          zoomIn();
+        }
+      });
+      function zoomIn() {
+        zoomLevel += 0.1;
+        if(zoomLevel>maxZoomLevel){
+          zoomLevel=maxZoomLevel;
+        }
+        updateZoom();
+      }
+      function zoomOut() {
+        zoomLevel -= 0.1;
+        if(zoomLevel<1)
+        zoomLevel=1;
+        updateZoom();
+      }
+      function updateZoom() {
+        
+        console.log('zoomLevel',zoomLevel);
+        activeImage.style.transform = `scale(${zoomLevel})`;
+      }
+  });
 </script>
 <script src="<?=SITE_URL; ?>/users/dist/audio-recorder.js"></script>
 <script type="application/javascript">
   
 </script>
-<div id="popovertip2" class="popovertip"  data-days="3" data-page="dailygoalsbackup" data-bs-custom-class="mejor-info-popover white-popover bs-popover-bottom 1st popovertip2" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<p>Te Gustaría hacer un Backup para no Perder tu Info? </p><a class='btn btn-warning mt-2' href='<?=SITE_URL;?>/users/backup.php'>Haz Click Aquí</a>"></div>
-<div id="popovertip" class="popovertip" data-page="dailygoals" data-bs-custom-class="mejor-info-popover bs-popover-bottom 2nd" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Cada día es una Oportunidad Inmensa de Vivir y de Servir. Elije las 7 Acciones o Resultados más importantes que quieres lograr. Cada Momento es Irrepetible. Haz el Esfuerzo para que hoy sea Excepcional. ¡Si puedes!"></div>
+<div id="popovertip2" class="popovertip"  data-days="3" data-page="dailygoalsbackup" data-bs-custom-class="mejor-info-popover white-popover bs-popover-bottom 1st popovertip2" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<p><?=translate('Te Gustaría hacer un Backup para no Perder tu Info?');?> </p><a class='btn btn-warning mt-2' href='<?=SITE_URL;?>/users/backup.php'><?=translate('Haz Click Aquí');?></a>"></div>
+<div id="popovertip" class="popovertip" data-page="dailygoals" data-bs-custom-class="mejor-info-popover bs-popover-bottom 2nd" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<?=translate('popover_dailygoals_1');?>"></div>
 
 <?php require_once "inc/footer.php"; ?>

@@ -119,7 +119,7 @@ if (!empty($letterid)) {
   <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12" style="padding: 0px;">
       <div style="background-color: #fef200;padding: 15px">
-        <h1 class="maintitle">Escríbete a tí mismo o a Alguien una Carta para la Eternidad</h1>
+        <h1 class="maintitle"><?=translate('Escríbete a tí mismo o a Alguien una Carta para la Eternidad'); ?></h1>
       </div>
     </div>
   </div>
@@ -138,10 +138,10 @@ if (!empty($letterid)) {
 
               <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-6">
-                  <label style="color: #ffffff;font-size: 20px; float: left;" class="form-label">Fecha</label>
+                  <label style="color: #ffffff;font-size: 20px; float: left;" class="form-label"><?=translate('Fecha'); ?></label>
                   <div class="input-group date daily-datepicker datepicker" id="datepicker">
 
-                    <input type="text" class="form-control" id="date" name="date" required placeholder="Enter Fecha" value="<?php if (!empty($letterapp) && !empty($letterapp['date'])) echo date('d-m-Y', strtotime($letterapp['date'])); ?>" id="date" readonly />
+                    <input type="text" class="form-control" id="date" name="date" required placeholder="<?=translate('Enter Fecha'); ?>" value="<?php if (!empty($letterapp) && !empty($letterapp['date'])) echo date('d-m-Y', strtotime($letterapp['date'])); ?>" id="date" readonly />
                     <span class="input-group-append">
                       <span class="input-group-text bg-light d-block">
                         <i class="fa fa-calendar"></i>
@@ -151,19 +151,19 @@ if (!empty($letterid)) {
 
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6">
-                  <label style="color: #ffffff;font-size: 20px; float: left;" class="form-label">De</label>
+                  <label style="color: #ffffff;font-size: 20px; float: left;" class="form-label"><?=translate('De'); ?></label>
                   <input class="form-control" required type="email" id="email" name="email" placeholder="De Parte de" value="<?php if (!empty($letterapp) && !empty($letterapp['email'])) echo $letterapp['email']; ?>">
                 </div>
               </div>
               <br />
               <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-6">
-                  <label style="color: #ffffff;font-size: 20px; float: left;" class="form-label">Para</label>
-                  <input class="form-control" required type="email" id="emailto" name="emailto" placeholder="Escribe destinatario" value="<?php if (!empty($letterapp) && !empty($letterapp['emailto'])) echo $letterapp['emailto']; ?>">
+                  <label style="color: #ffffff;font-size: 20px; float: left;" class="form-label"><?=translate('Para'); ?></label>
+                  <input class="form-control" required type="email" id="emailto" name="emailto" placeholder="<?=translate('Escribe destinatario'); ?>" value="<?php if (!empty($letterapp) && !empty($letterapp['emailto'])) echo $letterapp['emailto']; ?>">
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6">
-                  <label style="color: #ffffff;font-size: 20px; float: left;" class="form-label">Título de la Carta</label>
-                  <input class="form-control" required type="text" id="Title" name="Title" placeholder="Escribe título de tu Carta" value="<?php if (!empty($letterapp) && !empty($letterapp['title'])) echo $letterapp['title']; ?>">
+                  <label style="color: #ffffff;font-size: 20px; float: left;" class="form-label"><?=translate('Título de la Carta'); ?></label>
+                  <input class="form-control" required type="text" id="Title" name="Title" placeholder="<?=translate('Escribe título de tu Carta'); ?>" value="<?php if (!empty($letterapp) && !empty($letterapp['title'])) echo $letterapp['title']; ?>">
                 </div>
               </div>
             </div>
@@ -176,10 +176,10 @@ if (!empty($letterid)) {
             <div>
               <div class="form-group screenonly">
                 <input type="hidden" id="letter_id" value="<?= $letterid; ?>">
-                <input class="btn btn-info letter" type="button" id="emailsend" name="emailsend" value="Enviar" />
-                <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="Guardar pdf" />
-                <input class="btn btn-info letter" type="submit" id="onlysendcheck" name="saveDinstyLetter" value="Guardar" />
-                <button class="btn btn-primary rounded-circle text-white floating-btn" type="submit" id="onlysendcheck" name="saveDinstyLetter" value="Guardar"><i class="fa fa-save fa-lg"></i></button>
+                <input class="btn btn-info letter" type="button" id="emailsend" name="emailsend" value="<?=translate('Enviar'); ?>" />
+                <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="<?=translate('Guardar pdf'); ?>" />
+                <input class="btn btn-info letter" type="submit" id="onlysendcheck" name="saveDinstyLetter" value="<?=translate('Guardar'); ?>" />
+                <button class="btn btn-primary rounded-circle text-white floating-btn" type="submit" id="onlysendcheck" name="saveDinstyLetter" value="<?=translate('Guardar'); ?>"><i class="fa fa-save fa-lg"></i></button>
               </div>
 
             </div>

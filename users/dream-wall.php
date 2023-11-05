@@ -71,6 +71,8 @@ $isPastDate=false;
 
 <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit-icons.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+
 
 <style>
   .modal-header .modal-title{
@@ -142,6 +144,10 @@ $isPastDate=false;
      font-size:1.5rem;
     
 }
+.uk-lightbox.uk-open img{
+  transition: all .2s ease-in-out;
+  transform: scale(1);
+}
 </style>
 
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10">
@@ -156,8 +162,8 @@ $isPastDate=false;
         <div class="row">
           <div class="col-12" style="text-align:center;">
             <h2 style="text-transform: capitalize;">
-            My DreamWall
             
+            <?=translate('My DreamWall'); ?>
             </h2>
           </div>
           
@@ -173,7 +179,7 @@ $isPastDate=false;
                 <div class="d-flex flex-wrap bd-highlight mb-3" id="gallary-items" uk-lightbox="animation: slide">
                     
                     <?php  $i=0; foreach ($dreamWallImages as $key => $file):  ?>
-                      <?php setlocale(LC_ALL, "es_ES");
+                      <?php setlocale(LC_ALL, $locales[$userLanguage]);
         $string = date('d/m/Y', strtotime($file['created_at']));
         $dateObj = DateTime::createFromFormat("d/m/Y", $string);
         ?>
@@ -231,6 +237,70 @@ $isPastDate=false;
   </div>
 </div>
 <script>
+  
+  let zoomLevel = 1;
+  let maxZoomLevel=3;
+  
+  UIkit.util.on(document, 'itemhide', '.uk-lightbox.uk-open', function (event, lightbox) {
+    console.log('Lightbox is displayed! itemhide',lightbox);
+    const activeImage = lightbox.slides[lightbox.index].querySelector("img");
+    zoomLevel=1;
+    activeImage.style.transform = `scale(${zoomLevel})`;
+  });
+  UIkit.util.on(document, 'itemshown', '.uk-lightbox.uk-open', function (event, lightbox) {
+      console.log('Lightbox is displayed! itemshown',lightbox);
+      zoomLevel=1;
+      const activeImage = lightbox.slides[lightbox.index].querySelector("img");
+    
+      //console.log('activeImage',lightbox.slides[lightbox.index],activeImage);
+      //console.log('Active Image:', activeImage.getAttribute('src'));
+      const mc = new Hammer(activeImage);
+      mc.get('pinch').set({ enable: true });
+      
+      mc.on('doubletap', function (e) {        
+        if(zoomLevel==3){
+          zoomLevel=1;
+        }
+        if(zoomLevel!=3){
+          zoomLevel=3;
+        }
+        updateZoom();
+      });
+      mc.on('pinch', function (e) {
+        
+       // zoomLevel = Math.max(.999, Math.min(last_scale * (e.scale), 4));
+       zoomLevel = Math.max(1, Math.min(3, zoomLevel * e.scale)); // Adjust the maximum and minimum zoom levels as needed
+      // $('.uk-lightbox-caption').html(zoomLevel+"--"+e.scale);
+        updateZoom();
+        
+      });
+      activeImage.addEventListener('wheel', function (e) {
+        if (e.deltaY > 0) {
+          zoomOut();
+        } else {
+          zoomIn();
+        }
+      });
+      function zoomIn() {
+        zoomLevel += 0.1;
+        if(zoomLevel>maxZoomLevel){
+          zoomLevel=maxZoomLevel;
+        }
+        updateZoom();
+      }
+      function zoomOut() {
+        zoomLevel -= 0.1;
+        if(zoomLevel<1)
+        zoomLevel=1;
+        updateZoom();
+      }
+      function updateZoom() {
+        
+        console.log('zoomLevel',zoomLevel);
+        activeImage.style.transform = `scale(${zoomLevel})`;
+      }
+  });
+  
 
 $(document).on('click','.file-actions .file_delete',function(e){
     console.log('de;ete');
@@ -432,5 +502,5 @@ function showToast(type = 'success', message = '') {
    
   });
 </script>
-<div id="popovertip" data-page="dreamwall" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Crea la 'Pared de tus Sueños'. Agrega Imágenes que Representen lo que quieres tener o Manifestar en tu Vida. Empodera tu mente viéndo esta pared todos los días. ¡Nunca te des por vencido en lo que es importante para tí!"></div>
+<div id="popovertip" data-page="dreamwall" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<?=translate('popover_dream_wall');?>"></div>
 <?php require_once "inc/footer.php"; ?>

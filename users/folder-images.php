@@ -102,10 +102,10 @@ $isPastDate=false;
         <div class="row">
           <div class="col-12" style="text-align:center;">
          
-            <a class="btn btn-warning btn-sm pull-left" href="<?=SITE_URL;?>/users/photo-drive.php">Back</a>
+            <a class="btn btn-warning btn-sm pull-left" href="<?=SITE_URL;?>/users/photo-drive.php"><?=translate('Back');?></a>
           
             <h2 style="text-transform: capitalize;">
-            Imagenes de Exito
+            <?=translate('Imagenes de Exito');?>
             </h2>
           </div>
           
@@ -121,7 +121,7 @@ $isPastDate=false;
                 <div class="d-flex flex-wrap bd-highlight mb-3" uk-lightbox="animation: slide">
                     
                     <?php foreach ($dailyV7Files as $key => $file): ?>
-                      <?php setlocale(LC_ALL, "es_ES");
+                      <?php setlocale(LC_ALL, $locales[$userLanguage]);
         $string = date('d/m/Y', strtotime($file['created_at']));
         $dateObj = DateTime::createFromFormat("d/m/Y", $string);
         ?>
@@ -138,7 +138,7 @@ $isPastDate=false;
 </svg>
                             </button>
                             <ul class="dropdown-menu">
-                              <li><div class="dropdown-item file_delete" href="#">Delete</div></li>
+                              <li><div class="dropdown-item file_delete" href="#"><?=translate('Delete');?></div></li>
                             </ul>
                           </div>
                           
@@ -173,11 +173,11 @@ $isPastDate=false;
         <img src="" data-index="0" class="img-fluid">
         <button class="carousel-control-prev" type="button" data-bs-target="#mediaLightBoxModal" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
+            <span class="visually-hidden"><?=translate('Previous');?></span>
           </button>
           <button class="carousel-control-next" type="button" data-bs-target="#mediaLightBoxModal" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
+            <span class="visually-hidden"><?=translate('Next');?></span>
           </button>
       </div>
     </div>

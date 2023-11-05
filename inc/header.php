@@ -11,7 +11,37 @@ include_once($filepath . '/../classes/Common.php');
 $db = new Database();
 $fm = new Format();
 $common = new Common();
+$languages=[
+    'en'=>"English",
+    'es'=>"Spanish"
+];
+if(isset($_GET['lang']) && !empty($_GET['lang'])){
+    $slang=$_GET['lang'];
+    if(!empty($languages[$slang])){
+        Session::set('language', $slang);
+        $userLanguage=$slang;
+    }
+}
 
+$userLanguage = Session::get('language');
+if(empty($userLanguage)){
+    $userLanguage='es';
+}
+$translations=[];
+$translationFile = $filepath ."/../translations/$userLanguage.json";
+if(file_exists($translationFile)){
+    //echo file_get_contents($translationFile);
+    $translations = json_decode(file_get_contents($translationFile), true);
+    //print_r($translations);
+}
+
+function translate($key) {
+    global $translations;
+    if(!empty($translations[$key])){
+        return $translations[$key];
+    }    
+    return $key;
+}
 $user_infos = null;
 $rememberCookieData = RememberCookie::getRememberCookieData();
 if ($rememberCookieData) {
@@ -36,7 +66,7 @@ if ($user_infos === null && Session::get('user_id') !== NULL) {
 $profile_info = $common
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?=$userLanguage;?>">
 
 <head>
     <meta charset="UTF-8">
@@ -65,6 +95,26 @@ $profile_info = $common
         var SITE_URL = '<?= SITE_URL; ?>';
     </script>
     <style>
+        .language-options-wrapper{
+            padding:0 20px;
+        }
+        .language-switcher a.dropdown-item{
+            border-radius:20px !important;
+            color:#000;
+        }
+        .language-switcher .dropdown-menu{
+            padding:0;
+            width:113px;
+            min-width:113px;
+            border-radius:20px;
+        }
+        .language-switcher button.dropdown-toggle{
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 16px;
+            border:0;
+        }
         .login-option-buttons{
             width:375px; margin:0 auto;
         }
@@ -87,6 +137,10 @@ $profile_info = $common
         }
 
         @media only screen and (max-width: 767px) {
+            
+            .language-options-wrapper{
+                padding:0 10px;
+            }
             .desktop-only {
                 display: none;
             }
@@ -134,6 +188,9 @@ $profile_info = $common
             }
             .nav-brand.desktop-only.logo-icon{
                 display:none;
+            }
+            .header-top-nav{
+                padding-bottom:10px;
             }
         }
         #login_email_check_part{

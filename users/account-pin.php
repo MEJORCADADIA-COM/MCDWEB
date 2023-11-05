@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
         );
         if ($result) {
             //header("Location: " . SITE_URL . "/users/account-pin.php");
-            $update_msg = '<div class="alert alert-success mb-0">PIN ha sido Actualizado Exitosamente.</div>';
+            $update_msg = '<div class="alert alert-success mb-0">'.translate('PIN ha sido Actualizado Exitosamente').'.</div>';
         } else {
             $update_msg = '<div class="alert alert-danger mb-0">Something is wrong!</div>';
         }
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
                 <div class="px-2"><?= $user_infos['full_name'] ?></div>
             </div>
             <div class="alert alert-custom p-0" role="alert">
-                <p>Por favor ingresa tu PIN para recuperar tu cuenta en caso de que hayas Olvidado tu Contraseña o si has usado una cuenta de redes sociales a la que no puedes acceder. El proceso de verificación de PIN te permite acceder a una cuenta de manera segura. No compartas este PIN con nadie. El PIN es la manera de reestablecer tu cuenta.</p>
+                <p><?=translate('Por favor ingresa tu PIN para recuperar tu cuenta en caso de que hayas Olvidado tu Contraseña o si has usado una cuenta de redes sociales a la que no puedes acceder. El proceso de verificación de PIN te permite acceder a una cuenta de manera segura. No compartas este PIN con nadie. El PIN es la manera de reestablecer tu cuenta.'); ?></p>
             </div>
 
         </div>
@@ -99,16 +99,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
        
         <?php if(!empty($update_msg)) { echo $update_msg; } ?>
         <div class="change-profile-group">
-            <label for="pin">PIN</label>
+            <label for="pin"><?=translate('PIN');?></label>
             <input class="from-control" id="pin" type="password" name="pin" value="" required>
         </div>
         <div class="change-profile-group">
-            <label for="confirm_pin">Confirma tu PIN</label>
+            <label for="confirm_pin"><?=translate('Confirma tu PIN');?></label>
             <input class="from-control" id="confirm_pin" type="password" name="confirm_pin" value="" required>
         </div>
         <div class="btn-group mt-3">
-            <a href="https://mejorcadadia.com/users/profile.php" class="profile_edit_btn bg-danger text-light me-2">Cancelar</a>
-            <input type="submit" id="submit-new-details" name="update_profile" value="Actualizar">
+            <a href="https://mejorcadadia.com/users/profile.php" class="profile_edit_btn bg-danger text-light me-2"><?=translate('Cancelar');?></a>
+            <input type="submit" id="submit-new-details" name="update_profile" value="<?=translate('Actualizar');?>">
         </div>
 
     </form>

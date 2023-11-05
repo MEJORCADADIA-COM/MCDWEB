@@ -179,12 +179,12 @@ $isPastDate=false;
         <div class="row">
           <div class="col-12" style="text-align:center;">
           <?php  if(!empty($selectedFolder)): ?>
-            <a class="btn btn-warning btn-sm pull-left" href="<?=SITE_URL;?>/users/photo-drive.php">Back</a>
+            <a class="btn btn-warning btn-sm pull-left" href="<?=SITE_URL;?>/users/photo-drive.php"><?=translate('Back');?></a>
           <?php endif; ?>
           
           
           
-          <a class="btn btn-warning btn-sm pull-right" href="<?=SITE_URL;?>/users/folder-images.php">View All</a>
+          <a class="btn btn-warning btn-sm pull-right" href="<?=SITE_URL;?>/users/folder-images.php"><?=translate('View All');?></a>
             <h2 style="text-transform: capitalize;">
             
             <?=empty($selectedFolder)? 'Imagenes de Exito':$selectedFolder['name']; ?>
@@ -203,7 +203,7 @@ $isPastDate=false;
                 <div class="d-flex flex-wrap bd-highlight mb-3" id="gallary-items" uk-lightbox="animation: slide">
                     
                     <?php  $i=0; foreach ($folderImages as $key => $file):  ?>
-                      <?php setlocale(LC_ALL, "es_ES");
+                      <?php setlocale(LC_ALL, $locales[$userLanguage]);
         $string = date('d/m/Y', strtotime($file['created_at']));
         $dateObj = DateTime::createFromFormat("d/m/Y", $string);
         ?>

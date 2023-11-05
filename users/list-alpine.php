@@ -1,5 +1,5 @@
 <div class="mt-5">
-            <h4 class="text-center">Monthly Notes</h4>
+            <h4 class="text-center"><?=translate('Monthly Notes'); ?></h4>
             <div x-data="monthlyVictories">
                 <ol class="appointment-list text-white" style="font-size: 1rem;">
                     <template x-for="data in list" :key="data.id">
@@ -24,11 +24,11 @@
 
                 <div class="form-group screenonly" style="padding:20px; text-align:right;">
                     <button class="button btn btn-info mb-1 mb-lg-0" @click="saveMonthlyVictories()" x-show="textareaCount > 0">
-                        <i class="fa fa-save"></i> Guardar
+                        <i class="fa fa-save"></i> <?=translate('Guardar'); ?>
                     </button>
 
                     <button class="button btn btn-info" @click="textareaCount++">
-                        <i class="fa fa-book"></i> Agrega
+                        <i class="fa fa-book"></i> <?=translate('Agrega'); ?>
                     </button>
 
                 </div>

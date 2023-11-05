@@ -66,19 +66,19 @@ if (isset($_POST['send_email'])) {
     }
 
     if (!empty($commitment1)) {
-        $commitments = "<h4>Compromiso #1 que Hago conmigo:</h4><div>".html_entity_decode($commitment1)."</div>";
+        $commitments = "<h4>".translate('Compromiso #1 que Hago conmigo').":</h4><div>".html_entity_decode($commitment1)."</div>";
     }
     if (!empty($commitment2)) {
-        $commitments .= "<h4>Compromiso #2 que Hago conmigo:</h4><div>".html_entity_decode($commitment2)."</div>";
+        $commitments .= "<h4>".translate('Compromiso #12 que Hago conmigo').":</h4><div>".html_entity_decode($commitment2)."</div>";
     }
     if (!empty($commitment3)) {
-        $commitments .= "<h4>Compromiso #3 que Hago conmigo:</h4><div>".html_entity_decode($commitment3)."</div>";
+        $commitments .= "<h4>".translate('Compromiso #3 que Hago conmigo').":</h4><div>".html_entity_decode($commitment3)."</div>";
     }
     if (!empty($commitment4)) {
-        $commitments .= "<h4>Compromiso #4 que Hago conmigo:</h4><div>".html_entity_decode($commitment4)."</div>";
+        $commitments .= "<h4>".translate('Compromiso #4 que Hago conmigo').":</h4><div>".html_entity_decode($commitment4)."</div>";
     }
     if (!empty($commitment5)) {
-        $commitments .= "<h4>Compromiso #5 que Hago conmigo:</h4><div>".html_entity_decode($commitment5)."</div>";
+        $commitments .= "<h4>".translate('Compromiso #5 que Hago conmigo').":</h4><div>".html_entity_decode($commitment5)."</div>";
     }
 
     try {
@@ -87,7 +87,7 @@ if (isset($_POST['send_email'])) {
             <div style='width:600px; background-color:#FFF; margin:0 auto;'>
                 <header style='background-color: #74be41;'><img src='https://mejorcadadia.com/users/assets/logo.png'></header>                
                 <div style='padding:20px; background-color:#FFF;'>
-                    <h2 style='text-transform: capitalize;'>Compromisos Conmigo Mismo/a</h2>
+                    <h2 style='text-transform: capitalize;'>".translate('Compromisos Conmigo Mismo/a')."</h2>
                     <div class='goals-area' style='margin-top:20px; margin-bottom:40px;'></div>  
                     <div class='description-area' style='margin-top:20px; margin-bottom:40px;'>
                         {$commitments}
@@ -97,7 +97,7 @@ if (isset($_POST['send_email'])) {
         </ol>
         ";
 
-        if ((new Email())->send('Compromisos Conmigo Mismo/a', $email, $body)) {
+        if ((new Email())->send(translate('Compromisos Conmigo Mismo/a'), $email, $body)) {
             setSuccess('Email sent successfully');
         } else {
             setError();
@@ -119,32 +119,32 @@ if (isset($_POST['send_email'])) {
     <!-- Secondary Nav -->
     <div class="projects py-5" style="background-color: #ed008c;">
         <div class="mb-5" style="background-color: #fef200; padding: 10px">
-            <h2 class="toptitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;">Compromisos Conmigo Mismo/a:</h2>
+            <h2 class="toptitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;"><?=translate('Compromisos Conmigo Mismo/a'); ?>:</h2>
         </div>
         <form class="px-1 px-lg-0" action="" method="post">
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="commitment-1">Compromiso #1 que Hago conmigo:</label>
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="commitment-1"><?=translate('Compromiso #1 que Hago conmigo'); ?></label>
                 <textarea name="commitment_1" id="commitment-1" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userCommitments['commitment_1'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="commitment-2">Compromiso #2 que Hago conmigo:</label>
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="commitment-2"><?=translate('Compromiso #2 que Hago conmigo'); ?>:</label>
                 <textarea name="commitment_2" id="commitment-2" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userCommitments['commitment_2'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="commitment-3">Compromiso #3 que Hago conmigo:</label>
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="commitment-3"><?=translate('Compromiso #3 que Hago conmigo'); ?>:</label>
                 <textarea name="commitment_3" id="commitment-3" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userCommitments['commitment_3'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="commitment-4">Compromiso #4 que Hago conmigo:</label>
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="commitment-4"><?=translate('Compromiso #4 que Hago conmigo'); ?>:</label>
                 <textarea name="commitment_4" id="commitment-4" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userCommitments['commitment_4'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="commitment-5">Compromiso #5 que Hago conmigo:</label>
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="commitment-5"><?=translate('Compromiso #5 que Hago conmigo'); ?>:</label>
                 <textarea name="commitment_5" id="commitment-5" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userCommitments['commitment_5'] ?? '' ?></textarea>
             </div>
-            <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Email</button>
-            <button class="btn btn-info letter" type="submit" name="save_commitments">Guardar</button>
-            <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="Guardar pdf" />
+            <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button"><?=translate('Email'); ?></button>
+            <button class="btn btn-info letter" type="submit" name="save_commitments"><?=translate('Guardar'); ?></button>
+            <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="<?=translate('Guardar pdf'); ?>" />
             <!-- Floating Button Start -->
             <button class="btn btn-primary rounded-circle text-white floating-btn" type="submit" name="save_commitments"><i class="fa fa-save fa-lg"></i></button>
             <!-- Floating Button End -->
@@ -154,18 +154,18 @@ if (isset($_POST['send_email'])) {
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title text-dark" id="exampleModalToggleLabel">Send Email</h5>
+                            <h5 class="modal-title text-dark" id="exampleModalToggleLabel"><?=translate('Send Email'); ?></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label>Receiver Email Address</label>
-                                <input style="width:100%;" type="email" class="form-control" name="to_email" id="toEmail" placeHolder="Enter Email Address">
+                                <label><?=translate('Receiver Email Address'); ?></label>
+                                <input style="width:100%;" type="email" class="form-control" name="to_email" id="toEmail" placeHolder="<?=translate('Enter Email Address'); ?>">
                             </div>
                         </div>
                         <div class="modal-footer">
                             <div id="modal-msg"></div>
-                            <button class="btn btn-primary" type="submit" id="sendBtn" name="send_email">Send Email</button>
+                            <button class="btn btn-primary" type="submit" id="sendBtn" name="send_email"><?=translate('Send Email'); ?></button>
                         </div>
                     </div>
                 </div>

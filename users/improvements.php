@@ -39,7 +39,7 @@ require_once "inc/header.php"; ?>
          </div>
       </div>
       <div class="p-2-sm p-5-lg py-4">
-         <h3 class="text-center">¿Cómo Puedo Mejorar?:</h3>
+         <h3 class="text-center"><?=translate('¿Cómo Puedo Mejorar?');?>:</h3>
          <br>
          <div class="px-2 px-lg-3">
             <ul class="list-group p-1-sm p-3-lg item-container list-unstyled">

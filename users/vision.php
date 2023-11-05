@@ -1,23 +1,23 @@
 <?php
 $plan=isset($_GET['plan'])? intval($_GET['plan']):3;
 if($plan==3){
-    $p_title='Mi Visión a 3 Años';
-    $p_heading1='Describe la VISION más Espectacular que Puedas Imaginar para Próximos 3 Años:';
-    $p_heading2='Hoja de Ruta; Pasos y Estrategias para Hacer Realidad esta Visión:';
-    $p_heading3='Posibles Desafios y Cómo los Superarás:';
-    $p_heading4='Victorias y Progreso:';
+    $p_title=translate('Mi Visión a 3 Años');
+    $p_heading1=translate('Describe la VISION más Espectacular que Puedas Imaginar para Próximos 3 Años:');
+    $p_heading2=translate('Hoja de Ruta; Pasos y Estrategias para Hacer Realidad esta Visión:');
+    $p_heading3=translate('Posibles Desafios y Cómo los Superarás:');
+    $p_heading4=translate('Victorias y Progreso:');
 }elseif($plan==5){
-    $p_title='Mi Visión a 5 Años';
-    $p_heading1='Describe la VISION más Espectacular que Puedas Imaginar para Próximos 5 Años:';
-    $p_heading2='Hoja de Ruta; Pasos y Estrategias para Hacer Realidad esta Visión:';
-    $p_heading3='Posibles Desafios y Cómo los Superarás:';
-    $p_heading4='Victorias y Progreso:';
+    $p_title=translate('Mi Visión a 5 Años');
+    $p_heading1=translate('Describe la VISION más Espectacular que Puedas Imaginar para Próximos 5 Años:');
+    $p_heading2=translate('Hoja de Ruta; Pasos y Estrategias para Hacer Realidad esta Visión:');
+    $p_heading3=translate('Posibles Desafios y Cómo los Superarás:');
+    $p_heading4=translate('Victorias y Progreso:');
 }else{
-    $p_title='Mi Visión a 10 Años';
-    $p_heading1='Describe la VISION más Espectacular que Puedas Imaginar para Próximos 10 Años:';
-    $p_heading2='Hola de Ruta; Pasos y Estrategias para Hacer Realidad esta Visión:';
-    $p_heading3='Posibles Desafios y Cómo los Superarás:';
-    $p_heading4='Victorias y Progreso:';
+    $p_title=translate('Mi Visión a 10 Años');
+    $p_heading1=translate('Describe la VISION más Espectacular que Puedas Imaginar para Próximos 10 Años:');
+    $p_heading2=translate('Hola de Ruta; Pasos y Estrategias para Hacer Realidad esta Visión:');
+    $p_heading3=translate('Posibles Desafios y Cómo los Superarás:');
+    $p_heading4=translate('Victorias y Progreso:');
 }
 require_once "inc/header.php";
 require_once base_path('/users/services/Email.php');
@@ -214,5 +214,5 @@ if (isset($_POST['send_email'])) {
         window.print();
     });
 </script>
-<div id="popovertip" data-page="vision" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Sin una Visión que te Inspire y Empodere, tu Vida se desvanece y tus sueños también. Crea la Visión más Espectacular y Atrevida que Puedas Imaginar para tu Vida y que desafíe todo tu ser. Trabaja sin descanso en hacerla Realidad. ¡Si Puedes!"></div>
+<div id="popovertip" data-page="vision" data-bs-custom-class="mejor-info-popover bs-popover-bottom" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<?=translate('alert_mivision_3anos');?>"></div>
 <?php require_once "inc/footer.php"; ?>

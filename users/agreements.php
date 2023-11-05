@@ -32,7 +32,7 @@ if (isset($_POST['save_agreements'])) {
     } catch (Exception $e) {
         Session::set('error', 'Something went wrong. Please try again later.');
     }
-    Session::set('success', 'Agreements saved successfully!');
+    Session::set('success', translate('Agreements saved successfully!'));
 
 
     header("Location: " . SITE_URL . "/users/agreements.php");
@@ -60,19 +60,19 @@ if (isset($_POST['send_email'])) {
     }
 
     if (!empty($agreement1)) {
-        $agreements = "<h4>Acuerdo #1 que Hago conmigo:</h4><div>".html_entity_decode($agreement1)."</div>";
+        $agreements = "<h4>".translate('Acuerdo')." #1 ".translate('que Hago conmigo').":</h4><div>".html_entity_decode($agreement1)."</div>";
     }
     if (!empty($agreement2)) {
-        $agreements .= "<h4>Acuerdo #2 que Hago conmigo:</h4><div>".html_entity_decode($agreement2)."</div>";
+        $agreements .= "<h4>".translate('Acuerdo')." #2 ".translate('que Hago conmigo').":</h4><div>".html_entity_decode($agreement2)."</div>";
     }
     if (!empty($agreement3)) {
-        $agreements .= "<h4>Acuerdo #3 que Hago conmigo:</h4><div>".html_entity_decode($agreement3)."</div>";
+        $agreements .= "<h4>".translate('Acuerdo')." #3 ".translate('que Hago conmigo').":</h4><div>".html_entity_decode($agreement3)."</div>";
     }
     if (!empty($agreement4)) {
-        $agreements .= "<h4>Acuerdo #4 que Hago conmigo:</h4><div>".html_entity_decode($agreement4)."</div>";
+        $agreements .= "<h4>".translate('Acuerdo')." #4 ".translate('que Hago conmigo').":</h4><div>".html_entity_decode($agreement4)."</div>";
     }
     if (!empty($agreement5)) {
-        $agreements .= "<h4>Acuerdo #5 que Hago conmigo:</h4><div>".html_entity_decode($agreement5)."</div>";
+        $agreements .= "<h4>".translate('Acuerdo')." #5 ".translate('que Hago conmigo').":</h4><div>".html_entity_decode($agreement5)."</div>";
     }
 
     try {
@@ -113,33 +113,34 @@ if (isset($_POST['send_email'])) {
     <!-- Secondary Nav -->
     <div class="projects py-5" style="background-color: #ed008c;">
         <div class="mb-5" style="background-color: #fef200; padding: 10px">
-            <h2 class="toptitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;">Acuerdos que Hago Conmigo
-                Mismo/a:</h2>
+            <h2 class="toptitle text-black " style="padding:0; margin:0; width:100%; overflow:hidden;">
+            <?=translate('Acuerdos que Hago Conmigo Mismo/a'); ?>
+            </h2>
         </div>
         <form class="px-1 px-lg-0" action="" method="post">
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="agreement_1">Acuerdo #1 que Hago conmigo:</label>
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="agreement_1"><?=translate('Acuerdo'); ?> #1 <?=translate('que Hago conmigo'); ?>:</label>
                 <textarea name="agreement_1" id="agreement_1" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userAgreements['agreement_1'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="agreement_2">Acuerdo #2 que Hago conmigo:</label>
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="agreement_2"><?=translate('Acuerdo'); ?> #2 <?=translate('que Hago conmigo'); ?>:</label>
                 <textarea name="agreement_2" id="agreement_2" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userAgreements['agreement_2'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="agreement_3">Acuerdo #3 que Hago conmigo:</label>
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="agreement_3"><?=translate('Acuerdo'); ?> #3 <?=translate('que Hago conmigo'); ?>:</label>
                 <textarea name="agreement_3" id="agreement_3" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userAgreements['agreement_3'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="agreement_4">Acuerdo #4 que Hago conmigo:</label>
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="agreement_4"><?=translate('Acuerdo'); ?> #4 <?=translate('que Hago conmigo'); ?>:</label>
                 <textarea name="agreement_4" id="agreement_3" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userAgreements['agreement_4'] ?? '' ?></textarea>
             </div>
             <div class="mb-4">
-                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="agreement_5">Acuerdo #5 que Hago conmigo:</label>
+                <label class="px-1" style="margin: 5px 0px; font-size:1rem;" for="agreement_5"><?=translate('Acuerdo'); ?> #5 <?=translate('que Hago conmigo'); ?>:</label>
                 <textarea name="agreement_5" id="agreement_5" class="ckeditor form-control w-75 mx-auto form-box shadow-lg border border-light border-opacity-10"><?= $userAgreements['agreement_5'] ?? '' ?></textarea>
             </div>
-            <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Email</button>
-            <button class="btn btn-info letter" type="submit" name="save_agreements">Guardar</button>
-            <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="Guardar pdf" />
+            <button class="btn btn-info letter" type="button" data-bs-toggle="modal" href="#exampleModalToggle" role="button"><?=translate('Email'); ?></button>
+            <button class="btn btn-info letter" type="submit" name="save_agreements"><?=translate('Guardar'); ?></button>
+            <input class="btn btn-info letter" type="button" id="savePrintBtn" name="savePrintBtn" value="<?=translate('Guardar pdf'); ?>" />
             <!-- Floating Button Start -->
             <button class="btn btn-primary rounded-circle text-white floating-btn" type="submit" name="save_agreements"><i class="fa fa-save fa-lg"></i></button>
             <!-- Floating Button End -->
@@ -150,18 +151,18 @@ if (isset($_POST['send_email'])) {
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title text-dark" id="exampleModalToggleLabel">Send Email</h5>
+                            <h5 class="modal-title text-dark" id="exampleModalToggleLabel"><?=translate('Send Email'); ?></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label>Receiver Email Address</label>
-                                <input style="width:100%;" type="email" class="form-control" name="to_email" id="toEmail" placeHolder="Enter Email Address">
+                                <label><?=translate('Receiver Email Address'); ?></label>
+                                <input style="width:100%;" type="email" class="form-control" name="to_email" id="toEmail" placeHolder="<?=translate('Enter Email Address'); ?>">
                             </div>
                         </div>
                         <div class="modal-footer">
                             <div id="modal-msg"></div>
-                            <button class="btn btn-primary" type="submit" id="sendBtn" name="send_email">Send Email</button>
+                            <button class="btn btn-primary" type="submit" id="sendBtn" name="send_email"><?=translate('Send Email'); ?></button>
                         </div>
                     </div>
                 </div>

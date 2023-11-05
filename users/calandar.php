@@ -364,12 +364,12 @@ for ($day = 1; $day <= $day_count; $day++, $str++) {
     <div class="projects-inner" style="padding:10px 20px;">
       <header class="projects-header">
 
-        <?php setlocale(LC_ALL, "es_ES");
+        <?php setlocale(LC_ALL, $locales[$userLanguage]);
         $string = date('d/m/Y', strtotime($selectedDate));
         $dateObj = DateTime::createFromFormat("d/m/Y", $string);
         ?>
         <div class="row mb-3">
-          <div class="col-sm-12 col-12" style="text-align:left;"><button class="btn btn-warning" onclick="history.back()">Atrás</button></div>
+          <div class="col-sm-12 col-12" style="text-align:left;"><button class="btn btn-warning" onclick="history.back()"> <?=translate('Atrás');?></button></div>
         </div>
         <div class="row">
           <div class="col-sm-2 col-2" style="text-align:left;"><a class="prev-arrow" href="<?= SITE_URL; ?>/users/calandar.php?type=commitment&id=<?= $goalId; ?>&date=<?= date('Y-m-d', strtotime('-1 month', strtotime($selectedDate))); ?>" ;><i class="fa fa-arrow-left"></i></a></div>

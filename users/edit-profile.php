@@ -143,17 +143,17 @@ if ($userInterests) {
                 <img src="<?= $user_infos['image'] != NULL ? $user_infos['image'] : 'https://s3-us-west-2.amazonaws.com/harriscarney/images/150x150.png'; ?>" name="image" alt="profile image" id="profile-preview-image">
                 <div class="change_photo">
                     <input type="file" id="upload-new-image" accept="image/png,image/jpg" name="image" onchange="loadFile(event)" hidden />
-                    <label for="upload-new-image">Change Profile Photo</label>
+                    <label for="upload-new-image"><?=translate('Change Profile Photo')?></label>
                 </div>
             </div>
 
         </div>
         <div class="change-profile-group">
-            <label for="newUserName">Name</label>
+            <label for="newUserName"><?=translate('Name')?></label>
             <input class="username" id="newUserName" type="text" name="name" value="<?= $user_infos['full_name']; ?>" required="">
         </div>
         <div class="change-profile-group">
-            <label for="newUserName">Description</label>
+            <label for="newUserName"><?=translate('Description')?></label>
             <textarea name="description" id="newDescription" rows="5" required=""><?= $user_infos['description']; ?></textarea>
         </div>
 
@@ -163,7 +163,7 @@ if ($userInterests) {
             <?php foreach ($interests as $interest) : ?>
                 <div class="d-flex justify-content-start">
                     <input type="checkbox" name="interests[]" value="<?= $interest['id'] ?>" id="interest-<?= $interest['id'] ?>" <?= isset($userInterestsHashMap[$interest['id']]) ? 'checked' : '' ?>>
-                    <label for="interest-<?= $interest['id'] ?>"><?= $interest['interest'] ?></label>
+                    <label for="interest-<?= $interest['id'] ?>"><?= translate($interest['interest']) ?></label>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -172,14 +172,14 @@ if ($userInterests) {
         <?php $answersArr = json_decode($user_infos['answers']); ?>
         <?php foreach ($questions as $key => $question) : ?>
             <div class="change-profile-group">
-                <label for="question-<?= $key ?>"><?= $question ?></label>
+                <label for="question-<?= $key ?>"><?= translate($question) ?></label>
                 <textarea name="<?= $key ?>" id="question-<?= $key ?>" rows="5"><?= $answersArr->{$key} ?? '' ?></textarea>
             </div>
         <?php endforeach; ?>
 
         <div class="btn-group">
-            <a href="https://mejorcadadia.com/users/profile.php" class="profile_edit_btn bg-danger text-light me-2">cancel</a>
-            <input type="submit" id="submit-new-details" name="update_profile" value="Update">
+            <a href="https://mejorcadadia.com/users/profile.php" class="profile_edit_btn bg-danger text-light me-2"><?=translate('Cancelar')?></a>
+            <input type="submit" id="submit-new-details" name="update_profile" value="<?=translate('Update')?>">
         </div>
 
     </form>

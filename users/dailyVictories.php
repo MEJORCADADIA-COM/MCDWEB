@@ -28,7 +28,7 @@
          <a class="bg-primary text-white px-2 py-1 rounded" href="<?= SITE_URL; ?>/users/dailyVictoriesCalendar.php" id=" calendarBtn"><i class="fa fa-calendar"></i></a>
       </div>
       <div class="p-2-sm p-5-lg py-4">
-         <h3 class="text-center">Mi Victoria Diaria</h3>
+         <h3 class="text-center"><?=translate('Mi Victoria Diaria'); ?></h3>
          <br>
          <div class="px-2 px-lg-3">
             <ul class="list-group p-1-sm p-3-lg item-container list-unstyled">

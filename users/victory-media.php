@@ -106,11 +106,13 @@ $isPastDate=false;
           <a  class="btn btn-warning btn-sm pull-left" href="<?=SITE_URL;?>/users/dailygoals.php?date=<?=$currentDate;?>">Back</a>
             <h2 style="text-transform: capitalize;">
             <?php if($type=='image'): ?>
-                Gallery/Images
+                <?=translate('Gallery/Images') ?>
             <?php elseif($type=='audio'): ?>
-                Gallery/Audios
+              
+                <?=translate('Gallery/Audios') ?>
             <?php elseif($type=='video'): ?>
-                Gallery/Videos
+                
+                <?=translate('Gallery/Videos') ?>
             <?php endif; ?>
             </h2>
           </div>
@@ -120,7 +122,7 @@ $isPastDate=false;
       </header>
       <div class="media-items media-gallery" style="min-height:500px;" uk-lightbox="animation: slide">
         <?php foreach ($dailyV7Gallery as $day => $files): ?>
-        <?php setlocale(LC_ALL, "es_ES");
+        <?php setlocale(LC_ALL, $locales[$userLanguage]);
         $string = date('d/m/Y', strtotime($day));
         $dateObj = DateTime::createFromFormat("d/m/Y", $string);
         ?>
@@ -134,7 +136,8 @@ $isPastDate=false;
                             <?php if($file['type']=='audio'): ?>
                                 <audio controls src="<?=$file['url'];?>">
                                 <a href="<?=$file['url'];?>">
-                                    Download audio
+                                    
+                                    <?=translate('Download audio') ?>
                                 </a> 
                                 </audio>
                             <?php elseif($file['type']=='video'):

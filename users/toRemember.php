@@ -20,7 +20,7 @@
    <div class="px-3-sm px-5-lg mt-4 mt-lg-5 pt-0 pt-lg-3">
       
       <div class="p-2-sm p-5-lg py-4">
-         <h3 class="text-center">Momentos Para Recordar</h3>
+         <h3 class="text-center"><?=translate('Momentos Para Recordar'); ?></h3>
          <br>
          <div class="px-2 px-lg-3">
             <ul class="list-group p-1-sm p-3-lg item-container list-unstyled">

@@ -64,7 +64,7 @@ if(!empty($supermemories)){
       <header class="projects-header">
       
         
-        <?php setlocale(LC_ALL, "es_ES");
+        <?php setlocale(LC_ALL, $locales[$userLanguage]);
         $string = date('d/m/Y', strtotime($currentDate));
         $dateObj = DateTime::createFromFormat("d/m/Y", $string);
         ?>
@@ -105,9 +105,9 @@ if(!empty($supermemories)){
           
             <div class="form-group screenonly" style="padding:20px; text-align:right;" id="create-top-goal-btn-wrapper">
 
-              <button type="button" id="save-new-top-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewTopGoals()"><i class="fa fa-save"></i> Guarda Nuevo Objetivo</button>
+              <button type="button" id="save-new-top-goals-btn" style="display:none;" class="button btn btn-info" onClick="SaveNewTopGoals()"><i class="fa fa-save"></i> <?=translate('Guarda Nuevo Objetivo') ?></button>
 
-              <button type="button" class="button btn btn-info" onClick="CreateDailyTopGoal()"><i class="fa fa-book"></i> Agrega SuperMemoria</button>
+              <button type="button" class="button btn btn-info" onClick="CreateDailyTopGoal()"><i class="fa fa-book"></i> <?=translate('Agrega SuperMemoria') ?></button>
 
             </div>
           
@@ -115,7 +115,7 @@ if(!empty($supermemories)){
       </div>
       
       <div class="cardd mb-5" id="section-2" style="padding:0 5px;">
-            <div class="d-flex justify-content-between my-1"><h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;">Expande tu Memoria con Eventos Extraordinarios</h5>
+            <div class="d-flex justify-content-between my-1"><h5 class="card-header" style="color:#FFF;  margin:5px 0; font-size: 1rem;"><?=translate('Expande tu Memoria con Eventos Extraordinarios') ?></h5>
               </div>
               <div class="card-body">
                 <div class="form-group">

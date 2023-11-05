@@ -6,7 +6,7 @@
 <?php 
 function localDate($ctime,$format="%A, %d %B, %Y"){
 
-  setlocale(LC_ALL,"es_ES");
+  setlocale(LC_ALL,$locales[$userLanguage]);
   $string = date('d/m/Y',$ctime);
   $dateObj = DateTime::createFromFormat("d/m/Y", $string);
   return utf8_encode(strftime($format,$dateObj->getTimestamp()));
@@ -238,26 +238,23 @@ $ym = date('Y-m',strtotime($selectedDate));
         <div class="projects-inner" style="padding-left:10px; padding-right:10px;">
         <header class="projects-header" style="">
         
-         <?php setlocale(LC_ALL,"es_ES");
+         <?php setlocale(LC_ALL,$locales[$userLanguage]);
             $string = date('d/m/Y',strtotime($selectedDate));
             $dateObj = DateTime::createFromFormat("d/m/Y", $string);
             ?>
         
          <div class="row">         
               <div class="col-sm-12 col-12" style="text-align:center;">
-              <h1 style="text-transform: capitalize;">CronoVida</h1>
-              <h4>El Reloj de tu Vida</h4>
+              <h1 style="text-transform: capitalize;"><?=translate('CronoVida');?></h1>
+              <h4><?=translate('El Reloj de tu Vida');?></h4>
             
             </div>             
          </div>
                       
           </header> 
           <div class="mt-1 mb-2" style="color:#FFF; font-size:1rem;">
-          <h6 class="text-center">
-          CronoVida, el Reloj para tu Vida calcula cuanto tiempo te queda
-de Vida calculando a Partir de 
-Cuantos años Crees que vas a Vivir. 
-Lo Puedes Cambiar en Cualquier Momento. Tu decides.
+          <h6 class="text-center"><?=translate('crono_description');?>
+          
           </h6>
           </div>
 
@@ -376,23 +373,23 @@ Lo Puedes Cambiar en Cualquier Momento. Tu decides.
                       }
                       ?>
                     </select>
-                    <label for="inputYear" class="form-label">Año</label>
+                    <label for="inputYear" class="form-label"><?=translate('Año');?></label>
                     </div>
                   </div>
                     
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Número de Años Crees que vas a Vivir</label>
+                    <label class="form-label"><?=translate('Número de Años Crees que vas a Vivir');?></label>
                     <input type="number" class="form-control" name="max_years" value="<?php if(!empty($cronovida) && !empty($cronovida['age'])){ echo $cronovida['age'];} ?>" placeholder="Escribe número de Años" required min="0" max="200"/>
                  </div>
                  <div class="form-group">
-                  <button type="submit" class="btn btn-warning btn-lg">Submit</button>
+                  <button type="submit" class="btn btn-warning btn-lg"><?=translate('Submit');?></button>
                  </div>
 
               </form>
             </div>
             <button class="btn btn-warning btn-lg" id="start-cronovida-btn">
-            Actualiza tu Reloj            
+            <?=translate('Actualiza tu Reloj');?>         
             </button>
           </div>
        

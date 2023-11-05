@@ -163,32 +163,32 @@ $authorization_url = 'https://www.dropbox.com/oauth2/authorize?client_id=' . $dr
               <div class="row">
                 <div class="col-md-4">
                   <ul class="price-plan">
-                    <li class="header">15 Días</li>
+                    <li class="header"><?=translate('15 Días')?></li>
                    
                     <li class="grey"><a href="<?=SITE_URL;?>/users/backup.php?plan=15-days" class="btn btn-info">Backup Now</a></li>
                   </ul>
                 </div>
                 <div class="col-md-4">
                   <ul class="price-plan">
-                    <li class="header">30 Días</li>
+                    <li class="header">30 <?=translate('Días')?></li>
                     
                     <li class="grey"><a href="<?=SITE_URL;?>/users/backup.php?plan=30-days" class="btn btn-info">Backup Now</a></li>
                   </ul>
                 </div>
                 <div class="col-md-4">
                   <ul class="price-plan">
-                    <li class="header">Todo</li>                 
-                    <li class="grey"><a href="<?=SITE_URL;?>/users/backup.php?plan=all-time" class="btn btn-info">Backup Now</a></li>
+                    <li class="header"><?=translate('Todo')?></li>                 
+                    <li class="grey"><a href="<?=SITE_URL;?>/users/backup.php?plan=all-time" class="btn btn-info"><?=translate('Backup Now')?></a></li>
                   </ul>
                 </div>
             </div>  
             <?php elseif(!empty($selectedPlan)): ?>
               <div class="mt-2" style="background-color: #fef200; padding: 10px">
-                 <h3 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; ">Has elegido Plan de <?=$selectedPlan;?>
+                 <h3 class="maintitle" style="padding:0; margin:0; width:100%; overflow:hidden; "><?=translate('Has elegido Plan de')?> <?=$selectedPlan;?>
                      </h3>
               </div>
               <div class="cardd mb-4 py-4" id="section-1">
-                <div class="btn-wrapper"><button class="btn btn-primary" id="startBackupBtn">Comienza Backup</button></div>
+                <div class="btn-wrapper"><button class="btn btn-primary" id="startBackupBtn"><?=translate('Comienza Backup')?></button></div>
                 <div id="progressBarContainer" style="display:none;">
                   <div id="progressBar" style="width: 0%; background-color: green; height: 30px;"></div>
               </div>
@@ -200,7 +200,7 @@ $authorization_url = 'https://www.dropbox.com/oauth2/authorize?client_id=' . $dr
     </div>
         <?php else: ?>
           <div id="pre-auth-section" style="text-align:center;">
-            <a href="<?=$authorization_url?>" id="authlinkd" class="button btn btn-warning"><i class="fa fa-dropbox"></i> Accede a tu Cuenta de DropBox</a>
+            <a href="<?=$authorization_url?>" id="authlinkd" class="button btn btn-warning"><i class="fa fa-dropbox"></i> <?=translate('Accede a tu Cuenta de DropBox')?></a>
           </div>
         <?php endif; ?>
 
@@ -297,8 +297,8 @@ $authorization_url = 'https://www.dropbox.com/oauth2/authorize?client_id=' . $dr
                     dbx.filesUpload({ path: '/' + dropboxPath, contents: blob,mode: { '.tag': 'overwrite' } })
                         .then(function (response) {
                             console.log('File uploaded successfully:', response,response.result);
-                            showToast('success','Su copia de seguridad se ha cargado en su cuenta de Dropbox.');
-                            $("#startBackupBtn").text('Su copia de seguridad se ha cargado en su cuenta de Dropbox.');
+                            showToast('success','<?=translate("Su copia de seguridad se ha cargado en su cuenta de Dropbox."); ?>');
+                            $("#startBackupBtn").text('<?=translate("Su copia de seguridad se ha cargado en su cuenta de Dropbox."); ?>');
                             $.ajax({
                               url: SITE_URL+"/users/ajax/ajax.php",
                               type: "POST",
@@ -383,13 +383,13 @@ $authorization_url = 'https://www.dropbox.com/oauth2/authorize?client_id=' . $dr
             success: function(response) {
               $("#progressBarContainer").hide();
               if(response.success && response.backup_file_url!=""){
-                $("#startBackupBtn").text('Subiendo Backup a tu Cuenta de DropBox...');
+                $("#startBackupBtn").text('<?=translate('Subiendo Backup a tu Cuenta de DropBox...') ?>');
                 uploadFileToDropbox(response.backup_file_url);
               } 
             },
             error: function(xhr, status, error) {
                 console.error("Error: " + error);
-                $("#startBackupBtn").text('Comienza Backup');
+                $("#startBackupBtn").text('<?=translate('Comienza Backup') ?>');
             }
           });
         });
