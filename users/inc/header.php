@@ -196,6 +196,9 @@ if (Session::get('user_id') !== NULL) {
                 padding: 20px 0px;
         }
         @media screen and (max-width: 767px) {
+            .uk-lightbox-button.uk-slidenav{
+                display:none;
+            }
             .navbar-brand 8
                 order: 2;
             }

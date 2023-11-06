@@ -2620,7 +2620,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'UploadFolderImage')) {
 
 if (isset($_POST['action']) && ($_POST['action'] == 'UploadDreamWallImage')) {
     
-    $maxAllowed=20;
+    $maxAllowed=100;
     $selectedDate=$today;
     $hash = $format->validation($_POST['hash']);
     $user_id = Session::get('user_id');
