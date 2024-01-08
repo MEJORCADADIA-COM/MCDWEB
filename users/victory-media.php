@@ -67,8 +67,8 @@ $isPastDate=false;
 
 
 <script>
-  var SITE_URL = '<?= SITE_URL; ?>';
-  var currentDate = '<?= $currentDate; ?>';
+var SITE_URL = '<?= SITE_URL; ?>';
+var currentDate = '<?= $currentDate; ?>';
 </script>
 <link rel="stylesheet" href="<?=SITE_URL; ?>/users/assets/uikit-lightbox.css" />
 <script src="https://mejorcadadia.com/users/assets/jquery-3.6.0.min.js"></script>
@@ -77,69 +77,82 @@ $isPastDate=false;
 <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit-icons.min.js"></script>
 
 <style>
-  .media-gallery-row video{
-    max-height:120px;
-  }
-  audio,video{min-width:200px;}
-  @media screen and (max-width: 767px) {
-    audio,video{width:100%;}
-  }
-  .v7-media-box{
-    width:114px;
-  }
-  .v7-media-box img {
+.media-gallery-row video {
+    max-height: 120px;
+}
+
+audio,
+video {
+    min-width: 200px;
+}
+
+@media screen and (max-width: 767px) {
+
+    audio,
+    video {
+        width: 100%;
+    }
+}
+
+.v7-media-box {
+    width: 114px;
+}
+
+.v7-media-box img {
     max-height: 106px;
 }
 </style>
 
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10">
 
-<?php require_once 'inc/secondaryNav.php'; ?>
+    <?php require_once 'inc/secondaryNav.php'; ?>
 
-  <div class="projects my-5" style="background-color: #ed008c;">
-    <div class="projects-inner">
-      <header class="projects-header">
-        
-        
-        <div class="row">
-        <div class="col-12" style="text-align:center;">
-          <a  class="btn btn-warning btn-sm pull-left" href="<?=SITE_URL;?>/users/dailygoals.php?date=<?=$currentDate;?>">Back</a>
-            <h2 style="text-transform: capitalize;">
-            <?php if($type=='image'): ?>
-                <?=translate('Gallery/Images') ?>
-            <?php elseif($type=='audio'): ?>
-              
-                <?=translate('Gallery/Audios') ?>
-            <?php elseif($type=='video'): ?>
-                
-                <?=translate('Gallery/Videos') ?>
-            <?php endif; ?>
-            </h2>
-          </div>
-          
-        </div>
+    <div class="projects my-5" style="background-color: #ed008c;">
+        <div class="projects-inner">
+            <header class="projects-header">
 
-      </header>
-      <div class="media-items media-gallery" style="min-height:500px;" uk-lightbox="animation: slide">
-        <?php foreach ($dailyV7Gallery as $day => $files): ?>
-        <?php setlocale(LC_ALL, $locales[$userLanguage]);
+
+                <div class="row">
+                    <div class="col-12" style="text-align:center;">
+                        <a class="btn btn-warning btn-sm pull-left"
+                            href="<?=SITE_URL;?>/users/dailygoals.php?date=<?=$currentDate;?>">Back</a>
+                        <h2 style="text-transform: capitalize;">
+                            <?php if($type=='image'): ?>
+                            <?=translate('Gallery/Images') ?>
+                            <?php elseif($type=='audio'): ?>
+
+                            <?=translate('Gallery/Audios') ?>
+                            <?php elseif($type=='video'): ?>
+
+                            <?=translate('Gallery/Videos') ?>
+                            <?php endif; ?>
+                        </h2>
+                    </div>
+
+                </div>
+
+            </header>
+            <div class="media-items media-gallery" style="min-height:500px;" uk-lightbox="animation: slide">
+                <?php foreach ($dailyV7Gallery as $day => $files): ?>
+                <?php setlocale(LC_ALL, $locales[$userLanguage]);
         $string = date('d/m/Y', strtotime($day));
         $dateObj = DateTime::createFromFormat("d/m/Y", $string);
         ?>
-           
-            <div class="media-date-item mb-3 media-gallery-row">
-                <h4 style="background-color: #fef200; margin:0; padding:8px 10px; margin-bottom:10px;"><?= utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp())); ?></h4>
-                <div class="d-flex flex-row bd-highlight m-3">
-                    
-                    <?php foreach ($files as $key => $file): ?>
-                    <div class="p-1 w-100 bd-highlight ">
+
+                <div class="media-date-item mb-3 media-gallery-row">
+                    <h4 style="background-color: #fef200; margin:0; padding:8px 10px; margin-bottom:10px;">
+                        <?= utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp())); ?></h4>
+                    <div class="d-flex flex-row bd-highlight m-3 flex-wrap">
+
+                        <?php foreach ($files as $key => $file): ?>
+                        <div class="p-1 w-100 bd-highlight ">
                             <?php if($file['type']=='audio'): ?>
-                                <audio controls src="<?=$file['url'];?>">
+                            <audio controls src="<?=$file['url'];?>">
                                 <a href="<?=$file['url'];?>">
-                                    
+
                                     <?=translate('Download audio') ?>
-                                </a> 
-                                </audio>
+                                </a>
+                            </audio>
                             <?php elseif($file['type']=='video'):
                             $thumb_path=str_replace("https://mejorcadadia.com/users/","",$file['thumb']);
                              
@@ -147,95 +160,100 @@ $isPastDate=false;
                             if(!file_exists($thumb_path)){ $file['thumb']='https://mejorcadadia.com/assets/images/playlist-icon.png'; }
                             ?>
                             <div class="v7-media-box">
-                             <a href="<?=$file['url'];?>" data-index="<?=$key;?>"  data-file="<?=$file['id'];?>" data-caption="<?= utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp())); ?>" > 
-                                <img data-bs-target="#carouselExampleIndicators" data-bs-slide-to="<?=$key;?>" class="img-fluid rounded-3 w-100 shadow-1-strong"  src="<?=$file['thumb'];?>">
-                              </a>
+                                <a href="<?=$file['url'];?>" data-index="<?=$key;?>" data-file="<?=$file['id'];?>"
+                                    data-caption="<?= utf8_encode(strftime("%A, %d %B, %Y", $dateObj->getTimestamp())); ?>">
+                                    <img data-bs-target="#carouselExampleIndicators" data-bs-slide-to="<?=$key;?>"
+                                        class="img-fluid rounded-3 w-100 shadow-1-strong" src="<?=$file['thumb'];?>">
+                                </a>
                             </div>
                             <?php endif; ?>
+                        </div>
+                        <?php endforeach;?>
                     </div>
-                    <?php endforeach;?>
                 </div>
+                <?php endforeach;?>
             </div>
-        <?php endforeach;?>
-       </div>
-    
 
-      
+
+
+        </div>
     </div>
-  </div>
 
-  <div class="clearfix;"></div>
+    <div class="clearfix;"></div>
 </main>
 <!-- Modal -->
 
 <!-- Lightbox (made with Bootstrap modal and carousel) -->
 <!-- Modal -->
-<div class="modal fade p-0" id="mediaLightBoxModal" tabindex="-1" aria-labelledby="mediaLightBoxModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-fullscreen-md-down modal-xl modal-dialog-centered modal-dialog-scrollable ">
-    <div class="modal-content bg-dark">
-      <div class="modal-header border-0">        
-        <button type="button" class="btn-close bg-white border border-warning" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">       
-        <img src="" class="img-fluid">
-      </div>
+<div class="modal fade p-0" id="mediaLightBoxModal" tabindex="-1" aria-labelledby="mediaLightBoxModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen-md-down modal-xl modal-dialog-centered modal-dialog-scrollable ">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close bg-white border border-warning" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img src="" class="img-fluid">
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 
 
 <div class="toast-container position-absolute top-0 end-0 p-3">
-  <div class="toast" id="toast">
+    <div class="toast" id="toast">
 
-    <div class="toast-body">
-      Hello, world! This is a toast message.
+        <div class="toast-body">
+            Hello, world! This is a toast message.
+        </div>
     </div>
-  </div>
 </div>
 <script>
 var mediaLightBoxModal = document.getElementById('mediaLightBoxModal')
-  mediaLightBoxModal.addEventListener('show.bs.modal', function (event) {
-  // Button that triggered the modal
-  var button = event.relatedTarget
-  var imgsrc=button.getAttribute('href');
-  console.log('imgsrc',imgsrc);
-  var modalBodyInput = mediaLightBoxModal.querySelector('.modal-body img');
-  modalBodyInput.src = imgsrc;
+mediaLightBoxModal.addEventListener('show.bs.modal', function(event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+    var imgsrc = button.getAttribute('href');
+    console.log('imgsrc', imgsrc);
+    var modalBodyInput = mediaLightBoxModal.querySelector('.modal-body img');
+    modalBodyInput.src = imgsrc;
 });
+
 function showToast(type = 'success', message = '') {
-  
+
     $('#toast .toast-body').html(message);
     if (type == 'success') {
-      $('#toast').addClass('bg-primary text-white');
-      $('#toast').removeClass('bg-danger text-white');
+        $('#toast').addClass('bg-primary text-white');
+        $('#toast').removeClass('bg-danger text-white');
     } else {
-      $('#toast').removeClass('bg-primary text-white');
-      $('#toast').addClass('bg-danger text-white');
+        $('#toast').removeClass('bg-primary text-white');
+        $('#toast').addClass('bg-danger text-white');
     }
     var toastElList = [].slice.call(document.querySelectorAll('.toast'));
     var toastList = toastElList.map(function(toastEl) {
-      // Creates an array of toasts (it only initializes them)
+        // Creates an array of toasts (it only initializes them)
 
-      return new bootstrap.Toast(toastEl) // No need for options; use the default options
+        return new bootstrap.Toast(toastEl) // No need for options; use the default options
     });
     toastList.forEach(toast => toast.show()); // This show them
-  }
-
- 
-
-  
-  
-
-  
-  
+}
 
 
-  $(function() {
-   
-  });
+
+
+
+
+
+
+
+
+$(function() {
+
+});
 </script>
 <script type="application/javascript">
-  
+
 </script>
 <?php require_once "inc/footer.php"; ?>
